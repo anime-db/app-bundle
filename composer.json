@@ -25,7 +25,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "anime-db/anime-db": "dev-develop"
+        "anime-db/anime-db": "dev-issue-20"
     },
     "minimum-stability": "dev"
 }
