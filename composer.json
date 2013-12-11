@@ -4,7 +4,6 @@
     "type": "library",
     "description": "The application for making home collection anime",
     "homepage": "http://anime-db.org",
-    "version": "0.0.1",
     "authors": [
         {
             "name": "Anime DB",
@@ -26,7 +25,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "anime-db/anime-db": "dev-develop as 0.2.1"
+        "anime-db/anime-db": "dev-develop"
     },
     "minimum-stability": "dev"
 }
