@@ -203,7 +203,7 @@ class Image
      */
     protected function getUploadRootDir()
     {
-        return __DIR__.'/../../../../../../../../web/'.$this->getUploadDir();
+        return __DIR__.'/../../../../../../../../../web/'.$this->getUploadDir();
     }
 
     /**
@@ -213,7 +213,7 @@ class Image
      */
     protected function getUploadDir()
     {
-        return 'media/tmp'.date('/Ymd');
+        return 'media/tmp/'.date('Ymd');
     }
 
     /**
