@@ -1,0 +1,31 @@
+{
+    "name": "anime-db/app-bundle",
+    "license": "GPL-3.0",
+    "type": "library",
+    "description": "The application for making home collection anime",
+    "homepage": "http://anime-db.org",
+    "authors": [
+        {
+            "name": "Anime DB",
+            "homepage": "http://anime-db.org"
+        },
+        {
+            "name": "Peter Gribanov",
+            "email": "info@peter-gribanov.ru"
+        },
+        {
+            "name": "Anime DB Community",
+            "homepage": "https://github.com/anime-db/app-bundle/graphs/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "AnimeDb\\Bundle\\AppBundle": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "anime-db/anime-db": "dev-issue-20"
+    },
+    "minimum-stability": "dev"
+}
