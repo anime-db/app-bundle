@@ -27,9 +27,11 @@ class NoticeController extends Controller
     /**
      * Show last notice
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction()
+    public function showAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         /* @var $repository \AnimeDb\Bundle\AppBundle\Repository\Notice */
@@ -46,7 +48,10 @@ class NoticeController extends Controller
             return new JsonResponse([
                 'notice' => $notice->getId(),
                 'close' => $this->generateUrl('notice_close', ['id' => $notice->getId()]),
-                'content' => $this->renderView('AnimeDbAppBundle:Notice:show.html.twig', ['notice' => $notice])
+                'content' => $this->renderView('AnimeDbAppBundle:Notice:show.html.twig', [
+                    'notice' => $notice,
+                    'link_all' => $request->get('all')
+                ])
             ]);
         }
 
