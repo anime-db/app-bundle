@@ -58,6 +58,10 @@ class FormController extends Controller
         $form->handleRequest($request);
         $path = $form->get('path')->getData() ?: $this->getUserHomeDir();
 
+        if (($root = $request->get('root')) && strpos($path, $root) !== 0) {
+            $path = $root;
+        }
+
         if (!is_dir($path) || !is_readable($path)) {
             throw new NotFoundHttpException('Cen\'t read directory: '.$path);
         }
@@ -73,12 +77,14 @@ class FormController extends Controller
                 continue;
             }
             $realpath = realpath($path.$entry.DIRECTORY_SEPARATOR);
+            $realpath = ($realpath != DIRECTORY_SEPARATOR ? $realpath.DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR);
+
             // if read path is root path then parent path is also equal to root
             if ($realpath && $realpath != $path && is_dir($realpath) && is_readable($realpath)) {
-                if ($entry == '..' || $entry[0] != '.') {
+                if (($entry == '..' && (!$root || strpos($realpath, $root) === 0)) || $entry[0] != '.') {
                     $folders[$entry] = [
                         'name' => $entry,
-                        'path' => ($realpath != '/' ? $realpath.DIRECTORY_SEPARATOR : '/')
+                        'path' => $realpath
                     ];
                 }
             }
