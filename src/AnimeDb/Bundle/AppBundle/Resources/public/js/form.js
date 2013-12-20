@@ -244,11 +244,19 @@ var FormLocalPathModelField = function(path, button, controller) {
 			})
 		}
 	});
+	this.path.change(function() {
+		that.correctPath();
+	}).change();
 };
 FormLocalPathModelField.prototype = {
 	change: function() {
-		// correct the end symbol of path
-		value = this.path.val();
+		this.correctPath();
+		this.popup.change(this.path.val());
+		this.popup.show();
+	},
+	// correct the end symbol of path
+	correctPath: function() {
+		var value = this.path.val();
 		if (value.length && !(/[\\\/]$/.test(value))) {
 			if (value[0] == '/') {
 				this.path.val(value += '/');
@@ -256,8 +264,14 @@ FormLocalPathModelField.prototype = {
 				this.path.val(value += '\\');
 			}
 		}
-		this.popup.change(value);
-		this.popup.show();
+		// if the root folder is set then the path must always start with him
+		var root = this.path.data('root');
+		if (root) {
+			var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
+			if (!value.length || !reg.test(value)) {
+				this.path.val(root);
+			}
+		}
 	}
 };
 
@@ -320,8 +334,18 @@ FormLocalPathModelPopup.prototype = {
 			this.path.val(value);
 		}
 		// return if not full path
-		if (this.path.val().length && !(/[\\\/]$/.test(this.path.val()))) {
-			return false;
+		if (this.path.val().length) {
+			// if the root folder is set then the path must always start with him
+			var root = this.field.path.data('root');
+			if (root) {
+				var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
+				if (!reg.test(this.path.val())) {
+					this.path.val(root);
+				}
+			}
+			if (!(/[\\\/]$/.test(this.path.val()))) {
+				return false;
+			}
 		}
 
 		// start updating
@@ -331,6 +355,7 @@ FormLocalPathModelPopup.prototype = {
 		// send form as ajax
 		this.form.ajaxSubmit({
 			dataType: 'json',
+			data: {'root': that.field.path.data('root')},
 			success: function(data) {
 				that.path.val(data.path);
 				// remove old folders
