@@ -1,0 +1,5 @@
+doctrine:
+    orm:
+        dql:
+            datetime_functions:
+                datetime: AnimeDb\Bundle\AppBundle\DQL\Datetime
