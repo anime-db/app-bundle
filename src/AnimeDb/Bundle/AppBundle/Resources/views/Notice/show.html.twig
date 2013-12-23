@@ -1,4 +1,9 @@
 <section class="b-notice">
-	<span class="b-message">{% autoescape false %}{{ notice.message }}{% endautoescape %}</span>
-	<button type="button" class="bt-close" data-close="{{ path('notice_close', {id: notice.id}) }}">Close</button>
+	<span class="b-message">
+		{% autoescape false %}{{ notice.message }}{% endautoescape %}
+		{% if link_all %}
+			(<a href="{{ link_all }}" title="{% trans %}View all notices{% endtrans %}">{% trans %}All notices{% endtrans %}</a>)
+		{% endif %}
+	</span>
+	<button type="button" class="bt-close" data-close="{{ path('notice_close', {id: notice.id}) }}">{% trans %}Close{% endtrans %}</button>
 </section>

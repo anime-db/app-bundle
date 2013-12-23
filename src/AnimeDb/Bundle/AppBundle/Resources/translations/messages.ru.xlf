@@ -154,6 +154,14 @@
                 <source>Delete</source>
                 <target>Удалить</target>
             </trans-unit>
+            <trans-unit id="39">
+                <source>View all notices</source>
+                <target>Смотреть все уведомления</target>
+            </trans-unit>
+            <trans-unit id="40">
+                <source>All notices</source>
+                <target>Все уведомления</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
