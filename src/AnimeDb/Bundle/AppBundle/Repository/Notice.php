@@ -35,6 +35,7 @@ class Notice extends EntityRepository
                 AnimeDbAppBundle:Notice n
             WHERE
                 n.status != :closed AND
+                n.date_start <= :time AND
                 (n.date_closed IS NULL OR n.date_closed >= :time)
             ORDER BY
                 n.date_created, n.id ASC
