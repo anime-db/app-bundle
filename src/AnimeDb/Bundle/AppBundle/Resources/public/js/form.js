@@ -609,14 +609,20 @@ var PopupContainer = {
 /**
  * Notice
  */
-var NoticeModel = function(container, block, close_url, close) {
+var NoticeModel = function(container, block, close_url, see_later_url, close, see_later) {
 	this.container = container;
 	this.block = block;
 	this.close_url = close_url;
+	this.see_later_url = see_later_url;
 	this.close_button = close;
+	this.see_later_button = see_later;
+
 	var that = this;
 	this.close_button.click(function(){
 		that.close();
+	});
+	this.see_later_button.click(function(){
+		that.seeLater();
 	});
 };
 NoticeModel.prototype = {
@@ -633,6 +639,21 @@ NoticeModel.prototype = {
 					delete that.container.notice;
 					// load new notice
 					that.container.load();
+				}
+			});
+		});
+	},
+	seeLater: function() {
+		var that = this;
+		this.block.animate({opacity: 0}, 400, function() {
+			// report to backend
+			$.ajax({
+				type: 'POST',
+				url: that.see_later_url,
+				success: function() {
+					// remove this
+					that.block.remove();
+					delete that.container.notice;
 				}
 			});
 		});
@@ -663,7 +684,14 @@ NoticeContainerModel.prototype = {
 	show: function(data) {
 		data.notice;
 		var block = $(data.content);
-		this.notice = new NoticeModel(this, block, data.close, block.find('.bt-close'));
+		this.notice = new NoticeModel(
+			this,
+			block,
+			data.close,
+			data.see_later,
+			block.find('.bt-close'),
+			block.find('.bt-see-later')
+		);
 		this.container.append(this.notice.block);
 	}
 };
