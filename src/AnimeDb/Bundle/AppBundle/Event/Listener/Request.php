@@ -92,7 +92,7 @@ class Request
         $request->setLocale($locale);
         setlocale(LC_ALL, $locale);
         // set translatable
-        $this->translatable->setTranslatableLocale($locale);
+        $this->translatable->setTranslatableLocale(substr($locale, 0, 2));
     }
 
     /**
