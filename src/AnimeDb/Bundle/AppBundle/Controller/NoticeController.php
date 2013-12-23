@@ -25,6 +25,13 @@ use AnimeDb\Bundle\AppBundle\Service\Pagination;
 class NoticeController extends Controller
 {
     /**
+     * See notices later interval
+     *
+     * @var integer
+     */
+    const SEE_LATER_INTERVAL = 3600;
+
+    /**
      * Show last notice
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -48,6 +55,7 @@ class NoticeController extends Controller
             return new JsonResponse([
                 'notice' => $notice->getId(),
                 'close' => $this->generateUrl('notice_close', ['id' => $notice->getId()]),
+                'see_later' => $this->generateUrl('notice_see_later'),
                 'content' => $this->renderView('AnimeDbAppBundle:Notice:show.html.twig', [
                     'notice' => $notice,
                     'link_all' => $request->get('all')
@@ -74,5 +82,44 @@ class NoticeController extends Controller
         $em->flush();
 
         return new JsonResponse([]);
+    }
+
+    /**
+     * See notices later
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function seeLaterAction()
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        $list = $em->createQuery('
+            SELECT
+                n
+            FROM
+                AnimeDbAppBundle:Notice n
+            WHERE
+                n.status != :closed AND
+                n.date_start <= :time AND
+                (n.date_closed IS NULL OR n.date_closed >= :time)
+            ORDER BY
+                n.date_created, n.id ASC
+        ')
+            ->setParameter('closed', Notice::STATUS_CLOSED)
+            ->setParameter('time', date('Y-m-d H:i:s'))
+            ->getResult();
+
+        // increase the date start display notice
+        /* @var $notice \AnimeDb\Bundle\AppBundle\Entity\Notice */
+        foreach ($list as $notice) {
+            $notice->setDateStart(
+                $notice->getDateStart()->modify('+'.self::SEE_LATER_INTERVAL.' seconds')
+            );
+            $em->persist($notice);
+        }
+        $em->flush();
+
+        return new JsonResponse(['notices' => count($list)]);
     }
 }

@@ -13,6 +13,12 @@ notice_close:
         _method:  POST
         id:  \d+
 
+notice_see_later:
+    pattern:  /notice/see_later.json
+    defaults: { _controller: AnimeDbAppBundle:Notice:seeLater, _format: json }
+    requirements:
+        _method:  POST
+
 
 form_local_path:
     pattern:  /form/local_path.html
