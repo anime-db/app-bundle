@@ -25,6 +25,13 @@ use AnimeDb\Bundle\AppBundle\Service\Pagination;
 class NoticeController extends Controller
 {
     /**
+     * See notices later interval
+     *
+     * @var integer
+     */
+    const SEE_LATER_INTERVAL = 3600;
+
+    /**
      * Show last notice
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -48,6 +55,7 @@ class NoticeController extends Controller
             return new JsonResponse([
                 'notice' => $notice->getId(),
                 'close' => $this->generateUrl('notice_close', ['id' => $notice->getId()]),
+                'see_later' => $this->generateUrl('notice_see_later'),
                 'content' => $this->renderView('AnimeDbAppBundle:Notice:show.html.twig', [
                     'notice' => $notice,
                     'link_all' => $request->get('all')
@@ -73,6 +81,31 @@ class NoticeController extends Controller
         $em->persist($notice);
         $em->flush();
 
+        return new JsonResponse([]);
+    }
+
+    /**
+     * See notices later
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function seeLaterAction()
+    {
+        // increase the date start display notice
+        $this->getDoctrine()
+            ->getManager()
+            ->createQuery('
+                UPDATE
+                    AnimeDbAppBundle:Notice n
+                SET
+                    n.date_start = DATETIME(n.date_start, \'+'.self::SEE_LATER_INTERVAL.' seconds\')
+                WHERE
+                    n.status != :closed AND
+                    (n.date_closed IS NULL OR n.date_closed >= :time)
+            ')
+            ->setParameter('closed', Notice::STATUS_CLOSED)
+            ->setParameter('time', date('Y-m-d H:i:s'))
+            ->execute();
         return new JsonResponse([]);
     }
 }
