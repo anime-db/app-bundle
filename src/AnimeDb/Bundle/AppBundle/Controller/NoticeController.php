@@ -91,35 +91,21 @@ class NoticeController extends Controller
      */
     public function seeLaterAction()
     {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $list = $em->createQuery('
-            SELECT
-                n
-            FROM
-                AnimeDbAppBundle:Notice n
-            WHERE
-                n.status != :closed AND
-                n.date_start <= :time AND
-                (n.date_closed IS NULL OR n.date_closed >= :time)
-            ORDER BY
-                n.date_created, n.id ASC
-        ')
+        // increase the date start display notice
+        $this->getDoctrine()
+            ->getManager()
+            ->createQuery('
+                UPDATE
+                    AnimeDbAppBundle:Notice n
+                SET
+                    n.date_start = DATETIME(n.date_start, \'+'.self::SEE_LATER_INTERVAL.' seconds\')
+                WHERE
+                    n.status != :closed AND
+                    (n.date_closed IS NULL OR n.date_closed >= :time)
+            ')
             ->setParameter('closed', Notice::STATUS_CLOSED)
             ->setParameter('time', date('Y-m-d H:i:s'))
-            ->getResult();
-
-        // increase the date start display notice
-        /* @var $notice \AnimeDb\Bundle\AppBundle\Entity\Notice */
-        foreach ($list as $notice) {
-            $notice->setDateStart(
-                $notice->getDateStart()->modify('+'.self::SEE_LATER_INTERVAL.' seconds')
-            );
-            $em->persist($notice);
-        }
-        $em->flush();
-
-        return new JsonResponse(['notices' => count($list)]);
+            ->execute();
+        return new JsonResponse([]);
     }
 }
