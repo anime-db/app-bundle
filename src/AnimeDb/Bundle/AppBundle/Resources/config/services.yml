@@ -48,3 +48,8 @@ services:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }
             - { name: kernel.event_listener, event: anime_db.package.removed, method: onRemoved }
+
+    anime_db.form.type_extension.help:
+        class: AnimeDb\Bundle\AppBundle\Form\Type\Help
+        tags:
+          - { name: "form.type_extension", alias: "form" }

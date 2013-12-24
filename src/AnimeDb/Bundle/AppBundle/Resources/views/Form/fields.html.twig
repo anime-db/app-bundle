@@ -72,8 +72,16 @@
 {% spaceless %}
     <div class="f-row">
         {{ form_errors(form) }}
-        {{ form_label(form) }}
-        {{ form_widget(form) }}
+        <div class="f-col">
+            {{ form_label(form) }}
+            {% if help|default is not empty %}
+                <span class="f-help">{{ help|trans }}</span>
+            {% endif %}
+        </div>
+        <div class="f-col">
+            {{ form_widget(form) }}
+        </div>
+        <div class="f-col-clear"></div>
     </div>
 {% endspaceless %}
 {% endblock form_row %}
