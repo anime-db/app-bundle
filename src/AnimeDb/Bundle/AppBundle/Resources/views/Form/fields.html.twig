@@ -9,8 +9,13 @@
             {% for rows in form %}
                 {% for row in rows %}
                     <div class="f-row">
-                        <div class="f-fields">
+                        <div class="f-col">
                             {{ form_label(row) }}
+                            {% if help|default is not empty %}
+                                <span class="f-help">{{ help|trans }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="f-col">
                             {{ form_widget(row) }}
                         </div>
                         <button
@@ -18,18 +23,19 @@
                             class="icon icon-minus bt-remove-item"
                             title="{% trans %}Remove row{% endtrans %}"
                         >{% trans %}Remove row{% endtrans %}</button>
+                        <div class="f-col-clear"></div>
                     </div>
                 {% endfor %}
             {% endfor %}
             {{ form_rest(form) }}
             {% if allow_add %}
                 <div class="f-row f-coll-button">
-                    <div class="f-fields"></div>
                     <button
                         type="button"
                         class="icon icon-plus bt-add-item"
                         title="{% trans %}Add row{% endtrans %}"
                     >{% trans %}Add row{% endtrans %}</button>
+                    <div class="f-col-clear"></div>
                 </div>
             {% endif %}
         </div>
@@ -41,8 +47,13 @@
 {% spaceless %}
     {% for row in prototype %}
         <div class="f-row">
-            <div class="f-fields">
+            <div class="f-col">
                 {{ form_label(row) }}
+                {% if help|default is not empty %}
+                    <span class="f-help">{{ help|trans }}</span>
+                {% endif %}
+            </div>
+            <div class="f-col">
                 {{ form_widget(row) }}
             </div>
             <button
@@ -50,6 +61,7 @@
                 class="icon icon-minus bt-remove-item"
                 title="{% trans %}Remove row{% endtrans %}"
             >{% trans %}Remove row{% endtrans %}</button>
+            <div class="f-col-clear"></div>
         </div>
     {% endfor %}
 {% endspaceless %}
