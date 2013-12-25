@@ -159,3 +159,15 @@
     </div>
     {% endspaceless %}
 {% endblock %}
+
+
+{% block rating_widget %}
+    {% spaceless %}
+    <div class="f-rating" {{ block('widget_container_attributes') }}>
+        {% for child in form|reverse %}
+            {{ form_widget(child, {'attr': {'class': 'f-rating-input'} }) }}
+            {{ form_label(child, label|default(null), {'label_attr': {'class': 'f-rating-star'} }) }}
+        {% endfor %}
+    </div>
+    {% endspaceless %}
+{% endblock %}
