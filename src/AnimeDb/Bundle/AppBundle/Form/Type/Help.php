@@ -51,9 +51,9 @@ class Help extends AbstractTypeExtension
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'help' => null,
-        ));
+        ]);
     }
 
     /**
