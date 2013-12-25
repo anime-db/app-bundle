@@ -36,10 +36,10 @@ class Rating extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'expanded' => true,
-            'choices' => [1, 2, 3, 4, 5]
-        ));
+            'choices' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]
+        ]);
     }
 
     /**
