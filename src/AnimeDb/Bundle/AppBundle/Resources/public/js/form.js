@@ -265,7 +265,7 @@ FormLocalPathModelField.prototype = {
 			}
 		}
 		// if the root folder is set then the path must always start with him
-		var root = this.path.data('root');
+		var root = this.path.attr('data-root');
 		if (root) {
 			var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
 			if (!value.length || !reg.test(value)) {
@@ -334,9 +334,9 @@ FormLocalPathModelPopup.prototype = {
 			this.path.val(value);
 		}
 		// return if not full path
-		if (this.path.val().length) {
+		if (this.path.val()) {
 			// if the root folder is set then the path must always start with him
-			var root = this.field.path.data('root');
+			var root = this.field.path.attr('data-root');
 			if (root) {
 				var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
 				if (!reg.test(this.path.val())) {
@@ -355,7 +355,7 @@ FormLocalPathModelPopup.prototype = {
 		// send form as ajax
 		this.form.ajaxSubmit({
 			dataType: 'json',
-			data: {'root': that.field.path.data('root')},
+			data: {'root': that.field.path.attr('data-root')},
 			success: function(data) {
 				that.path.val(data.path);
 				// remove old folders
@@ -969,18 +969,22 @@ var FormStorage = function(storage, source, target) {
 };
 FormStorage.prototype = {
 	change: function() {
-		var that = this;
-		$.ajax({
-			url: this.source,
-			data: {'id': this.storage.val()},
-			success: function(data) {
-				if (data.required) {
-					that.require(data.path);
-				} else {
-					that.unrequire();
+		if (this.storage.val()) {
+			var that = this;
+			$.ajax({
+				url: this.source,
+				data: {'id': this.storage.val()},
+				success: function(data) {
+					if (data.required) {
+						that.require(data.path);
+					} else {
+						that.unrequire();
+					}
 				}
-			}
-		});
+			});
+		} else {
+			this.unrequire();
+		}
 	},
 	unrequire: function() {
 		this.target.removeAttr('required').removeAttr('data-root').val('').change();
