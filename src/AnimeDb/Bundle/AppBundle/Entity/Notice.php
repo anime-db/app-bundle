@@ -98,6 +98,16 @@ class Notice
     protected $date_created;
 
     /**
+     * Date start show notice
+     *
+     * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
+     *
+     * @var \DateTime
+     */
+    protected $date_start;
+
+    /**
      * Lifetime notice
      *
      * @ORM\Column(type="integer")
@@ -123,7 +133,7 @@ class Notice
      */
     public function __construct()
     {
-        $this->date_created = new \DateTime();
+        $this->date_created = $this->date_start = new \DateTime();
     }
 
     /**
@@ -182,7 +192,7 @@ class Notice
     }
 
     /**
-     * Set date_closed
+     * Set date closed
      *
      * @param \DateTime $date_closed
      *
@@ -195,23 +205,46 @@ class Notice
     }
 
     /**
-     * Get date_closed
+     * Get date closed
      *
-     * @return \DateTime 
+     * @return \DateTime|null
      */
     public function getDateClosed()
     {
-        return $this->date_closed;
+        return $this->date_closed ? clone $this->date_closed : null;
     }
 
     /**
-     * Get date_created
+     * Get date created
      *
      * @return \DateTime 
      */
     public function getDateCreated()
     {
-        return $this->date_created;
+        return clone $this->date_created;
+    }
+
+    /**
+     * Set date start show
+     *
+     * @param \DateTime $date_start
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     */
+    public function setDateStart(\DateTime $date_start)
+    {
+        $this->date_start = clone $date_start;
+        return $this;
+    }
+
+    /**
+     * Get date start show
+     *
+     * @return \DateTime 
+     */
+    public function getDateStart()
+    {
+        return clone $this->date_start;
     }
 
     /**

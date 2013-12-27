@@ -265,7 +265,7 @@ FormLocalPathModelField.prototype = {
 			}
 		}
 		// if the root folder is set then the path must always start with him
-		var root = this.path.data('root');
+		var root = this.path.attr('data-root');
 		if (root) {
 			var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
 			if (!value.length || !reg.test(value)) {
@@ -334,9 +334,9 @@ FormLocalPathModelPopup.prototype = {
 			this.path.val(value);
 		}
 		// return if not full path
-		if (this.path.val().length) {
+		if (this.path.val()) {
 			// if the root folder is set then the path must always start with him
-			var root = this.field.path.data('root');
+			var root = this.field.path.attr('data-root');
 			if (root) {
 				var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
 				if (!reg.test(this.path.val())) {
@@ -355,7 +355,7 @@ FormLocalPathModelPopup.prototype = {
 		// send form as ajax
 		this.form.ajaxSubmit({
 			dataType: 'json',
-			data: {'root': that.field.path.data('root')},
+			data: {'root': that.field.path.attr('data-root')},
 			success: function(data) {
 				that.path.val(data.path);
 				// remove old folders
@@ -609,14 +609,20 @@ var PopupContainer = {
 /**
  * Notice
  */
-var NoticeModel = function(container, block, close_url, close) {
+var NoticeModel = function(container, block, close_url, see_later_url, close, see_later) {
 	this.container = container;
 	this.block = block;
 	this.close_url = close_url;
+	this.see_later_url = see_later_url;
 	this.close_button = close;
+	this.see_later_button = see_later;
+
 	var that = this;
 	this.close_button.click(function(){
 		that.close();
+	});
+	this.see_later_button.click(function(){
+		that.seeLater();
 	});
 };
 NoticeModel.prototype = {
@@ -633,6 +639,21 @@ NoticeModel.prototype = {
 					delete that.container.notice;
 					// load new notice
 					that.container.load();
+				}
+			});
+		});
+	},
+	seeLater: function() {
+		var that = this;
+		this.block.animate({opacity: 0}, 400, function() {
+			// report to backend
+			$.ajax({
+				type: 'POST',
+				url: that.see_later_url,
+				success: function() {
+					// remove this
+					that.block.remove();
+					delete that.container.notice;
 				}
 			});
 		});
@@ -663,7 +684,14 @@ NoticeContainerModel.prototype = {
 	show: function(data) {
 		data.notice;
 		var block = $(data.content);
-		this.notice = new NoticeModel(this, block, data.close, block.find('.bt-close'));
+		this.notice = new NoticeModel(
+			this,
+			block,
+			data.close,
+			data.see_later,
+			block.find('.bt-close'),
+			block.find('.bt-see-later')
+		);
 		this.container.append(this.notice.block);
 	}
 };
@@ -941,18 +969,22 @@ var FormStorage = function(storage, source, target) {
 };
 FormStorage.prototype = {
 	change: function() {
-		var that = this;
-		$.ajax({
-			url: this.source,
-			data: {'id': this.storage.val()},
-			success: function(data) {
-				if (data.required) {
-					that.require(data.path);
-				} else {
-					that.unrequire();
+		if (this.storage.val()) {
+			var that = this;
+			$.ajax({
+				url: this.source,
+				data: {'id': this.storage.val()},
+				success: function(data) {
+					if (data.required) {
+						that.require(data.path);
+					} else {
+						that.unrequire();
+					}
 				}
-			}
-		});
+			});
+		} else {
+			this.unrequire();
+		}
 	},
 	unrequire: function() {
 		this.target.removeAttr('required').removeAttr('data-root').val('').change();

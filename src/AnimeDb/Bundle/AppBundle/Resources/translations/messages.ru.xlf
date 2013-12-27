@@ -162,6 +162,10 @@
                 <source>All notices</source>
                 <target>Все уведомления</target>
             </trans-unit>
+            <trans-unit id="41">
+                <source>See notices later</source>
+                <target>Смотреть уведомления позже</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

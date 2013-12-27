@@ -1,0 +1,9 @@
+doctrine:
+    orm:
+        dql:
+            datetime_functions:
+                datetime: AnimeDb\Bundle\AppBundle\DQL\Datetime
+
+twig:
+    form:
+        resources: ['AnimeDbAppBundle:Form:fields.html.twig']

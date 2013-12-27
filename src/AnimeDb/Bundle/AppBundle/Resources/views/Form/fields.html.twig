@@ -9,8 +9,13 @@
             {% for rows in form %}
                 {% for row in rows %}
                     <div class="f-row">
-                        <div class="f-fields">
+                        <div class="f-col">
                             {{ form_label(row) }}
+                            {% if help|default is not empty %}
+                                <span class="f-help">{{ help|trans }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="f-col">
                             {{ form_widget(row) }}
                         </div>
                         <button
@@ -18,18 +23,19 @@
                             class="icon icon-minus bt-remove-item"
                             title="{% trans %}Remove row{% endtrans %}"
                         >{% trans %}Remove row{% endtrans %}</button>
+                        <div class="f-col-clear"></div>
                     </div>
                 {% endfor %}
             {% endfor %}
             {{ form_rest(form) }}
             {% if allow_add %}
                 <div class="f-row f-coll-button">
-                    <div class="f-fields"></div>
                     <button
                         type="button"
                         class="icon icon-plus bt-add-item"
                         title="{% trans %}Add row{% endtrans %}"
                     >{% trans %}Add row{% endtrans %}</button>
+                    <div class="f-col-clear"></div>
                 </div>
             {% endif %}
         </div>
@@ -41,8 +47,13 @@
 {% spaceless %}
     {% for row in prototype %}
         <div class="f-row">
-            <div class="f-fields">
+            <div class="f-col">
                 {{ form_label(row) }}
+                {% if help|default is not empty %}
+                    <span class="f-help">{{ help|trans }}</span>
+                {% endif %}
+            </div>
+            <div class="f-col">
                 {{ form_widget(row) }}
             </div>
             <button
@@ -50,6 +61,7 @@
                 class="icon icon-minus bt-remove-item"
                 title="{% trans %}Remove row{% endtrans %}"
             >{% trans %}Remove row{% endtrans %}</button>
+            <div class="f-col-clear"></div>
         </div>
     {% endfor %}
 {% endspaceless %}
@@ -72,8 +84,16 @@
 {% spaceless %}
     <div class="f-row">
         {{ form_errors(form) }}
-        {{ form_label(form) }}
-        {{ form_widget(form) }}
+        <div class="f-col">
+            {{ form_label(form) }}
+            {% if help|default is not empty %}
+                <span class="f-help">{{ help|trans }}</span>
+            {% endif %}
+        </div>
+        <div class="f-col">
+            {{ form_widget(form) }}
+        </div>
+        <div class="f-col-clear"></div>
     </div>
 {% endspaceless %}
 {% endblock form_row %}
@@ -136,6 +156,18 @@
     >
         {{ block('form_widget') }}
         <button type="button" class="change-path" title="{% trans %}Change{% endtrans %}">{% trans %}Change{% endtrans %}</button>
+    </div>
+    {% endspaceless %}
+{% endblock %}
+
+
+{% block rating_widget %}
+    {% spaceless %}
+    <div class="f-rating" {{ block('widget_container_attributes') }}>
+        {% for child in form|reverse %}
+            {{ form_widget(child, {'attr': {'class': 'f-rating-input'} }) }}
+            {{ form_label(child, label|default(null), {'label_attr': {'class': 'f-rating-star'} }) }}
+        {% endfor %}
     </div>
     {% endspaceless %}
 {% endblock %}
