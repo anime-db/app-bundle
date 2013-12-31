@@ -9,13 +9,13 @@
             {% for rows in form %}
                 {% for row in rows %}
                     <div class="f-row">
-                        <div class="f-col">
+                        <div class="f-col f-col-label">
                             {{ form_label(row) }}
                             {% if help|default is not empty %}
                                 <span class="f-help">{{ help|trans }}</span>
                             {% endif %}
                         </div>
-                        <div class="f-col">
+                        <div class="f-col f-col-widget">
                             {{ form_widget(row) }}
                         </div>
                         <button
@@ -47,13 +47,13 @@
 {% spaceless %}
     {% for row in prototype %}
         <div class="f-row">
-            <div class="f-col">
+            <div class="f-col f-col-label">
                 {{ form_label(row) }}
                 {% if help|default is not empty %}
                     <span class="f-help">{{ help|trans }}</span>
                 {% endif %}
             </div>
-            <div class="f-col">
+            <div class="f-col f-col-widget">
                 {{ form_widget(row) }}
             </div>
             <button
@@ -84,13 +84,13 @@
 {% spaceless %}
     <div class="f-row">
         {{ form_errors(form) }}
-        <div class="f-col">
+        <div class="f-col f-col-label">
             {{ form_label(form) }}
             {% if help|default is not empty %}
                 <span class="f-help">{{ help|trans }}</span>
             {% endif %}
         </div>
-        <div class="f-col">
+        <div class="f-col f-col-widget">
             {{ form_widget(form) }}
         </div>
         <div class="f-col-clear"></div>
