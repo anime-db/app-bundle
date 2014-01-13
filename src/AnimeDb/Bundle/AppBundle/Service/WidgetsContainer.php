@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use AnimeDb\Bundle\AppBundle\Event\Widget\StoreEvents;
 use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
 
@@ -32,16 +32,16 @@ class WidgetsContainer
     /**
      * Dispatcher
      *
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     private $dispatcher;
 
     /**
      * Construct
      *
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
      */
-    public function __construct(EventDispatcher $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
