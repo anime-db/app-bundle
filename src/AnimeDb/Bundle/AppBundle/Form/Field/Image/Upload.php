@@ -30,11 +30,11 @@ class Upload extends AbstractType
     {
         $builder
             ->add('remote', 'text', [
-                'label' => 'Image from URL',
+                'label' => 'Image URL',
                 'required' => false
             ])
             ->add('local', 'file', [
-                'label' => 'Local image',
+                'label' => 'Upload image',
                 'required' => false
             ]);
     }
