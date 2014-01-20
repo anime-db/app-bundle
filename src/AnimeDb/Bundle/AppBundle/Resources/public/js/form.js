@@ -296,9 +296,10 @@ FormLocalPathModelFolder.prototype = {
 };
 
 // model pop-up
-var FormLocalPathModelPopup = function(popup, path, button, folders, prototype, field) {
+var FormLocalPathModelPopup = function(popup, path, letter, button, folders, prototype, field) {
 	this.popup = popup;
 	this.path = path;
+	this.letter = letter;
 	this.button = button;
 	this.field = field;
 	this.form = popup.body.find('form');
@@ -313,6 +314,11 @@ var FormLocalPathModelPopup = function(popup, path, button, folders, prototype, 
 		that.apply();
 		return false;
 	});
+	if (this.letter) {
+		this.letter.change(function() {
+			that.path.val(that.letter.val()+':\\');
+		});
+	}
 };
 FormLocalPathModelPopup.prototype = {
 	show: function() {
@@ -411,6 +417,7 @@ FormLocalPathController.prototype = {
 			popup = new FormLocalPathModelPopup(
 				popup,
 				popup.body.find('#local_path_popup_path'),
+				popup.body.find('#local_path_popup_letter'),
 				popup.body.find('.change-path'),
 				folders,
 				folders.data('prototype'),
