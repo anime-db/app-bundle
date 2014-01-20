@@ -41,7 +41,7 @@ class TaskSchedulerCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         // exit if disabled
-        if (!$this->getContainer()->getParameter('task_scheduler')['enabled']) {
+        if (!$this->getContainer()->getParameter('task_scheduler.enabled')) {
             return null;
         }
 
@@ -53,13 +53,6 @@ class TaskSchedulerCommand extends ContainerAwareCommand
         /* @var $repository \AnimeDb\Bundle\AppBundle\Repository\Task */
         $repository = $em->getRepository('AnimeDbAppBundle:Task');
 
-        // output streams
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $streams = '>nul 2>&1';
-        } else {
-            $streams = '>/dev/null 2>&1';
-        }
-
         $output->writeln('Task Scheduler');
 
         while (true) {
@@ -68,7 +61,12 @@ class TaskSchedulerCommand extends ContainerAwareCommand
             // task is exists
             if ($task instanceof Task) {
                 $output->writeln('Run <info>'.$task->getCommand().'</info>');
-                exec($console.' '.$task->getCommand().' '.$streams.' &');
+
+                if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                    pclose(popen('start /b '.$console.' '.$task->getCommand().' >nul 2>&1', 'r'));
+                } else {
+                    exec($console.' '.$task->getCommand().' >/dev/null 2>&1 &');
+                }
 
                 // update information on starting
                 $task->executed();

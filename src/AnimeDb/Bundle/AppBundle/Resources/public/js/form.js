@@ -917,7 +917,7 @@ FormRefillSearchItem.prototype = {
 var ToggleBlock = function(button) {
 	var block = $(button.data('target'));
 	button.click(function() {
-		block.toggle();
+		block.slideToggle(150);
 		return false;
 	});
 };

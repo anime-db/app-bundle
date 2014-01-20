@@ -131,12 +131,12 @@
                 <target>Добавить картинку</target>
             </trans-unit>
             <trans-unit id="33">
-                <source>Image from URL</source>
-                <target>Кортинка из URL</target>
+                <source>Image URL</source>
+                <target>URL картинки</target>
             </trans-unit>
             <trans-unit id="34">
-                <source>Local image</source>
-                <target>Локальная кортинка</target>
+                <source>Upload image</source>
+                <target>Загрузить кортинку</target>
             </trans-unit>
             <trans-unit id="35">
                 <source>Path</source>

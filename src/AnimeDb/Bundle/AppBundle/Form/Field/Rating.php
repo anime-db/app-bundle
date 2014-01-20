@@ -38,6 +38,8 @@ class Rating extends AbstractType
     {
         $resolver->setDefaults([
             'expanded' => true,
+            'required' => false,
+            'empty_value' => false,
             'choices' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]
         ]);
     }
