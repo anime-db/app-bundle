@@ -5,8 +5,21 @@
 {% set content %}
 <form action="{{ path('form_local_path_folders') }}" method="post" {{ form_enctype(form) }}>
 	<div class="f-row">
-		{{ form_widget(form.path) }}
-		<button type="submit" title="{{ 'Change path'|trans }}" class="change-path">{% trans %}Change path{% endtrans %}</button>
+		<table class="t-path">
+			<tr>
+				{% if form.letter is defined %}
+					<td class="b-letter">
+						{{ form_widget(form.letter) }}
+					</td>
+				{% endif %}
+				<td class="b-input">
+					{{ form_widget(form.path) }}
+				</td>
+				<td class="b-button">
+					<button type="submit" title="{{ 'Change path'|trans }}" class="change-path">{% trans %}Change path{% endtrans %}</button>
+				</td>
+			</tr>
+		</table>
 	</div>
 	<nav class="folders" data-prototype="{{ block('folder')|e }}"></nav>
 </form>
