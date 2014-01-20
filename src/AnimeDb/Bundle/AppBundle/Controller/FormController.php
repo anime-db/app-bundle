@@ -73,20 +73,19 @@ class FormController extends Controller
         $d = dir($path);
         $folders = [];
         while (false !== ($entry = $d->read())) {
-            if ($entry == '.') {
+            if ($entry == '.' || !($realpath = realpath($path.$entry.DIRECTORY_SEPARATOR))) {
                 continue;
             }
-            $realpath = realpath($path.$entry.DIRECTORY_SEPARATOR);
-            $realpath = ($realpath != DIRECTORY_SEPARATOR ? $realpath.DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR);
+            $realpath = ($realpath != DIRECTORY_SEPARATOR ? $realpath.DIRECTORY_SEPARATOR : '/');
 
             // if read path is root path then parent path is also equal to root
-            if ($realpath && $realpath != $path && is_dir($realpath) && is_readable($realpath)) {
-                if (($entry == '..' && (!$root || strpos($realpath, $root) === 0)) || $entry[0] != '.') {
-                    $folders[$entry] = [
-                        'name' => $entry,
-                        'path' => $realpath
-                    ];
-                }
+            if ($realpath != $path && is_dir($realpath) && is_readable($realpath) &&
+                (($entry == '..' && (!$root || strpos($realpath, $root) === 0)) || $entry[0] != '.')
+            ) {
+                $folders[$entry] = [
+                    'name' => $entry,
+                    'path' => $realpath
+                ];
             }
         }
         $d->close();
