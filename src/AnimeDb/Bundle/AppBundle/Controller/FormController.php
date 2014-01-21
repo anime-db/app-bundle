@@ -67,6 +67,7 @@ class FormController extends Controller
         }
 
         // add slash if need
+        $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
         $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
 
         // scan directory
@@ -76,10 +77,12 @@ class FormController extends Controller
             if ($entry == '.' || !($realpath = realpath($path.$entry.DIRECTORY_SEPARATOR))) {
                 continue;
             }
-            $realpath = ($realpath != DIRECTORY_SEPARATOR ? $realpath.DIRECTORY_SEPARATOR : '/');
+            if ($realpath[strlen($realpath)-1] != DIRECTORY_SEPARATOR) {
+                $realpath .= DIRECTORY_SEPARATOR;
+            }
 
             // if read path is root path then parent path is also equal to root
-            if ($realpath != $path && is_dir($realpath) && is_readable($realpath) &&
+            if ($realpath != $path && is_dir($realpath) &&
                 (($entry == '..' && (!$root || strpos($realpath, $root) === 0)) || $entry[0] != '.')
             ) {
                 $folders[$entry] = [
