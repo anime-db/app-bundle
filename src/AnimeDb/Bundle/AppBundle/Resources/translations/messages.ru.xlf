@@ -166,6 +166,10 @@
                 <source>See notices later</source>
                 <target>Смотреть уведомления позже</target>
             </trans-unit>
+            <trans-unit id="42">
+                <source>Required field</source>
+                <target>Поле обязательное для заполнения</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
