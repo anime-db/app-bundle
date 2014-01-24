@@ -16,6 +16,8 @@ use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\Locale;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Request listener
@@ -47,15 +49,27 @@ class Request
     private $validator;
 
     /**
+     * Container
+     *
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+
+    /**
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator $validator
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
-    public function __construct(TranslatableListener $translatable, Validator $validator)
-    {
+    public function __construct(
+        TranslatableListener $translatable,
+        Validator $validator,
+        ContainerInterface $container
+    ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
+        $this->container = $container;
     }
 
     /**
@@ -91,8 +105,16 @@ class Request
         }
         $request->setLocale($locale);
         setlocale(LC_ALL, $locale);
-        // set translatable
-        $this->translatable->setTranslatableLocale(substr($locale, 0, 2));
+
+        $locale = substr($locale, 0, 2);
+        // update parameters
+        if ($this->container->getParameter('locale') != $locale) {
+            $file = $this->container->getParameter('kernel.root_dir').'/config/parameters.yml';
+            $parameters = Yaml::parse($file);
+            $parameters['parameters']['locale'] = $locale;
+            file_put_contents($file, Yaml::dump($parameters));
+        }
+        $this->translatable->setTranslatableLocale($locale);
     }
 
     /**
