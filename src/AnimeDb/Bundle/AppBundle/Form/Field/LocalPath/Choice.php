@@ -35,6 +35,27 @@ class Choice extends AbstractType
                 'placeholder' => $this->getUserHomeDir()
             ]
         ]);
+
+        // choice the disc letter in Windows
+        if (defined('PHP_WINDOWS_VERSION_BUILD') &&
+            extension_loaded('com_dotnet') &&
+            ($fs = new \COM('Scripting.FileSystemObject'))
+        ) {
+            // types: Unknown, Removable, Fixed, Network, CD-ROM, RAM Disk
+            $choices = [];
+            foreach($fs->Drives as $drive) {
+                $drive = $fs->GetDrive($drive);
+                if($drive->DriveType == 3){
+                    $name = $drive->Sharename;
+                } elseif ($drive->IsReady) {
+                    $name = $drive->VolumeName;
+                } else {
+                    $name = '[Drive not ready]';
+                }
+                $choices[$drive->DriveLetter] = $drive->DriveLetter . ': ' . $name;
+            }
+            $builder->add('letter', 'choice', ['choices' => $choices]);
+        }
     }
 
     /**
