@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Project listener
@@ -80,5 +81,9 @@ class Project
         $parameters = Yaml::parse($this->root.'/config/parameters.yml');
         $parameters['parameters']['last_update'] = date('r');
         file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
+
+        // clear cache
+        $fs = new Filesystem();
+        $fs->remove($this->root.'/cache/');
     }
 }

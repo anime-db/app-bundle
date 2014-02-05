@@ -12,6 +12,7 @@ namespace AnimeDb\Bundle\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
@@ -35,6 +36,18 @@ class FormController extends Controller
      */
     public function localPathAction(Request $request)
     {
+        $response = new Response();
+        // caching
+        if ($last_update = $this->container->getParameter('last_update')) {
+            $response->setPublic();
+            $response->setLastModified(new \DateTime($last_update));
+
+            // response was not modified for this request
+            if ($response->isNotModified($request)) {
+                return $response;
+            }
+        }
+
         $form = $this->createForm(
             new ChoiceLocalPath(),
             ['path' => $request->get('path') ?: '']
@@ -42,7 +55,7 @@ class FormController extends Controller
 
         return $this->render('AnimeDbAppBundle:Form:local_path.html.twig', [
             'form' => $form->createView()
-        ]);
+        ], $response);
     }
 
     /**
