@@ -137,10 +137,22 @@ class FormController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function imageAction(Request $request) {
+        $response = new Response();
+        // caching
+        if ($last_update = $this->container->getParameter('last_update')) {
+            $response->setPublic();
+            $response->setLastModified(new \DateTime($last_update));
+
+            // response was not modified for this request
+            if ($response->isNotModified($request)) {
+                return $response;
+            }
+        }
+
         return $this->render('AnimeDbAppBundle:Form:image.html.twig', [
             'form' => $this->createForm(new UploadImage())->createView(),
             'change' => (bool)$request->get('change', false)
-        ]);
+        ], $response);
     }
 
     /**
