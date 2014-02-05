@@ -70,6 +70,22 @@ class FormController extends Controller
         $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
         $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
 
+        // caching
+        $response = new JsonResponse();
+        $response->setPublic();
+        $response->setLastModified(new \DateTime('@'.filemtime($path)));
+        if ( // poject update date
+            ($last_update = $this->container->getParameter('last_update')) &&
+            ($last_update = new \DateTime($last_update)) > $response->getLastModified()
+        ) {
+            $response->setLastModified($last_update);
+        }
+
+        // response was not modified for this request
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         // scan directory
         $d = dir($path);
         $folders = [];
@@ -94,7 +110,7 @@ class FormController extends Controller
         $d->close();
         ksort($folders);
 
-        return new JsonResponse([
+        return $response->setData([
             'path' => $path,
             'folders' => array_values($folders)
         ]);
