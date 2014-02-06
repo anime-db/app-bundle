@@ -1,6 +1,9 @@
 services:
     anime_db.pagination:
         class: AnimeDb\Bundle\AppBundle\Service\Pagination
+    anime_db.cache_clearer:
+        class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
+        arguments: [ @kernel, %kernel.root_dir% ]
 
     anime_db.assets:
         class: AnimeDb\Bundle\AppBundle\Service\Assets
