@@ -13,7 +13,7 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Doctrine\ORM\EntityManager;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -32,6 +32,13 @@ class Project
     protected $em;
 
     /**
+     * Cache clearer
+     *
+     * @var \Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface
+     */
+    protected $cache_clearer;
+
+    /**
      * Root dir
      *
      * @var string
@@ -42,11 +49,13 @@ class Project
      * Construct
      *
      * @param \Doctrine\ORM\EntityManager $em
+     * @param \Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface $cache_clearer
      * @param string $root
      */
-    public function __construct(EntityManager $em, $root)
+    public function __construct(EntityManager $em, CacheClearerInterface $cache_clearer, $root)
     {
         $this->em = $em;
+        $this->cache_clearer = $cache_clearer;
         $this->root = $root;
     }
 
@@ -83,7 +92,6 @@ class Project
         file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
 
         // clear cache
-        $fs = new Filesystem();
-        $fs->remove($this->root.'/cache/');
+        $this->cache_clearer->clear($this->root.'/cache/');
     }
 }

@@ -38,7 +38,7 @@ services:
 
     anime_db.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine.orm.entity_manager, %kernel.root_dir% ]
+        arguments: [ @doctrine.orm.entity_manager, @cache_clearer, %kernel.root_dir% ]
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
