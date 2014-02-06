@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -57,20 +57,40 @@ class Request
     private $container;
 
     /**
+     * Cache clearer
+     *
+     * @var \Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface
+     */
+    protected $cache_clearer;
+
+    /**
+     * Root dir
+     *
+     * @var string
+     */
+    protected $root;
+
+    /**
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator $validator
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param \Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface $cache_clearer
+     * @param string $root
      */
     public function __construct(
         TranslatableListener $translatable,
         Validator $validator,
-        ContainerInterface $container
+        ContainerInterface $container,
+        CacheClearerInterface $cache_clearer,
+        $root
     ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
         $this->container = $container;
+        $this->cache_clearer = $cache_clearer;
+        $this->root = $root;
     }
 
     /**
@@ -110,13 +130,11 @@ class Request
         $locale = substr($locale, 0, 2);
         // update parameters
         if ($this->container->getParameter('locale') != $locale) {
-            $file = $this->container->getParameter('kernel.root_dir').'/config/parameters.yml';
-            $parameters = Yaml::parse($file);
+            $parameters = Yaml::parse($this->root.'/config/parameters.yml');
             $parameters['parameters']['locale'] = $locale;
-            file_put_contents($file, Yaml::dump($parameters));
+            file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
             // clear cache
-            $fs = new Filesystem();
-            $fs->remove($this->root.'/cache/');
+            $this->cache_clearer->clear($this->root.'/cache/');
         }
         $this->translatable->setTranslatableLocale($locale);
     }
