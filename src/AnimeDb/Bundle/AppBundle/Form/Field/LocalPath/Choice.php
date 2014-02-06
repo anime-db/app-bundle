@@ -28,13 +28,15 @@ class Choice extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('path', 'text', [
-            'label' => 'Path',
-            'required' => true,
-            'attr' => [
-                'placeholder' => $this->getUserHomeDir()
-            ]
-        ]);
+        $builder
+            ->setMethod('GET')
+            ->add('path', 'text', [
+                'label' => 'Path',
+                'required' => true,
+                'attr' => [
+                    'placeholder' => $this->getUserHomeDir()
+                ]
+            ]);
 
         // choice the disc letter in Windows
         if (defined('PHP_WINDOWS_VERSION_BUILD') &&

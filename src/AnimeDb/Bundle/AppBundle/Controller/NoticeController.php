@@ -45,6 +45,15 @@ class NoticeController extends Controller
         $repository = $em->getRepository('AnimeDbAppBundle:Notice');
 
         $notice = $repository->getFirstShow();
+        // caching
+        $response = new JsonResponse();
+        $response->setPublic();
+        $response->setEtag(md5($notice ? $notice->getId() : 0));
+
+        // response was not modified for this request
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
 
         // shown notice
         if (!is_null($notice)) {
@@ -52,7 +61,7 @@ class NoticeController extends Controller
             $em->persist($notice);
             $em->flush();
 
-            return new JsonResponse([
+            $response->setData([
                 'notice' => $notice->getId(),
                 'close' => $this->generateUrl('notice_close', ['id' => $notice->getId()]),
                 'see_later' => $this->generateUrl('notice_see_later'),
@@ -63,7 +72,7 @@ class NoticeController extends Controller
             ]);
         }
 
-        return new JsonResponse([]);
+        return $response;
     }
 
     /**

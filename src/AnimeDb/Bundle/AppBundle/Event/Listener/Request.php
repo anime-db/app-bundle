@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -113,6 +114,9 @@ class Request
             $parameters = Yaml::parse($file);
             $parameters['parameters']['locale'] = $locale;
             file_put_contents($file, Yaml::dump($parameters));
+            // clear cache
+            $fs = new Filesystem();
+            $fs->remove($this->root.'/cache/');
         }
         $this->translatable->setTranslatableLocale($locale);
     }
