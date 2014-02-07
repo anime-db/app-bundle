@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
+use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -28,13 +28,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Request
 {
-    /**
-     * Session name for the locale
-     *
-     * @var string
-     */
-    const SESSION_LOCALE = '_locale';
-
     /**
      * Translatable listener
      *
@@ -59,7 +52,7 @@ class Request
     /**
      * Cache clearer
      *
-     * @var \Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface
+     * @var \AnimeDb\Bundle\AppBundle\Service\CacheClearer
      */
     protected $cache_clearer;
 
@@ -76,14 +69,14 @@ class Request
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator $validator
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     * @param \Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface $cache_clearer
+     * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
      * @param string $root
      */
     public function __construct(
         TranslatableListener $translatable,
         Validator $validator,
         ContainerInterface $container,
-        CacheClearerInterface $cache_clearer,
+        CacheClearer $cache_clearer,
         $root
     ) {
         $this->translatable = $translatable;
@@ -120,10 +113,6 @@ class Request
      */
     public function setLocale(HttpRequest $request, $locale)
     {
-        // set locale from session
-        if ($request->hasPreviousSession()) {
-            $request->getSession()->set(self::SESSION_LOCALE, $locale);
-        }
         $request->setLocale($locale);
         setlocale(LC_ALL, $locale);
 
@@ -132,9 +121,10 @@ class Request
         if ($this->container->getParameter('locale') != $locale) {
             $parameters = Yaml::parse($this->root.'/config/parameters.yml');
             $parameters['parameters']['locale'] = $locale;
+            $parameters['parameters']['last_update'] = gmdate('r');
             file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
             // clear cache
-            $this->cache_clearer->clear($this->root.'/cache/');
+            $this->cache_clearer->clear();
         }
         $this->translatable->setTranslatableLocale($locale);
     }
@@ -148,11 +138,8 @@ class Request
      */
     public function getLocale(HttpRequest $request)
     {
-        // set locale from session
-        if ($request->hasPreviousSession()) {
-            if ($locale = $request->getSession()->get(self::SESSION_LOCALE)) {
-                return $locale;
-            }
+        if ($this->container->getParameter('locale')) {
+            return $this->container->getParameter('locale');
         }
 
         // get locale from language list
