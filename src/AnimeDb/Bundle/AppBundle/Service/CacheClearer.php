@@ -68,13 +68,14 @@ class CacheClearer
      * Execute command
      *
      * @param string $cmd
+     * @param integer $timeout
      */
-    protected function executeCommand($cmd)
+    protected function executeCommand($cmd, $timeout = 300)
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            pclose(popen('start /b '.$this->getPhp().' '.$this->console.' '.$cmd.' >nul 2>&1', 'r'));
-        } else {
-            exec($this->getPhp().' '.$this->console.' '.$cmd.' >/dev/null 2>&1 &');
+        $process = new Process($this->getPhp().' '.$this->console.' '.$cmd, null, null, null, $timeout);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', $cmd));
         }
     }
 
