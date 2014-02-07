@@ -1,6 +1,9 @@
 services:
     anime_db.pagination:
         class: AnimeDb\Bundle\AppBundle\Service\Pagination
+    anime_db.cache_clearer:
+        class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
+        arguments: [ @kernel, %kernel.root_dir% ]
 
     anime_db.assets:
         class: AnimeDb\Bundle\AppBundle\Service\Assets
@@ -19,7 +22,7 @@ services:
     anime_db.listener.request:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Request
         tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255 }]
-        arguments: [ @gedmo.listener.translatable, @validator, @service_container ]
+        arguments: [ @gedmo.listener.translatable, @validator, @service_container, @anime_db.cache_clearer, %kernel.root_dir% ]
 
     # Console listener
     anime_db.listener.console:
@@ -38,7 +41,7 @@ services:
 
     anime_db.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine.orm.entity_manager, %kernel.root_dir% ]
+        arguments: [ @doctrine.orm.entity_manager, @anime_db.cache_clearer, %kernel.root_dir% ]
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }

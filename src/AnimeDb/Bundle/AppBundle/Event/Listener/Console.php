@@ -54,7 +54,7 @@ class Console
     {
         $this->translatable = $translatable;
         $this->translator = $translator;
-        $this->locale = $locale;
+        $this->locale = $locale ?: 'en';
     }
 
     /**
