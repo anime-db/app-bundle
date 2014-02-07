@@ -41,6 +41,13 @@ class Package
     const API_HOST = 'http://anime-db.org/';
 
     /**
+     * API version
+     *
+     * @var string
+     */
+    const API_VERSION = 1;
+
+    /**
      * Entity manager
      *
      * @var \Doctrine\ORM\EntityManager
@@ -55,14 +62,24 @@ class Package
     protected $fs;
 
     /**
+     * Locale
+     *
+     * @var string
+     */
+    protected $locale;
+
+    /**
      * Construct
      *
      * @param \Doctrine\ORM\EntityManager $em
+     * @param \Symfony\Component\Filesystem\Filesystem $em
+     * @param string $locale
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Filesystem $fs, $locale)
     {
         $this->em = $em;
-        $this->fs = new Filesystem();
+        $this->fs = $fs;
+        $this->locale = $locale;
     }
 
     /**
@@ -131,9 +148,10 @@ class Package
      */
     protected function fillPluginData(Plugin $plugin)
     {
+        $path = 'api/v'.self::API_VERSION.'/'.$this->locale.'/plugin/'.$plugin->getName().'/';
         $client = new Client(self::API_HOST);
         /* @var $response \Guzzle\Http\Message\Response */
-        $response = $client->get('api/plugin/'.$plugin->getName().'/')->send();
+        $response = $client->get($path)->send();
 
         if ($response->isSuccessful()) {
             $data = json_decode($response->getBody(true), true);

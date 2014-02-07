@@ -48,7 +48,7 @@ services:
 
     anime_db.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ @doctrine.orm.entity_manager, @filesystem, %locale% ]
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }
