@@ -48,6 +48,13 @@ class Package
     const API_VERSION = 1;
 
     /**
+     * API default locale
+     *
+     * @var string
+     */
+    const API_DEFAULT_LOCALE = 'en';
+
+    /**
      * Entity manager
      *
      * @var \Doctrine\ORM\EntityManager
@@ -69,6 +76,13 @@ class Package
     protected $locale;
 
     /**
+     * List of available locales
+     *
+     * @var array
+     */
+    protected $locales = ['ru', 'en'];
+
+    /**
      * Construct
      *
      * @param \Doctrine\ORM\EntityManager $em
@@ -79,7 +93,8 @@ class Package
     {
         $this->em = $em;
         $this->fs = $fs;
-        $this->locale = $locale;
+        $this->locale = substr($locale, 0, 2);
+        $this->locale = in_array($this->locale, $this->locales) ? $locale : self::API_DEFAULT_LOCALE;
     }
 
     /**
