@@ -75,19 +75,33 @@ class Choice extends AbstractType
      * @return string
      */
     protected function getUserHomeDir() {
+        // have home env var
         if ($home = getenv('HOME')) {
-            $last = substr($home, strlen($home), 1);
-            if ($last == '/' || $last == '\\') {
-                return $home;
-            } else {
-                return $home.DIRECTORY_SEPARATOR;
-            }
-        } elseif (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            return '/home/'.get_current_user().'/';
-        } elseif (is_dir($win7path = 'C:\Users\\'.get_current_user().'\\')) { // is Windows 7 or Vista
+            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
+        }
+
+        // *nix OS
+        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $username = get_current_user() ?: getenv('USERNAME');
+            return '/home/'.($username ? $username.'/' : '');
+        }
+
+        // have drive and path env vars
+        if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
+            $home = getenv('HOMEDRIVE').getenv('HOMEPATH');
+            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
+        }
+
+        // Windows
+        $username = get_current_user() ?: getenv('USERNAME');
+        if ($username && is_dir($win7path = 'C:\Users\\'.$username.'\\')) { // is Vista or older
             return $win7path;
+        } elseif ($username) {
+            return 'C:\Documents and Settings\\'.$username.'\\';
+        } elseif (is_dir('C:\Users\\')) { // is Vista or older
+            return 'C:\Users\\';
         } else {
-            return 'C:\Documents and Settings\\'.get_current_user().'\\';
+            return 'C:\Documents and Settings\\';
         }
     }
 }
