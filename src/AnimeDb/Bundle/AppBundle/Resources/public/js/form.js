@@ -704,15 +704,18 @@ NoticeContainerModel.prototype = {
 /**
  * Check all
  */
-var CheckAllModel = function(checker, list) {
+var CheckAllToggle = function(checker, list) {
 	this.checker = checker;
 	this.list = list;
 	var that = this;
 	this.checker.click(function(){
 		that.change();
 	});
+	for (var i in this.list) {
+		this.list[i].setToggle(this);
+	}
 };
-CheckAllModel.prototype = {
+CheckAllToggle.prototype = {
 	change: function() {
 		if (this.checker.is(':checked')) {
 			this.all();
@@ -732,15 +735,28 @@ CheckAllModel.prototype = {
 	}
 };
 // Check all node
-var CheckAllNodeModel = function(checkbox) {
+var CheckAllNode = function(checkbox) {
 	this.checkbox = checkbox;
+	this.toggle;
+	var that = this;
+	this.checkbox.click(function(){
+		that.change();
+	});
 };
-CheckAllNodeModel.prototype = {
+CheckAllNode.prototype = {
+	change: function() {
+		if (!this.checkbox.is(':checked') && this.toggle) {
+			this.toggle.checker.prop('checked', false);
+		}
+	},
 	check: function() {
 		this.checkbox.prop('checked', true);
 	},
 	uncheck: function() {
 		this.checkbox.prop('checked', false);
+	},
+	setToggle: function(toggle) {
+		this.toggle = toggle;
 	}
 };
 // Check all in table
@@ -748,9 +764,9 @@ var TableCheckAllController = function(checker) {
 	var checkboxes = checker.parents('table').find('.'+checker.data('target'));
 	var list = [];
 	for (var i = 0; i < checkboxes.length; i++) {
-		list.push(new CheckAllNodeModel($(checkboxes[i])));
+		list.push(new CheckAllNode($(checkboxes[i])));
 	}
-	new CheckAllModel(checker, list);
+	new CheckAllToggle(checker, list);
 }
 
 /**
