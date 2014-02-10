@@ -170,6 +170,14 @@
                 <source>Required field</source>
                 <target>Поле обязательное для заполнения</target>
             </trans-unit>
+            <trans-unit id="43">
+                <source>Scroll left</source>
+                <target>Прокрутка влево</target>
+            </trans-unit>
+            <trans-unit id="44">
+                <source>Scroll right</source>
+                <target>Прокрутка вправо</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
