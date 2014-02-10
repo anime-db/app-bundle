@@ -267,8 +267,7 @@ FormLocalPathModelField.prototype = {
 		// if the root folder is set then the path must always start with him
 		var root = this.path.attr('data-root');
 		if (root) {
-			var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
-			if (!value.length || !reg.test(value)) {
+			if (!value.length || value.insexOf(root) !== 0)) {
 				this.path.val(root);
 			}
 		}
@@ -344,8 +343,7 @@ FormLocalPathModelPopup.prototype = {
 			// if the root folder is set then the path must always start with him
 			var root = this.field.path.attr('data-root');
 			if (root) {
-				var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
-				if (!reg.test(this.path.val())) {
+				if (this.path.val().insexOf(root) !== 0) {
 					this.path.val(root);
 				}
 			}
