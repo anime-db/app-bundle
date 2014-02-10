@@ -267,7 +267,7 @@ FormLocalPathModelField.prototype = {
 		// if the root folder is set then the path must always start with him
 		var root = this.path.attr('data-root');
 		if (root) {
-			if (!value.length || value.insexOf(root) !== 0)) {
+			if (!value.length || value.insexOf(root) !== 0) {
 				this.path.val(root);
 			}
 		}
