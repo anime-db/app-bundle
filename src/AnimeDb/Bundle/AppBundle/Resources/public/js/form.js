@@ -614,13 +614,28 @@ var PopupContainer = {
 /**
  * Notice
  */
-var NoticeModel = function(container, block, close_url, see_later_url, close, see_later) {
+var NoticeModel = function(
+	container,
+	block,
+	close_url,
+	see_later_url,
+	close,
+	see_later,
+	offset,
+	message,
+	scroll_left,
+	scroll_right
+) {
 	this.container = container;
 	this.block = block;
 	this.close_url = close_url;
 	this.see_later_url = see_later_url;
 	this.close_button = close;
 	this.see_later_button = see_later;
+	this.offset = offset;
+	this.message = message;
+	this.scroll_left = scroll_left;
+	this.scroll_right = scroll_right;
 
 	var that = this;
 	this.close_button.click(function(){
@@ -629,6 +644,19 @@ var NoticeModel = function(container, block, close_url, see_later_url, close, se
 	this.see_later_button.click(function(){
 		that.seeLater();
 	});
+	// scroll buttons
+	if (offset > 0) {
+		this.scroll_left.hover(function() {
+			that.scrollLeft();
+		}, function() {
+			that.stopScroll();
+		}).show();
+		this.scroll_right.hover(function() {
+			that.scrollRight();
+		}, function() {
+			that.stopScroll();
+		}).show();
+	}
 };
 NoticeModel.prototype = {
 	close: function() {
@@ -662,6 +690,19 @@ NoticeModel.prototype = {
 				}
 			});
 		});
+	},
+	scrollLeft: function() {
+		this.message.stop().animate({
+			'margin-left': 0
+		}, 1500);
+	},
+	scrollRight: function() {
+		this.message.stop().animate({
+			'margin-left': -(this.offset)
+		}, 1500);
+	},
+	stopScroll: function() {
+		this.message.stop();
 	}
 };
 /**
@@ -689,15 +730,20 @@ NoticeContainerModel.prototype = {
 	show: function(data) {
 		data.notice;
 		var block = $(data.content);
+		var message = block.find('.b-message');
+		this.container.append(block);
 		this.notice = new NoticeModel(
 			this,
 			block,
 			data.close,
 			data.see_later,
 			block.find('.bt-close'),
-			block.find('.bt-see-later')
+			block.find('.bt-see-later'),
+			message.width() - block.find('.b-message-wrapper').width(),
+			message,
+			block.find('.bt-notice-scroll-left'),
+			block.find('.bt-notice-scroll-right')
 		);
-		this.container.append(this.notice.block);
 	}
 };
 
