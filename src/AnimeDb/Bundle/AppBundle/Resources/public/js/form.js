@@ -720,8 +720,12 @@ NoticeContainerModel.prototype = {
 		this.notice = null;
 		$.ajax({
 			url: this.from,
-			success: function(data) {
-				if (data) {
+			complete: function(jqXHR, textStatus) {
+				var data;
+				if (
+					(textStatus == 'success' || textStatus == 'notmodified') &&
+					(data = $.parseJSON(jqXHR.responseText))
+				) {
 					that.show(data)
 				}
 			}
