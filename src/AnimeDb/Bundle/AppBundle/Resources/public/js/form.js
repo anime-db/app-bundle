@@ -267,8 +267,7 @@ FormLocalPathModelField.prototype = {
 		// if the root folder is set then the path must always start with him
 		var root = this.path.attr('data-root');
 		if (root) {
-			var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
-			if (!value.length || !reg.test(value)) {
+			if (!value.length || value.insexOf(root) !== 0) {
 				this.path.val(root);
 			}
 		}
@@ -344,8 +343,7 @@ FormLocalPathModelPopup.prototype = {
 			// if the root folder is set then the path must always start with him
 			var root = this.field.path.attr('data-root');
 			if (root) {
-				var reg = new RegExp('^'+root.replace(/\//g, '\\\/'));
-				if (!reg.test(this.path.val())) {
+				if (this.path.val().insexOf(root) !== 0) {
 					this.path.val(root);
 				}
 			}
@@ -616,13 +614,28 @@ var PopupContainer = {
 /**
  * Notice
  */
-var NoticeModel = function(container, block, close_url, see_later_url, close, see_later) {
+var NoticeModel = function(
+	container,
+	block,
+	close_url,
+	see_later_url,
+	close,
+	see_later,
+	offset,
+	message,
+	scroll_left,
+	scroll_right
+) {
 	this.container = container;
 	this.block = block;
 	this.close_url = close_url;
 	this.see_later_url = see_later_url;
 	this.close_button = close;
 	this.see_later_button = see_later;
+	this.offset = offset;
+	this.message = message;
+	this.scroll_left = scroll_left;
+	this.scroll_right = scroll_right;
 
 	var that = this;
 	this.close_button.click(function(){
@@ -631,6 +644,19 @@ var NoticeModel = function(container, block, close_url, see_later_url, close, se
 	this.see_later_button.click(function(){
 		that.seeLater();
 	});
+	// scroll buttons
+	if (offset > 0) {
+		this.scroll_left.hover(function() {
+			that.scrollLeft();
+		}, function() {
+			that.stopScroll();
+		}).show();
+		this.scroll_right.hover(function() {
+			that.scrollRight();
+		}, function() {
+			that.stopScroll();
+		}).show();
+	}
 };
 NoticeModel.prototype = {
 	close: function() {
@@ -664,6 +690,19 @@ NoticeModel.prototype = {
 				}
 			});
 		});
+	},
+	scrollLeft: function() {
+		this.message.stop().animate({
+			'margin-left': 0
+		}, 1500);
+	},
+	scrollRight: function() {
+		this.message.stop().animate({
+			'margin-left': -(this.offset)
+		}, 1500);
+	},
+	stopScroll: function() {
+		this.message.stop();
 	}
 };
 /**
@@ -691,30 +730,38 @@ NoticeContainerModel.prototype = {
 	show: function(data) {
 		data.notice;
 		var block = $(data.content);
+		var message = block.find('.b-message');
+		this.container.append(block);
 		this.notice = new NoticeModel(
 			this,
 			block,
 			data.close,
 			data.see_later,
 			block.find('.bt-close'),
-			block.find('.bt-see-later')
+			block.find('.bt-see-later'),
+			message.width() - block.find('.b-message-wrapper').width(),
+			message,
+			block.find('.bt-notice-scroll-left'),
+			block.find('.bt-notice-scroll-right')
 		);
-		this.container.append(this.notice.block);
 	}
 };
 
 /**
  * Check all
  */
-var CheckAllModel = function(checker, list) {
+var CheckAllToggle = function(checker, list) {
 	this.checker = checker;
 	this.list = list;
 	var that = this;
 	this.checker.click(function(){
 		that.change();
 	});
+	for (var i in this.list) {
+		this.list[i].setToggle(this);
+	}
 };
-CheckAllModel.prototype = {
+CheckAllToggle.prototype = {
 	change: function() {
 		if (this.checker.is(':checked')) {
 			this.all();
@@ -734,15 +781,28 @@ CheckAllModel.prototype = {
 	}
 };
 // Check all node
-var CheckAllNodeModel = function(checkbox) {
+var CheckAllNode = function(checkbox) {
 	this.checkbox = checkbox;
+	this.toggle;
+	var that = this;
+	this.checkbox.click(function(){
+		that.change();
+	});
 };
-CheckAllNodeModel.prototype = {
+CheckAllNode.prototype = {
+	change: function() {
+		if (!this.checkbox.is(':checked') && this.toggle) {
+			this.toggle.checker.prop('checked', false);
+		}
+	},
 	check: function() {
 		this.checkbox.prop('checked', true);
 	},
 	uncheck: function() {
 		this.checkbox.prop('checked', false);
+	},
+	setToggle: function(toggle) {
+		this.toggle = toggle;
 	}
 };
 // Check all in table
@@ -750,9 +810,9 @@ var TableCheckAllController = function(checker) {
 	var checkboxes = checker.parents('table').find('.'+checker.data('target'));
 	var list = [];
 	for (var i = 0; i < checkboxes.length; i++) {
-		list.push(new CheckAllNodeModel($(checkboxes[i])));
+		list.push(new CheckAllNode($(checkboxes[i])));
 	}
-	new CheckAllModel(checker, list);
+	new CheckAllToggle(checker, list);
 }
 
 /**
