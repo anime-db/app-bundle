@@ -18,6 +18,7 @@ use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Field\LocalPath\Choice as ChoiceLocalPath;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Form
@@ -75,13 +76,20 @@ class FormController extends Controller
             $path = $root;
         }
 
-        if (!is_dir($path) || !is_readable($path)) {
-            throw new NotFoundHttpException('Cen\'t read directory: '.$path);
-        }
-
         // add slash if need
         $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
         $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        $origin_path = $path;
+
+        // wrap fs
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            stream_wrapper_register('win', 'Patchwork\Utf8\WinFsStreamWrapper');
+            $path = 'win://'.$path;
+        }
+
+        if (!is_dir($path) || !is_readable($path)) {
+            throw new NotFoundHttpException('Cen\'t read directory: '.$origin_path);
+        }
 
         // caching
         $response = new JsonResponse();
@@ -100,31 +108,34 @@ class FormController extends Controller
         }
 
         // scan directory
-        $d = dir($path);
-        $folders = [];
-        while (false !== ($entry = $d->read())) {
-            if ($entry == '.' || !($realpath = realpath($path.$entry.DIRECTORY_SEPARATOR))) {
-                continue;
-            }
-            if ($realpath[strlen($realpath)-1] != DIRECTORY_SEPARATOR) {
-                $realpath .= DIRECTORY_SEPARATOR;
-            }
+        $finder = new Finder();
+        $finder
+            ->in($path)
+            ->directories()
+            ->ignoreUnreadableDirs()
+            ->depth('== 0')
+            // tmp files
+            ->notName('.DS_Store')
+            ->notName('._*')
+            ->notName('*~')
+            ->notName('.Spotlight-V100')
+            ->notName('.Trashes')
+            ->notName('ehthumbs.db')
+            ->notName('Thumbs.db')
+            ->notName('desktop.ini');
 
-            // if read path is root path then parent path is also equal to root
-            if ($realpath != $path && is_dir($realpath) &&
-                (($entry == '..' && (!$root || strpos($realpath, $root) === 0)) || $entry[0] != '.')
-            ) {
-                $folders[$entry] = [
-                    'name' => $entry,
-                    'path' => $realpath
-                ];
-            }
+        $folders = [];
+        /* @var $file \Symfony\Component\Finder\SplFileInfo */
+        foreach ($finder as $file) {
+            $folders[$file->getFilename()] = [
+                'name' => $file->getFilename(),
+                'path' => $origin_path.$file->getFilename()
+            ];
         }
-        $d->close();
         ksort($folders);
 
         return $response->setData([
-            'path' => $path,
+            'path' => $origin_path,
             'folders' => array_values($folders)
         ]);
     }
