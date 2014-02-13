@@ -90,8 +90,5 @@ class Project
         $parameters = Yaml::parse($this->root.'/config/parameters.yml');
         $parameters['parameters']['last_update'] = date('r');
         file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
-
-        // clear cache
-        $this->cache_clearer->clear();
     }
 }
