@@ -89,11 +89,13 @@ class Choice extends AbstractType
         // have drive and path env vars
         if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
             $home = getenv('HOMEDRIVE').getenv('HOMEPATH');
+            $home = iconv('cp1251', 'utf-8', $home);
             return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
         }
 
         // Windows
         $username = get_current_user() ?: getenv('USERNAME');
+        $username = iconv('cp1251', 'utf-8', $username);
         if ($username && is_dir($win7path = 'C:\Users\\'.$username.'\\')) { // is Vista or older
             return $win7path;
         } elseif ($username) {
