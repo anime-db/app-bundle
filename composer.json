@@ -26,10 +26,9 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "anime-db/anime-db": "0.3.*"
-    },
-    "suggest": {
-        "ext-com_dotnet": "Allows to switch between drives in Windows"
+        "ext-com_dotnet": "*",
+        "anime-db/anime-db": "0.3.*",
+        "patchwork/utf8": "dev-lab-windows-fs"
     },
     "minimum-stability": "dev"
 }
