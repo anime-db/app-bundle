@@ -129,7 +129,7 @@ class FormController extends Controller
         foreach ($finder as $file) {
             $folders[$file->getFilename()] = [
                 'name' => $file->getFilename(),
-                'path' => $origin_path.$file->getFilename()
+                'path' => $origin_path.$file->getFilename().DIRECTORY_SEPARATOR
             ];
         }
         ksort($folders);
