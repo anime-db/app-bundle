@@ -8,20 +8,20 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\AppBundle\Service;
+namespace AnimeDb\Bundle\AppBundle\Util;
 
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node\Current;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node\First;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node\Last;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node\Next;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node\Page;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node\Previous;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Page;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Previous;
 
 /**
  * Pagination service
  *
- * @package AnimeDb\Bundle\AppBundle\Service
+ * @package AnimeDb\Bundle\AppBundle\Util
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Pagination
@@ -209,7 +209,7 @@ class Pagination
      *
      * @param string $type
      *
-     * @return \AnimeDb\Bundle\AppBundle\Service\Pagination\Node
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
      */
     protected function getNode($type) {
         switch ($type) {
