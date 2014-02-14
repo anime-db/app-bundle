@@ -19,7 +19,7 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Page;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Previous;
 
 /**
- * Pagination service
+ * Pagination
  *
  * @package AnimeDb\Bundle\AppBundle\Util
  * @author  Peter Gribanov <info@peter-gribanov.ru>
