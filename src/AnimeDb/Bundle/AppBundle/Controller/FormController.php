@@ -75,13 +75,20 @@ class FormController extends Controller
             $path = $root;
         }
 
-        if (!is_dir($path) || !is_readable($path)) {
-            throw new NotFoundHttpException('Cen\'t read directory: '.$path);
-        }
-
         // add slash if need
         $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
         $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        $origin_path = $path;
+
+        // wrap fs
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            stream_wrapper_register('win', 'Patchwork\Utf8\WinFsStreamWrapper');
+            $path = 'win://'.$path;
+        }
+
+        if (!is_dir($path) || !is_readable($path)) {
+            throw new NotFoundHttpException('Cen\'t read directory: '.$origin_path);
+        }
 
         // caching
         $response = new JsonResponse();
@@ -100,31 +107,34 @@ class FormController extends Controller
         }
 
         // scan directory
-        $d = dir($path);
         $folders = [];
-        while (false !== ($entry = $d->read())) {
-            if ($entry == '.' || !($realpath = realpath($path.$entry.DIRECTORY_SEPARATOR))) {
-                continue;
-            }
-            if ($realpath[strlen($realpath)-1] != DIRECTORY_SEPARATOR) {
-                $realpath .= DIRECTORY_SEPARATOR;
-            }
-
-            // if read path is root path then parent path is also equal to root
-            if ($realpath != $path && is_dir($realpath) &&
-                (($entry == '..' && (!$root || strpos($realpath, $root) === 0)) || $entry[0] != '.')
+        /* @var $file \SplFileInfo */
+        foreach (new \DirectoryIterator($path) as $file) {
+            if (
+                !in_array($file->getFilename(), ['.', '..', '.Spotlight-V100', '.Trashes', 'pagefile.sys']) &&
+                !preg_match('/~$/', $file->getFilename()) &&
+                !preg_match('/^\._/', $file->getFilename()) &&
+                $file->isDir() && $file->isReadable()
             ) {
-                $folders[$entry] = [
-                    'name' => $entry,
-                    'path' => $realpath
+                $folders[$file->getFilename()] = [
+                    'name' => $file->getFilename(),
+                    'path' => $origin_path.$file->getFilename().DIRECTORY_SEPARATOR
                 ];
             }
         }
-        $d->close();
         ksort($folders);
 
+        // add link on parent folder
+        if (substr_count($origin_path, DIRECTORY_SEPARATOR) > 1) {
+            $pos = strrpos(substr($origin_path, 0, -1), DIRECTORY_SEPARATOR) + 1;
+            array_unshift($folders, [
+                'name' => '..',
+                'path' => substr($origin_path, 0, $pos)
+            ]);
+        }
+
         return $response->setData([
-            'path' => $path,
+            'path' => $origin_path,
             'folders' => array_values($folders)
         ]);
     }
@@ -205,11 +215,13 @@ class FormController extends Controller
         // have drive and path env vars
         if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
             $home = getenv('HOMEDRIVE').getenv('HOMEPATH');
+            $home = iconv('cp1251', 'utf-8', $home);
             return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
         }
 
         // Windows
         $username = get_current_user() ?: getenv('USERNAME');
+        $username = iconv('cp1251', 'utf-8', $username);
         if ($username && is_dir($win7path = 'C:\Users\\'.$username.'\\')) { // is Vista or older
             return $win7path;
         } elseif ($username) {
