@@ -115,14 +115,10 @@ class FormController extends Controller
             ->ignoreUnreadableDirs()
             ->depth('== 0')
             // tmp files
-            ->notName('.DS_Store')
             ->notName('._*')
             ->notName('*~')
             ->notName('.Spotlight-V100')
-            ->notName('.Trashes')
-            ->notName('ehthumbs.db')
-            ->notName('Thumbs.db')
-            ->notName('desktop.ini');
+            ->notName('.Trashes');
 
         $folders = [];
         /* @var $file \Symfony\Component\Finder\SplFileInfo */
