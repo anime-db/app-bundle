@@ -18,7 +18,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Field\LocalPath\Choice as ChoiceLocalPath;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Form
@@ -108,35 +107,29 @@ class FormController extends Controller
         }
 
         // scan directory
-        $finder = new Finder();
-        $finder
-            ->in($path)
-            ->directories()
-            ->ignoreUnreadableDirs()
-            ->depth('== 0')
-            // tmp files
-            ->notName('._*')
-            ->notName('*~')
-            ->notName('.Spotlight-V100')
-            ->notName('.Trashes');
-
         $folders = [];
-        /* @var $file \Symfony\Component\Finder\SplFileInfo */
-        foreach ($finder as $file) {
-            $folders[$file->getFilename()] = [
-                'name' => $file->getFilename(),
-                'path' => $origin_path.$file->getFilename().DIRECTORY_SEPARATOR
-            ];
+        /* @var $file \SplFileInfo */
+        foreach (new \DirectoryIterator($path) as $file) {
+            if (
+                !in_array($file->getFilename(), ['.', '..', '.Spotlight-V100', '.Trashes', 'pagefile.sys']) &&
+                !preg_match('/~$/', $file->getFilename()) &&
+                !preg_match('/^\._/', $file->getFilename()) &&
+                $file->isDir() && $file->isReadable()
+            ) {
+                $folders[$file->getFilename()] = [
+                    'name' => $file->getFilename(),
+                    'path' => $origin_path.$file->getFilename().DIRECTORY_SEPARATOR
+                ];
+            }
         }
         ksort($folders);
 
         // add link on parent folder
         if (substr_count($origin_path, DIRECTORY_SEPARATOR) > 1) {
-            $list = explode(DIRECTORY_SEPARATOR, substr($origin_path, 0, -1));
-            array_pop($list);
+            $pos = strrpos(substr($origin_path, 0, -1), DIRECTORY_SEPARATOR) + 1;
             array_unshift($folders, [
                 'name' => '..',
-                'path' => implode(DIRECTORY_SEPARATOR, $list).DIRECTORY_SEPARATOR
+                'path' => substr($origin_path, 0, $pos)
             ]);
         }
 
