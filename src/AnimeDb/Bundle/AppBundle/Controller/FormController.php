@@ -130,6 +130,16 @@ class FormController extends Controller
         }
         ksort($folders);
 
+        // add link on parent folder
+        if (substr_count($origin_path, DIRECTORY_SEPARATOR) > 1) {
+            $list = explode(DIRECTORY_SEPARATOR, substr($origin_path, 0, -1));
+            array_pop($list);
+            array_unshift($folders, [
+                'name' => '..',
+                'path' => implode(DIRECTORY_SEPARATOR, $list).DIRECTORY_SEPARATOR
+            ]);
+        }
+
         return $response->setData([
             'path' => $origin_path,
             'folders' => array_values($folders)
