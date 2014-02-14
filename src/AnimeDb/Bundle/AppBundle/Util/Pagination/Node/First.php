@@ -8,37 +8,37 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\AppBundle\Service\Pagination\Node;
+namespace AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 
-use AnimeDb\Bundle\AppBundle\Service\Pagination;
-use AnimeDb\Bundle\AppBundle\Service\Pagination\Node;
+use AnimeDb\Bundle\AppBundle\Util\Pagination;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 
 /**
- * Node for previous page
+ * Node for first page
  *
- * @package AnimeDb\Bundle\AppBundle\Service\Pagination\Node
+ * @package AnimeDb\Bundle\AppBundle\Util\Pagination\Node
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Previous extends Node
+class First extends Node
 {
     /**
      * Name
      *
      * @var string
      */
-    protected $name = '←';
+    protected $name = '‹‹';
 
     /**
      * Node title
      *
      * @var string
      */
-    protected $title = 'Go to the previous page';
+    protected $title = 'Go to the first page';
 
     /**
      * Page number
      *
      * @var string
      */
-    protected $type = Pagination::TYPE_PREV;
+    protected $type = Pagination::TYPE_FIRST;
 }
