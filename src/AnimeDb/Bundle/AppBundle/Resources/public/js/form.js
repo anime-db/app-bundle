@@ -315,7 +315,7 @@ var FormLocalPathModelPopup = function(popup, path, letter, button, folders, pro
 	});
 	if (this.letter) {
 		this.letter.change(function() {
-			that.path.val(that.letter.val()+':\\');
+			that.change(that.letter.val()+':\\');
 		});
 	}
 };
