@@ -18,6 +18,7 @@ use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Field\LocalPath\Choice as ChoiceLocalPath;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 
 /**
  * Form
@@ -69,7 +70,7 @@ class FormController extends Controller
     {
         $form = $this->createForm(new ChoiceLocalPath());
         $form->handleRequest($request);
-        $path = $form->get('path')->getData() ?: $this->getUserHomeDir();
+        $path = $form->get('path')->getData() ?: Filesystem::getUserHomeDir();
 
         if (($root = $request->get('root')) && strpos($path, $root) !== 0) {
             $path = $root;
@@ -192,44 +193,6 @@ class FormController extends Controller
             ]);
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $this->get('translator')->trans($e->getMessage())], 404);
-        }
-    }
-
-    /**
-     * Get user home dir
-     *
-     * @return string
-     */
-    protected function getUserHomeDir() {
-        // have home env var
-        if ($home = getenv('HOME')) {
-            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
-        }
-
-        // *nix os
-        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $username = get_current_user() ?: getenv('USERNAME');
-            return '/home/'.($username ? $username.'/' : '');
-        }
-
-        // have drive and path env vars
-        if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
-            $home = getenv('HOMEDRIVE').getenv('HOMEPATH');
-            $home = iconv('cp1251', 'utf-8', $home);
-            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
-        }
-
-        // Windows
-        $username = get_current_user() ?: getenv('USERNAME');
-        $username = iconv('cp1251', 'utf-8', $username);
-        if ($username && is_dir($win7path = 'C:\Users\\'.$username.'\\')) { // is Vista or older
-            return $win7path;
-        } elseif ($username) {
-            return 'C:\Documents and Settings\\'.$username.'\\';
-        } elseif (is_dir('C:\Users\\')) { // is Vista or older
-            return 'C:\Users\\';
-        } else {
-            return 'C:\Documents and Settings\\';
         }
     }
 }
