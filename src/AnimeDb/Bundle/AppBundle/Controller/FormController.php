@@ -113,8 +113,8 @@ class FormController extends Controller
         foreach (new \DirectoryIterator($path) as $file) {
             if (
                 !in_array($file->getFilename(), ['.', '..', '.Spotlight-V100', '.Trashes', 'pagefile.sys']) &&
-                !preg_match('/~$/', $file->getFilename()) &&
-                !preg_match('/^\._/', $file->getFilename()) &&
+                substr($file->getFilename(), -1) != '~' &&
+                $file->getFilename()[0] != '.' &&
                 $file->isDir() && $file->isReadable()
             ) {
                 $folders[$file->getFilename()] = [
