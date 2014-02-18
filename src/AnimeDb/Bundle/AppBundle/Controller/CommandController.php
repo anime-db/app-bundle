@@ -48,11 +48,7 @@ class CommandController extends Controller
 
         // change path to console
         $root = $this->container->getParameter('kernel.root_dir');
-        $command = str_replace(
-            [' app/console ', ' app\console '],
-            ' '.escapeshellarg($root.DIRECTORY_SEPARATOR.'console').' ',
-            $command
-        );
+        $command = str_replace(' app/console ', ' '.escapeshellarg($root.DIRECTORY_SEPARATOR.'console').' ', $command);
 
         // change /dev/null for Windows
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
