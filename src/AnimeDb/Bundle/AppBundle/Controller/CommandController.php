@@ -43,7 +43,7 @@ class CommandController extends Controller
             if (!($phpPath = $phpFinder->find())) {
                 throw new \RuntimeException('The php executable could not be found, add it to your PATH environment variable and try again');
             }
-            $command = escapeshellarg($phpPath).substr($command, 4);
+            $command = escapeshellarg($phpPath).substr($command, 3);
         }
 
         // change path to console
