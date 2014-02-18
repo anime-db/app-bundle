@@ -6,6 +6,10 @@ services:
     anime_db.cache_clearer:
         class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
         arguments: [ @kernel, %kernel.root_dir% ]
+    anime_db.command:
+        class: AnimeDb\Bundle\AppBundle\Service\Command
+        arguments: [ @request, @router ]
+        scope: request
 
     anime_db.assets:
         class: AnimeDb\Bundle\AppBundle\Service\Assets
