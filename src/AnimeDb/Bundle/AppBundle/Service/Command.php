@@ -57,6 +57,13 @@ class Command
     /**
      * Execute command
      *
+     * Example:
+     * <code>
+     *   php app/console cache:clear > /dev/null 2>&1
+     *   php composer.phar update
+     *   ping > ping.log
+     * <code>
+     * 
      * @param string $command
      */
     public function exec($command)
