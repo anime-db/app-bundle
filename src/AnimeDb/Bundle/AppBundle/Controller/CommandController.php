@@ -34,6 +34,7 @@ class CommandController extends Controller
     {
         ignore_user_abort(true);
         set_time_limit(0);
+        ini_set('memory_limit', -1);
 
         $command = $request->get('command');
 
