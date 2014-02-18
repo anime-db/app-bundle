@@ -54,6 +54,11 @@ class CommandController extends Controller
             $command
         );
 
+        // change /dev/null for Windows
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $command = str_replace('/dev/null', 'nul', $command);
+        }
+
         chdir($root.'/../');
 
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
