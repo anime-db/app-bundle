@@ -71,13 +71,16 @@ class Command
         if (!$command) {
             throw new \InvalidArgumentException('Unknown command');
         }
+        $content = 'command='.urlencode($command);
 
         $fp = fsockopen($this->host, 80, $errno, $errstr, self::TIMEOUT);
-        $out = "POST ".$this->path." HTTP/1.1\r\n";
-        $out .= "Host: ".$this->host."\r\n";
-        $out .= "Connection: Close\r\n\r\n";
-        $out .= "command=".urlencode($command)."\r\n";
-        fwrite($fp, $out);
+        $request  = "POST ".$this->path." HTTP/1.1\r\n";
+        $request .= "Host: ".$this->host."\r\n";
+        $request .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $request .= "Content-Length: ".strlen($content)."\r\n";
+        $request .= "Connection: Close\r\n\r\n";
+        $request .= $content;
+        fwrite($fp, $request);
         fclose($fp);
     }
 }
