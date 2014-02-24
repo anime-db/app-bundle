@@ -112,9 +112,9 @@ class FormController extends Controller
         /* @var $file \SplFileInfo */
         foreach (new \DirectoryIterator($path) as $file) {
             if (
-                !in_array($file->getFilename(), ['.', '..', '.Spotlight-V100', '.Trashes', 'pagefile.sys']) &&
-                substr($file->getFilename(), -1) != '~' &&
                 $file->getFilename()[0] != '.' &&
+                substr($file->getFilename(), -1) != '~' &&
+                $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
                 $file->isDir() && $file->isReadable()
             ) {
                 $folders[$file->getFilename()] = [
