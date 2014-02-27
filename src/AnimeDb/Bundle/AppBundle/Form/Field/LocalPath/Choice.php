@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\AppBundle\Form\Field\LocalPath;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 
 /**
  * Local path choice form
@@ -34,7 +35,7 @@ class Choice extends AbstractType
                 'label' => 'Path',
                 'required' => true,
                 'attr' => [
-                    'placeholder' => $this->getUserHomeDir()
+                    'placeholder' => Filesystem::getUserHomeDir()
                 ]
             ]);
 
@@ -67,43 +68,5 @@ class Choice extends AbstractType
     public function getName()
     {
         return 'local_path_popup';
-    }
-
-    /**
-     * Get user home dir
-     *
-     * @return string
-     */
-    protected function getUserHomeDir() {
-        // have home env var
-        if ($home = getenv('HOME')) {
-            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
-        }
-
-        // *nix OS
-        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $username = get_current_user() ?: getenv('USERNAME');
-            return '/home/'.($username ? $username.'/' : '');
-        }
-
-        // have drive and path env vars
-        if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
-            $home = getenv('HOMEDRIVE').getenv('HOMEPATH');
-            $home = iconv('cp1251', 'utf-8', $home);
-            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
-        }
-
-        // Windows
-        $username = get_current_user() ?: getenv('USERNAME');
-        $username = iconv('cp1251', 'utf-8', $username);
-        if ($username && is_dir($win7path = 'C:\Users\\'.$username.'\\')) { // is Vista or older
-            return $win7path;
-        } elseif ($username) {
-            return 'C:\Documents and Settings\\'.$username.'\\';
-        } elseif (is_dir('C:\Users\\')) { // is Vista or older
-            return 'C:\Users\\';
-        } else {
-            return 'C:\Documents and Settings\\';
-        }
     }
 }
