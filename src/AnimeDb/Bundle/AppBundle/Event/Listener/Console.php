@@ -54,7 +54,7 @@ class Console
     {
         $this->translatable = $translatable;
         $this->translator = $translator;
-        $this->locale = $locale;
+        $this->locale = $locale ?: 'en';
     }
 
     /**
@@ -66,6 +66,6 @@ class Console
     {
         setlocale(LC_ALL, $this->locale);
         $this->translator->setLocale($this->locale);
-        $this->translatable->setTranslatableLocale($this->locale);
+        $this->translatable->setTranslatableLocale(substr($this->locale, 0, 2));
     }
 }

@@ -3,7 +3,7 @@
 {% set popup_id = 'f-path-popup' %}
 
 {% set content %}
-<form action="{{ path('form_local_path_folders') }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('form_local_path_folders') }}" method="get" {{ form_enctype(form) }}>
 	<div class="f-row">
 		<table class="t-path">
 			<tr>

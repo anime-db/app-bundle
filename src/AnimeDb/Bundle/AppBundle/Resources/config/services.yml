@@ -1,6 +1,15 @@
 services:
     anime_db.pagination:
-        class: AnimeDb\Bundle\AppBundle\Service\Pagination
+        class: AnimeDb\Bundle\AppBundle\Util\Pagination
+    anime_db.filesystem:
+        class: AnimeDb\Bundle\AppBundle\Util\Filesystem
+    anime_db.cache_clearer:
+        class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
+        arguments: [ @kernel, %kernel.root_dir% ]
+    anime_db.command:
+        class: AnimeDb\Bundle\AppBundle\Service\Command
+        arguments: [ @request, @router ]
+        scope: request
 
     anime_db.assets:
         class: AnimeDb\Bundle\AppBundle\Service\Assets
@@ -19,7 +28,7 @@ services:
     anime_db.listener.request:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Request
         tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255 }]
-        arguments: [ @gedmo.listener.translatable, @validator, @service_container ]
+        arguments: [ @gedmo.listener.translatable, @validator, @service_container, @anime_db.cache_clearer, %kernel.root_dir% ]
 
     # Console listener
     anime_db.listener.console:
@@ -38,12 +47,14 @@ services:
 
     anime_db.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine.orm.entity_manager ]
-        tags: [{ name: kernel.event_listener, event: anime_db.project.updated, method: onUpdated }]
+        arguments: [ @doctrine.orm.entity_manager, @anime_db.cache_clearer, %kernel.root_dir% ]
+        tags: 
+            - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
+            - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
 
     anime_db.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ @doctrine.orm.entity_manager, @filesystem, %locale% ]
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }

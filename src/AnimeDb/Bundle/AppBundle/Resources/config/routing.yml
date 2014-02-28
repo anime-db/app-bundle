@@ -44,3 +44,9 @@ media_favicon:
     requirements:
         host: .+
     defaults: { _controller: AnimeDbAppBundle:Media:favicon }
+
+
+command_exec:
+    pattern:  /command/exec.html
+    defaults: { _controller: AnimeDbAppBundle:Command:exec }
+    methods:  [POST]

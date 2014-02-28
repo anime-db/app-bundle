@@ -13,6 +13,8 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Doctrine\ORM\EntityManager;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
+use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Project listener
@@ -30,13 +32,31 @@ class Project
     protected $em;
 
     /**
+     * Cache clearer
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Service\CacheClearer
+     */
+    protected $cache_clearer;
+
+    /**
+     * Root dir
+     *
+     * @var string
+     */
+    protected $root;
+
+    /**
      * Construct
      *
      * @param \Doctrine\ORM\EntityManager $em
+     * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
+     * @param string $root
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, CacheClearer $cache_clearer, $root)
     {
         $this->em = $em;
+        $this->cache_clearer = $cache_clearer;
+        $this->root = $root;
     }
 
     /**
@@ -44,7 +64,7 @@ class Project
      *
      * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated $event
      */
-    public function onUpdated(UpdatedEvent $event)
+    public function onUpdatedProposeUpdateTask(UpdatedEvent $event)
     {
         /* @var $task \AnimeDb\Bundle\AppBundle\Entity\Task */
         $task = $this->em
@@ -57,5 +77,18 @@ class Project
 
         $this->em->persist($task);
         $this->em->flush();
+    }
+
+    /**
+     * Update last update date
+     *
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated $event
+     */
+    public function onUpdatedSaveLastUpdateDate(UpdatedEvent $event)
+    {
+        // update params
+        $parameters = Yaml::parse($this->root.'/config/parameters.yml');
+        $parameters['parameters']['last_update'] = date('r');
+        file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
     }
 }
