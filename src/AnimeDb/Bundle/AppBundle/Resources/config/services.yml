@@ -35,8 +35,7 @@ services:
             - @validator,
             - @service_container,
             - @anime_db.cache_clearer,
-            - %kernel.root_dir%,
-            - %last_update%
+            - %kernel.root_dir%
 
     # Console listener
     anime_db.listener.console:
