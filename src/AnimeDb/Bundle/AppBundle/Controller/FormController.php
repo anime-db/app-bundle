@@ -40,7 +40,6 @@ class FormController extends Controller
         $response = new Response();
         // caching
         if ($last_update = $this->container->getParameter('last_update')) {
-            $response->setPublic();
             $response->setLastModified(new \DateTime($last_update));
 
             // response was not modified for this request
@@ -93,9 +92,8 @@ class FormController extends Controller
 
         // caching
         $response = new JsonResponse();
-        $response->setPublic();
         $response->setLastModified(new \DateTime('@'.filemtime($path)));
-        if ( // poject update date
+        if ( // project update date
             ($last_update = $this->container->getParameter('last_update')) &&
             ($last_update = new \DateTime($last_update)) > $response->getLastModified()
         ) {
@@ -151,7 +149,6 @@ class FormController extends Controller
         $response = new Response();
         // caching
         if ($last_update = $this->container->getParameter('last_update')) {
-            $response->setPublic();
             $response->setLastModified(new \DateTime($last_update));
 
             // response was not modified for this request
