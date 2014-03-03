@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Request listener
@@ -64,6 +65,13 @@ class Request
     protected $root;
 
     /**
+     * App last update date
+     *
+     * @var \DateTime|null
+     */
+    protected $last_update;
+
+    /**
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
@@ -71,19 +79,22 @@ class Request
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
      * @param string $root
+     * @param string $last_update
      */
     public function __construct(
         TranslatableListener $translatable,
         Validator $validator,
         ContainerInterface $container,
         CacheClearer $cache_clearer,
-        $root
+        $root,
+        $last_update
     ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
         $this->container = $container;
         $this->cache_clearer = $cache_clearer;
         $this->root = $root;
+        $this->last_update = $last_update ? new \DateTime($last_update) : null;
     }
 
     /**
@@ -152,5 +163,24 @@ class Request
 
         // get default locale
         return $request->getLocale();
+    }
+
+    /**
+     * Kernel response handler
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        // cache response
+        $response = $event->getResponse();
+        if ($response->getLastModified()) {
+            $response->setPublic();
+            $response->headers->addCacheControlDirective('must-revalidate', true);
+            // use app last update
+            if ($this->last_update && $response->getLastModified() < $this->last_update) {
+                $response->setLastModified($this->last_update);
+            }
+        }
     }
 }
