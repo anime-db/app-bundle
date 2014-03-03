@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Request listener
@@ -152,5 +153,19 @@ class Request
 
         // get default locale
         return $request->getLocale();
+    }
+
+    /**
+     * Kernel response handler
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        // cache response
+        if ($event->getResponse()->getLastModified()) {
+            $event->getResponse()->setPublic();
+            $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+        }
     }
 }
