@@ -69,8 +69,8 @@ class Version20131223134044_AddNoticeDateStart extends AbstractMigration
                 "notice"
         ');
         // rename new to origin and drop origin
-        $this->addSql('ALTER TABLE storage RENAME TO _origin');
-        $this->addSql('ALTER TABLE _new RENAME TO storage');
+        $this->addSql('ALTER TABLE notice RENAME TO _origin');
+        $this->addSql('ALTER TABLE _new RENAME TO notice');
         $this->addSql('DROP TABLE _origin');
 
         $this->addSql('CREATE INDEX notice_show_idx ON notice (date_closed, date_created)');
