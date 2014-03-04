@@ -46,7 +46,10 @@ class NoticeController extends Controller
         $notice = $repository->getFirstShow();
         // caching
         $response = new JsonResponse();
-        $response->setPublic();
+        // project update date
+        if ($last_update = $this->container->getParameter('last_update')) {
+            $response->setLastModified(new \DateTime($last_update));
+        }
         $response->setEtag(md5($notice ? $notice->getId() : 0));
 
         // response was not modified for this request

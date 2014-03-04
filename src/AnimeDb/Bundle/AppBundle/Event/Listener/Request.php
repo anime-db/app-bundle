@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Request listener
@@ -93,6 +94,10 @@ class Request
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+            return;
+        }
+
         /* @var $request \Symfony\Component\HttpFoundation\Request */
         $request = $event->getRequest();
 
@@ -152,5 +157,36 @@ class Request
 
         // get default locale
         return $request->getLocale();
+    }
+
+    /**
+     * Kernel response handler
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+            return;
+        }
+
+        // cache response
+        $response = $event->getResponse();
+        if ($response->getLastModified()) {
+            $response->setPublic();
+            $response->headers->addCacheControlDirective('must-revalidate', true);
+        }
+
+        // compress response
+        if ($encoding = $event->getRequest()->headers->get('Accept-Encoding')) {
+            if (stripos($encoding, 'gzip') !== false) {
+                $response->setContent(gzencode($response->getContent(), 9, FORCE_GZIP));
+                $response->headers->set('Content-Encoding', 'gzip');
+
+            } elseif (stripos($encoding, 'deflate') !== false) {
+                $response->setContent(gzencode($response->getContent(), 9, FORCE_DEFLATE));
+                $response->headers->set('Content-Encoding', 'deflate');
+            }
+        }
     }
 }

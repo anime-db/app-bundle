@@ -22,15 +22,26 @@ class AssetsController extends Controller
 {
 
     /**
-     * Show assets stylesheets and javascripts
+     * Show assets javascripts
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction()
+    public function jsAction()
     {
-        return $this->render('AnimeDbAppBundle:Assets:show.html.twig', [
-            'css' => $this->get('anime_db.assets')->getStylesheetPaths(),
-            'js' => $this->get('anime_db.assets')->getJavaScriptsPaths()
+        return $this->render('AnimeDbAppBundle:Assets:js.html.twig', [
+            'paths' => $this->get('anime_db.assets')->getJavaScriptsPaths()
+        ]);
+    }
+
+    /**
+     * Show assets stylesheets
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cssAction()
+    {
+        return $this->render('AnimeDbAppBundle:Assets:css.html.twig', [
+            'paths' => $this->get('anime_db.assets')->getStylesheetPaths()
         ]);
     }
 }
