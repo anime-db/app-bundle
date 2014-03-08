@@ -104,7 +104,6 @@ class NoticeController extends Controller
     {
         $time = time();
         $start = date('Y-m-d H:i:s', $time+self::SEE_LATER_INTERVAL);
-        $close = date('Y-m-d H:i:s', $time+self::SEE_LATER_INTERVAL+Notice::DEFAULT_LIFETIME);
         $time = date('Y-m-d H:i:s', $time);
         $em = $this->getDoctrine()->getManager();
 
@@ -134,53 +133,11 @@ class NoticeController extends Controller
                 WHERE
                     n.status != :closed AND
                     n.date_closed IS NOT NULL AND
-                    n.date_closed > :time AND
-                    DATETIME(n.date_closed, \'+'.self::SEE_LATER_INTERVAL.' seconds\') > :time
+                    n.date_closed > :time
             ')
             ->setParameter('start', $start)
             ->setParameter('closed', Notice::STATUS_CLOSED)
             ->setParameter('time', $time)
-            ->execute();
-
-        // calculating the closing date
-        $em
-            ->createQuery('
-                UPDATE
-                    AnimeDbAppBundle:Notice n
-                SET
-                    n.date_start = :start,
-                    n.date_closed = DATETIME(:start, \'+ n.lifetime seconds\')
-                WHERE
-                    n.status != :closed AND
-                    n.date_closed IS NOT NULL AND
-                    n.date_closed > :time AND
-                    DATETIME(n.date_closed, \'+'.self::SEE_LATER_INTERVAL.' seconds\') <= :time AND
-                    n.lifetime > 0
-            ')
-            ->setParameter('start', $start)
-            ->setParameter('closed', Notice::STATUS_CLOSED)
-            ->setParameter('time', $time)
-            ->execute();
-
-        // calculating the closing date using the default lifetime
-        $em
-            ->createQuery('
-                UPDATE
-                    AnimeDbAppBundle:Notice n
-                SET
-                    n.date_start = :start,
-                    n.date_closed = :date_closed
-                WHERE
-                    n.status != :closed AND
-                    n.date_closed IS NOT NULL AND
-                    n.date_closed > :time AND
-                    DATETIME(n.date_closed, \'+'.self::SEE_LATER_INTERVAL.' seconds\') <= :time AND
-                    n.lifetime <= 0
-            ')
-            ->setParameter('start', $start)
-            ->setParameter('closed', Notice::STATUS_CLOSED)
-            ->setParameter('time', $time)
-            ->setParameter('date_closed', $close)
             ->execute();
 
         return new JsonResponse([]);
