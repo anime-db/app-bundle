@@ -102,21 +102,44 @@ class NoticeController extends Controller
      */
     public function seeLaterAction()
     {
-        // increase the date start display notice
-        $this->getDoctrine()
-            ->getManager()
+        $time = time();
+        $start = date('Y-m-d H:i:s', $time+self::SEE_LATER_INTERVAL);
+        $time = date('Y-m-d H:i:s', $time);
+        $em = $this->getDoctrine()->getManager();
+
+        // not shown notice
+        $em
             ->createQuery('
                 UPDATE
                     AnimeDbAppBundle:Notice n
                 SET
-                    n.date_start = DATETIME(n.date_start, \'+'.self::SEE_LATER_INTERVAL.' seconds\')
+                    n.date_start = :start
                 WHERE
                     n.status != :closed AND
-                    (n.date_closed IS NULL OR n.date_closed >= :time)
+                    n.date_closed IS NULL
             ')
+            ->setParameter('start', $start)
             ->setParameter('closed', Notice::STATUS_CLOSED)
-            ->setParameter('time', date('Y-m-d H:i:s'))
             ->execute();
+
+        // rigidly set closing date
+        $em
+            ->createQuery('
+                UPDATE
+                    AnimeDbAppBundle:Notice n
+                SET
+                    n.date_start = :start,
+                    n.date_closed = DATETIME(n.date_closed, \'+'.self::SEE_LATER_INTERVAL.' seconds\')
+                WHERE
+                    n.status != :closed AND
+                    n.date_closed IS NOT NULL AND
+                    n.date_closed > :time
+            ')
+            ->setParameter('start', $start)
+            ->setParameter('closed', Notice::STATUS_CLOSED)
+            ->setParameter('time', $time)
+            ->execute();
+
         return new JsonResponse([]);
     }
 }
