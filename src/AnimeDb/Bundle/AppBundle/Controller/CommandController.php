@@ -59,7 +59,7 @@ class CommandController extends Controller
         chdir($root.'/../');
 
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            pclose(popen('start /b '.$command, 'r'));
+            pclose(popen('start /b call '.$command, 'r'));
         } else {
             exec($command.' &');
         }
