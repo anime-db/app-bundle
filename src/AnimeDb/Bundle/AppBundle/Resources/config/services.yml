@@ -20,7 +20,7 @@ services:
     # Twig extension
     anime_db.app_twig_extension:
         class: AnimeDb\Bundle\AppBundle\Service\TwigExtension
-        arguments: [@router, @fragment.handler, @anime_db.widgets, %hinclude%]
+        arguments: [@router, @fragment.handler, @anime_db.widgets]
         tags:
             - { name: twig.extension }
 

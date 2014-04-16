@@ -45,30 +45,20 @@ class TwigExtension extends \Twig_Extension
     private $widgets;
 
     /**
-     * Hinclude loader template
-     *
-     * @var string
-     */
-    private $hinclude;
-
-    /**
      * Construct
      *
      * @param \Symfony\Bundle\FrameworkBundle\Routing\Router $router
      * @param \Symfony\Component\HttpKernel\Fragment\FragmentHandler $handler
      * @param \AnimeDb\Bundle\AppBundle\Service\WidgetsContainer $widgets
-     * @param string $hinclude
      */
     public function __construct(
         Router $router,
         FragmentHandler $handler,
-        WidgetsContainer $widgets,
-        $hinclude
+        WidgetsContainer $widgets
     ) {
         $this->router = $router;
         $this->handler = $handler;
         $this->widgets = $widgets;
-        $this->hinclude = $hinclude;
     }
 
     /**
@@ -116,10 +106,6 @@ class TwigExtension extends \Twig_Extension
      */
     public function widgets($place, $attributes = [], $options = [])
     {
-        $options = array_merge([
-            'default' => $this->hinclude
-        ], $options);
-
         $result = '';
         foreach ($this->widgets->getWidgetsForPlace($place) as $controller) {
             $result .= $this->handler->render(
