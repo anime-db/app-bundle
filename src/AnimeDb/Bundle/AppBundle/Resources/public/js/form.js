@@ -720,6 +720,7 @@ NoticeContainerModel.prototype = {
 		this.notice = null;
 		$.ajax({
 			url: this.from,
+			ifModified: true,
 			complete: function(jqXHR, textStatus) {
 				var data;
 				if (
