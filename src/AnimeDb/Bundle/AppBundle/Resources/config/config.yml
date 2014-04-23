@@ -7,3 +7,7 @@ doctrine:
 twig:
     form:
         resources: ['AnimeDbAppBundle:Form:fields.html.twig']
+
+framework:
+    templating:
+        hinclude_default_template: 'AnimeDbAppBundle::hinclude.html.twig'
