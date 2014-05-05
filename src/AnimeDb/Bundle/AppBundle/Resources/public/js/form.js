@@ -972,7 +972,7 @@ var FormRefillSearchItem = function(form, popup, link) {
 FormRefillSearchItem.prototype = {
 	refill: function() {
 		this.popup.hide();
-		var source = decodeURIComponent(this.link.attr('href')).replace(/^.*(?:\?|&)source=([^&]+).*$/, '$1');
+		var source = decodeURIComponent(this.link.attr('href')).replace(/^.*(?:\?|&)source=(.*)$/, '$1');
 		if (source) {
 			this.form.canRefill();
 			this.form.sources.add().row.find('input').val(source);
