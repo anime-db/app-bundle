@@ -898,6 +898,8 @@ FormRefill.prototype = {
 		);
 	},
 	showPopup: function(name, url, handler) {
+		var group = name;
+		name +=  '-plugin-' + this.button.data('plugin');
 		handler = handler || function() {};
 		var that = this;
 
@@ -911,6 +913,7 @@ FormRefill.prototype = {
 				data: this.form.serialize(),
 				success: function(popup) {
 					that.handler.notify(popup.body);
+					popup.body.addClass(group);
 					handler(popup);
 				}
 			});
