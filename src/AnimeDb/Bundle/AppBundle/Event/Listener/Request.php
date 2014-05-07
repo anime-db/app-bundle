@@ -166,27 +166,12 @@ class Request
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
-            return;
-        }
-
         // cache response
-        $response = $event->getResponse();
-        if ($response->getLastModified()) {
-            $response->setPublic();
-            $response->headers->addCacheControlDirective('must-revalidate', true);
-        }
-
-        // compress response
-        if ($encoding = $event->getRequest()->headers->get('Accept-Encoding')) {
-            if (stripos($encoding, 'gzip') !== false) {
-                $response->setContent(gzencode($response->getContent(), 9, FORCE_GZIP));
-                $response->headers->set('Content-Encoding', 'gzip');
-
-            } elseif (stripos($encoding, 'deflate') !== false) {
-                $response->setContent(gzencode($response->getContent(), 9, FORCE_DEFLATE));
-                $response->headers->set('Content-Encoding', 'deflate');
-            }
+        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST &&
+            $event->getResponse()->getLastModified()
+        ) {
+            $event->getResponse()->setPublic();
+            $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
         }
     }
 }
