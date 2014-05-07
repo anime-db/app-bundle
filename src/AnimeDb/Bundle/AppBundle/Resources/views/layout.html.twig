@@ -2,12 +2,10 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	{% render controller('AnimeDbAppBundle:Assets:css') %}
+	<link rel="stylesheet" type="text/css" href="/assetic/stylesheets.css" />
 {% endblock %}
 
 {% block javascripts %}
 	{{ parent() }}
-	<script type="text/javascript" src="{{ asset('/bundles/animedbapp/js/form.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('/bundles/animedbapp/js/hinclude.js') }}"></script>
-	{% render controller('AnimeDbAppBundle:Assets:js') %}
+	<script type="text/javascript" src="/assetic/javascripts.js"></script>
 {% endblock %}

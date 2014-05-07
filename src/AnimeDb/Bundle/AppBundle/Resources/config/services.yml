@@ -11,8 +11,6 @@ services:
         arguments: [ @request, @router ]
         scope: request
 
-    anime_db.assets:
-        class: AnimeDb\Bundle\AppBundle\Service\Assets
     anime_db.widgets:
         class: AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
         arguments: [@event_dispatcher]
