@@ -962,6 +962,17 @@ FormRefillCollection.prototype = {
 		}
 	}
 };
+var FormRefillMulti = function(field) {
+	this.field = field;
+};
+FormRefillMulti.prototype = {
+	update: function(popup) {
+		var that = this;
+		popup.body.find('input:checked').each(function() {
+			that.field.find('#'+$(this).attr('id')).prop('checked', true);
+		});
+	}
+};
 var FormRefillSearchItem = function(form, popup, link) {
 	var that = this;
 	this.form = form;
