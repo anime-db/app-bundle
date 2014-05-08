@@ -11,3 +11,10 @@ twig:
 framework:
     templating:
         hinclude_default_template: 'AnimeDbAppBundle::hinclude.html.twig'
+
+assetic:
+    bundles: [ AnimeDbAppBundle ]
+    assets:
+        javascripts:
+            inputs:
+                - @AnimeDbAppBundle/Resources/public/js/*.js
