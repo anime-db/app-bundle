@@ -168,7 +168,7 @@ class Request
     {
         // cache response
         if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST &&
-            $event->getResponse()->getLastModified()
+            $event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()
         ) {
             $event->getResponse()->setPublic();
             $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
