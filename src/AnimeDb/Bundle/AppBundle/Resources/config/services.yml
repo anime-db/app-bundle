@@ -16,14 +16,14 @@ services:
         arguments: [@event_dispatcher]
 
     # Twig extension
-    anime_db.app_twig_extension:
+    anime_db.app.twig_extension:
         class: AnimeDb\Bundle\AppBundle\Service\TwigExtension
         arguments: [@router, @fragment.handler, @anime_db.widgets]
         tags:
             - { name: twig.extension }
 
     # Kernel request listener
-    anime_db.listener.request:
+    anime_db.app.listener.request:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Request
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255 }
@@ -36,7 +36,7 @@ services:
             - %kernel.root_dir%
 
     # Console listener
-    anime_db.listener.console:
+    anime_db.app.listener.console:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Console
         tags: [{ name: kernel.event_listener, event: console.command, method: onConsoleCommand }]
         arguments: [ @gedmo.listener.translatable, @translator, %locale% ]
@@ -50,14 +50,14 @@ services:
             - [ setDefaultLocale, [ "en" ] ]
             - [ setTranslationFallback, [ true ] ]
 
-    anime_db.listener.project:
+    anime_db.app.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
         arguments: [ @doctrine.orm.entity_manager, @anime_db.cache_clearer, %kernel.root_dir% ]
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
 
-    anime_db.listener.package:
+    anime_db.app.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
         arguments: [ @doctrine.orm.entity_manager, @filesystem, %locale% ]
         tags:
