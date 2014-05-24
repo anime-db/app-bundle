@@ -46,7 +46,7 @@ var Cap = {
 	element: null,
 	button: null,
 	observers: [],
-	html: $('html'),
+	html: null,
 	setElement: function(element) {
 		Cap.element = element;
 		if (!Cap.button) {
@@ -61,6 +61,12 @@ var Cap = {
 			Cap.hide();
 		});
 	},
+	getHtml: function() {
+		if (Cap.html === null) {
+			Cap.html = $('html');
+		}
+		return Cap.html;
+	},
 	// hide cup and observers
 	hide: function(observer) {
 		if (typeof(observer) !== 'undefined') {
@@ -71,13 +77,13 @@ var Cap = {
 			}
 		}
 		Cap.element.hide();
-		Cap.html.removeClass('scroll-lock');
+		Cap.getHtml().removeClass('scroll-lock');
 	},
 	// show cup and observers
 	show: function(observer) {
 		Cap.element.show();
 		observer.show();
-		Cap.html.addClass('scroll-lock');
+		Cap.getHtml().addClass('scroll-lock');
 	},
 	// need methods 'show' and 'hide'
 	registr: function(observer) {
@@ -120,7 +126,13 @@ var PopupContainer = {
 	popup_loader: null,
 	xhr: null,
 	list: [],
-	container: $('body'),
+	container: null,
+	getContainer: function() {
+		if (PopupContainer.container === null) {
+			PopupContainer.container = $('body');
+		}
+		return PopupContainer.container;
+	},
 	load: function(name, options) {
 		options = $.extend({
 			success: function() {},
@@ -139,7 +151,7 @@ var PopupContainer = {
 			options.success = function(data) {
 				PopupContainer.list[name] = new Popup($(data));
 				success(PopupContainer.list[name]);
-				PopupContainer.container.append(PopupContainer.list[name].body);
+				PopupContainer.getContainer().append(PopupContainer.list[name].body);
 			}
 
 			PopupContainer.sendRequest(options);
@@ -193,7 +205,7 @@ var PopupContainer = {
 			options.success = function(data) {
 				var popup = new Popup(PopupContainer.popup_loader.body.clone().hide());
 				popup.body.attr('id', name).find('.content').append(data);
-				PopupContainer.container.append(popup.body);
+				PopupContainer.getContainer().append(popup.body);
 
 				PopupContainer.list[name] = popup;
 				success(popup);
