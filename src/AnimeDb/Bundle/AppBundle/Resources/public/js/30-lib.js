@@ -318,7 +318,7 @@ var UpdateLogBlock = function(block) {
 	this.from = block.data('from');
 	this.message = block.data('message');
 	this.redirect = block.data('redirect') || '/';
-	this.end_message = new RegExp(block.data('end-message')+'$');
+	this.end_message = block.data('end-message');
 	this.update();
 };
 UpdateLogBlock.prototype = {
@@ -329,7 +329,7 @@ UpdateLogBlock.prototype = {
 			success: function(data) {
 				if (that.block.text() != data) {
 					that.block.text(data).animate({scrollTop: that.block[0].scrollHeight}, 'slow');
-					if (that.end_message.test(data)) {
+					if (data.indexOf(that.end_message)) {
 						that.complete();
 						return;
 					}
