@@ -127,11 +127,16 @@ class Package
     public function onInstalled(InstalledEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = new Plugin();
-            $plugin->setName($event->getPackage()->getName());
-            $this->fillPluginData($plugin);
+            $plugin = $this->em->getRepository('AnimeDbAppBundle:Plugin')
+                ->find($event->getPackage()->getName());
 
-            $this->em->persist($plugin);
+            // create new plugin if not exists #55
+            if (!$plugin) {
+                $plugin = new Plugin();
+                $plugin->setName($event->getPackage()->getName());
+            }
+
+            $this->em->persist($this->fillPluginData($plugin));
             $this->em->flush();
         }
     }
