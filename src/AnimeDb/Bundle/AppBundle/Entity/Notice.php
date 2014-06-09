@@ -61,7 +61,7 @@ class Notice
      *
      * @var string
      */
-    const DEFAULT_TYPE = 'no-type';
+    const DEFAULT_TYPE = 'no_type';
 
     /**
      * Id
@@ -138,7 +138,7 @@ class Notice
     /**
      * Type
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank()
      *
      * @var integer
