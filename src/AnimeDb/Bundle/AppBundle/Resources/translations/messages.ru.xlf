@@ -178,6 +178,10 @@
                 <source>Scroll right</source>
                 <target>Прокрутка вправо</target>
             </trans-unit>
+            <trans-unit id="45">
+                <source>No type</source>
+                <target>Нет типа</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

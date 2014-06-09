@@ -57,6 +57,13 @@ class Notice
     const DEFAULT_LIFETIME = 300;
 
     /**
+     * Default type
+     *
+     * @var string
+     */
+    const DEFAULT_TYPE = 'no-type';
+
+    /**
      * Id
      *
      * @ORM\Id
@@ -127,6 +134,16 @@ class Notice
      * @var integer
      */
     protected $status = self::STATUS_CREATED;
+
+    /**
+     * Type
+     *
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     *
+     * @var integer
+     */
+    protected $type = self::DEFAULT_TYPE;
 
     /**
      * Construct
@@ -291,5 +308,28 @@ class Notice
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
