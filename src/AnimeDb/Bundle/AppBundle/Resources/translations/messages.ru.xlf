@@ -147,8 +147,8 @@
                 <target>Да</target>
             </trans-unit>
             <trans-unit id="37">
-                <source>Application must be updated</source>
-                <target>Необходимо обновить приложение</target>
+                <source>You long have not update the application. We recommend that you regularly update the application to always have the latest version</source>
+                <target>Вы давно не выполняли обновление приложения. Мы рекомендуем регулярно выполнять обновление приложения, чтобы всегда иметь актуальную версию</target>
             </trans-unit>
             <trans-unit id="38">
                 <source>Delete</source>
