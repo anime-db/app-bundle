@@ -342,7 +342,7 @@ UpdateLogBlock.prototype = {
 	},
 	complete: function() {
 		alert(this.message);
-		top.location = this.redirect;
+		window.location.replace(this.redirect);
 	}
 };
 
