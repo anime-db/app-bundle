@@ -342,7 +342,7 @@ UpdateLogBlock.prototype = {
 	},
 	complete: function() {
 		alert(this.message);
-		top.location = this.redirect;
+		window.location.replace(this.redirect);
 	}
 };
 
@@ -384,5 +384,110 @@ KeepHover.prototype = {
 	},
 	removeKeep: function() {
 		this.el.removeClass('keep-hover')
+	}
+};
+
+
+/**
+ * Progress bar
+ */
+var ProgressBar = function(bar, label) {
+	this.bar = bar;
+	this.label = label;
+	this.from = bar.data('from');
+	this.message = bar.data('message');
+	this.redirect = bar.data('redirect');
+
+	var that = this;
+	// init jQuery UI progressbar
+	this.bar.progressbar({
+		value: false,
+		change: function() {
+			that.label.text(that.bar.progressbar('value')+'%');
+		},
+		complete: function() {
+			that.complete();
+		}
+	});
+
+	that.update();
+};
+ProgressBar.prototype = {
+	update: function() {
+		var that = this;
+		$.ajax({
+			url: this.from,
+			dataType: 'json',
+			success: function(data) {
+				that.bar.progressbar('value', data.status);
+
+				if (data.status == 100) {
+					that.complete();
+				} else {
+					setTimeout(function() {
+						that.update();
+					}, 400);
+				}
+			}
+		});
+	},
+	complete: function() {
+		this.label.text(this.message);
+
+		if (this.redirect) {
+			// give the user the ability to see the completion message before redirecting
+			var that = this;
+			setTimeout(function() {
+				window.location.replace(that.redirect);
+			}, 500);
+		}
+	}
+};
+
+/**
+ * Progress log
+ */
+var ProgressLog = function(log, container) {
+	this.offset = 0;
+	this.log = log;
+	this.container = container || log;
+	this.from = log.data('from');
+	this.message = log.data('message');
+	this.redirect = log.data('redirect');
+
+	this.update();
+};
+ProgressLog.prototype = {
+	update: function() {
+		var that = this;
+		$.ajax({
+			url: this.from,
+			data: {offset: this.offset},
+			dataType: 'json',
+			success: function(data) {
+				that.log.text(that.log.text()+data.content);
+				that.offset += data.content.length;
+				// scroll progress log to bottom
+				if  (that.log.height() > that.container.height()) {
+					that.container.animate({scrollTop: that.container[0].scrollHeight}, 'slow');
+				}
+
+				if (data.end) {
+					that.complete();
+				} else {
+					setTimeout(function() {
+						that.update();
+					}, 400);
+				}
+			}
+		});
+	},
+	complete: function() {
+		if (this.message) {
+			alert(this.message);
+		}
+		if (this.redirect) {
+			window.location.replace(this.redirect);
+		}
 	}
 };

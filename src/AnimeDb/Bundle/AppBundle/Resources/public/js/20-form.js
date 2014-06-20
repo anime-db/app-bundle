@@ -608,7 +608,7 @@ FormRefill.prototype = {
 			'refill-search',
 			this.button.attr('href'),
 			function (popup) {
-				popup.body.find('a').each(function() {
+				popup.body.find('a:not(.external)').each(function() {
 					new FormRefillSearchItem(that, popup, $(this));
 				});
 			}
