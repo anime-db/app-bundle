@@ -113,7 +113,7 @@ class Node
     /**
      * Set title
      *
-     * @param integer $title
+     * @param string $title
      *
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
      */
