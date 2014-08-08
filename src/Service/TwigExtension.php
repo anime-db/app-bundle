@@ -68,7 +68,7 @@ class TwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'favicon' => new \Twig_SimpleFilter('favicon', [$this, 'filterFavicon'])
+            'favicon' => new \Twig_SimpleFilter('favicon', [$this, 'favicon'])
         ];
     }
 
@@ -79,7 +79,7 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'widgets' => new \Twig_Function_Method($this, 'widgets', ['is_safe' => ['html']])
+            'widgets' => new \Twig_SimpleFunction($this, [$this, 'widgets'], ['is_safe' => ['html']])
         ];
     }
 
@@ -90,7 +90,7 @@ class TwigExtension extends \Twig_Extension
      *
      * @return string|false
      */
-    public function filterFavicon($url)
+    public function favicon($url)
     {
         return $url ? $this->router->generate('media_favicon', ['host' => parse_url($url, PHP_URL_HOST)]) : false;
     }
