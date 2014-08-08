@@ -21,7 +21,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "AnimeDb\\Bundle\\AppBundle\\": "src/"
+            "AnimeDb\\Bundle\\AppBundle\\": "src/",
+            "AnimeDb\\Bundle\\AppBundle\\Tests\\": "tests/"
         }
     },
     "require": {
