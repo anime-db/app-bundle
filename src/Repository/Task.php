@@ -16,6 +16,8 @@ use AnimeDb\Bundle\AppBundle\Entity\Task as TaskEntity;
 /**
  * Task repository
  *
+ * @method \AnimeDb\Bundle\AppBundle\Entity\Task findOneByCommand(string $command)
+ *
  * @package AnimeDb\Bundle\AppBundle\Repository
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
