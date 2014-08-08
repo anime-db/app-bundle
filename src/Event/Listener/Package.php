@@ -100,7 +100,7 @@ class Package
     /**
      * Update plugin data
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated $event
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated $event
      */
     public function onUpdated(UpdatedEvent $event)
     {
@@ -122,7 +122,7 @@ class Package
     /**
      * Registr plugin
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Installed $event
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed $event
      */
     public function onInstalled(InstalledEvent $event)
     {
@@ -144,7 +144,7 @@ class Package
     /**
      * Unregistr plugin
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Removed $event
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed $event
      */
     public function onRemoved(RemovedEvent $event)
     {

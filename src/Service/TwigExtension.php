@@ -88,7 +88,7 @@ class TwigExtension extends \Twig_Extension
      *
      * @param string $url
      *
-     * @return boolean
+     * @return string|false
      */
     public function favicon($url)
     {

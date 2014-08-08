@@ -43,11 +43,8 @@ class Help extends AbstractTypeExtension
     }
 
     /**
-     * Get default options
-     *
-     * @param array $options
-     *
-     * @return array
+     * (non-PHPdoc)
+     * @see \Symfony\Component\Form\AbstractTypeExtension::setDefaultOptions()
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {

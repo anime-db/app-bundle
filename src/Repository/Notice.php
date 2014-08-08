@@ -50,7 +50,7 @@ class Notice extends EntityRepository
      * Get notice list
      *
      * @param integer $limit
-     * @param integer|null $offset
+     * @param integer $offset
      *
      * @return array [\AnimeDb\Bundle\AppBundle\Entity\Notice]
      */
