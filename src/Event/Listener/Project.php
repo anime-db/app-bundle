@@ -11,7 +11,6 @@
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Doctrine\ORM\EntityManager;
-use AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
