@@ -4,7 +4,7 @@
     "type": "library",
     "description": "The application for making home collection anime",
     "homepage": "http://anime-db.org",
-    "version": "0.3.14",
+    "version": "0.3.15",
     "authors": [
         {
             "name": "Anime DB",
@@ -20,8 +20,9 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "AnimeDb\\Bundle\\AppBundle": "src/"
+        "psr-4": {
+            "AnimeDb\\Bundle\\AppBundle\\": "src/",
+            "AnimeDb\\Bundle\\AppBundle\\Tests\\": "tests/"
         }
     },
     "require": {
