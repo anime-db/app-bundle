@@ -129,7 +129,10 @@ class Image
             if (!($info = getimagesize($tempname))) {
                 throw new \InvalidArgumentException('This is not a image file');
             }
-            $originalName = pathinfo(parse_url($this->getRemote(), PHP_URL_PATH), PATHINFO_BASENAME);
+            if (!($path = parse_url($this->getRemote(), PHP_URL_PATH))) {
+                throw new \InvalidArgumentException('Invalid image URL');
+            }
+            $originalName = pathinfo($path, PATHINFO_BASENAME);
             $this->remote = null;
             $this->setLocal(new UploadedFile(
                 $tempname,
