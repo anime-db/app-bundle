@@ -62,6 +62,13 @@ class Package
     protected $em;
 
     /**
+     * Entity repository
+     *
+     * @var \Doctrine\ORM\EntityRepository
+     */
+    protected $rep;
+
+    /**
      * Filesystem
      *
      * @var \Symfony\Component\Filesystem\Filesystem
@@ -93,6 +100,7 @@ class Package
     {
         $this->em = $em;
         $this->fs = $fs;
+        $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
         $this->locale = substr($locale, 0, 2);
         $this->locale = in_array($this->locale, $this->locales) ? $locale : self::API_DEFAULT_LOCALE;
     }
@@ -105,8 +113,7 @@ class Package
     public function onUpdated(UpdatedEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->em->getRepository('AnimeDbAppBundle:Plugin')
-                ->find($event->getPackage()->getName());
+            $plugin = $this->rep->find($event->getPackage()->getName());
 
             // create new plugin if not exists
             if (!$plugin) {
@@ -127,8 +134,7 @@ class Package
     public function onInstalled(InstalledEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->em->getRepository('AnimeDbAppBundle:Plugin')
-                ->find($event->getPackage()->getName());
+            $plugin = $this->rep->find($event->getPackage()->getName());
 
             // create new plugin if not exists #55
             if (!$plugin) {
@@ -149,8 +155,7 @@ class Package
     public function onRemoved(RemovedEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->em->getRepository('AnimeDbAppBundle:Plugin')
-                ->find($event->getPackage()->getName());
+            $plugin = $this->rep->find($event->getPackage()->getName());
 
             if ($plugin) {
                 $this->em->remove($plugin);
