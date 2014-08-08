@@ -59,10 +59,8 @@ class Console
 
     /**
      * Kernel request handler
-     *
-     * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
      */
-    public function onConsoleCommand(ConsoleCommandEvent $event)
+    public function onConsoleCommand()
     {
         setlocale(LC_ALL, $this->locale);
         $this->translator->setLocale($this->locale);
