@@ -20,8 +20,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "AnimeDb\\Bundle\\AppBundle": "src/"
+        "psr-4": {
+            "AnimeDb\\Bundle\\AppBundle\\": "src/"
         }
     },
     "require": {
