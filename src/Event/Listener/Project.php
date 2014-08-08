@@ -61,10 +61,8 @@ class Project
 
     /**
      * Update next run date for the propose update task
-     *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated $event
      */
-    public function onUpdatedProposeUpdateTask(UpdatedEvent $event)
+    public function onUpdatedProposeUpdateTask()
     {
         /* @var $task \AnimeDb\Bundle\AppBundle\Entity\Task */
         $task = $this->em
@@ -81,10 +79,8 @@ class Project
 
     /**
      * Update last update date
-     *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Project\Updated $event
      */
-    public function onUpdatedSaveLastUpdateDate(UpdatedEvent $event)
+    public function onUpdatedSaveLastUpdateDate()
     {
         // update params
         $parameters = Yaml::parse($this->root.'/config/parameters.yml');
