@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/anime-db/app-bundle.svg?branch=master)](https://travis-ci.org/anime-db/app-bundle)
 [![Total Downloads](https://poser.pugx.org/anime-db/app-bundle/downloads.png)](https://packagist.org/packages/anime-db/app-bundle)
 [![License](https://poser.pugx.org/anime-db/app-bundle/license.png)](https://packagist.org/packages/anime-db/app-bundle)
+[![Code Coverage](https://scrutinizer-ci.com/g/anime-db/app-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/app-bundle/?branch=master)
 
 # Anime DB #
 
