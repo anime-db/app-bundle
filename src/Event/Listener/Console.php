@@ -12,7 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
 
 /**
  * Console listener

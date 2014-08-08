@@ -79,7 +79,7 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'widgets' => new \Twig_SimpleFunction($this, [$this, 'widgets'], ['is_safe' => ['html']])
+            'widgets' => new \Twig_SimpleFunction('widgets', [$this, 'widgets'], ['is_safe' => ['html']])
         ];
     }
 
