@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
@@ -39,7 +39,7 @@ class Request
     /**
      * Validator
      *
-     * @var \Symfony\Component\Validator\Validator
+     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
     private $validator;
 
@@ -68,14 +68,14 @@ class Request
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
-     * @param \Symfony\Component\Validator\Validator $validator
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
      * @param string $root
      */
     public function __construct(
         TranslatableListener $translatable,
-        Validator $validator,
+        ValidatorInterface $validator,
         ContainerInterface $container,
         CacheClearer $cache_clearer,
         $root

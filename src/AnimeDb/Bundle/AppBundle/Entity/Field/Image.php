@@ -12,7 +12,7 @@ namespace AnimeDb\Bundle\AppBundle\Entity\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Item images
@@ -112,10 +112,10 @@ class Image
     /**
      * Upload image
      *
-     * @param \Symfony\Component\Validator\Validator $validator
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param string|null $name
      */
-    public function upload(Validator $validator, $name = null) {
+    public function upload(ValidatorInterface $validator, $name = null) {
         // upload remote file
         if ($this->getRemote() && $this->getLocal() === null) {
             if (!($content = file_get_contents($this->getRemote()))) {
