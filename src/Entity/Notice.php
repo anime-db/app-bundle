@@ -160,7 +160,7 @@ class Notice
      */
     public static function getStatuses()
     {
-        return [self::STATUS_CREATED, self::STATUS_SHOWN];
+        return [self::STATUS_CREATED, self::STATUS_SHOWN, self::STATUS_CLOSED];
     }
 
     /**
