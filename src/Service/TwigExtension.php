@@ -99,12 +99,12 @@ class TwigExtension extends \Twig_Extension
      * Render widgets
      *
      * @param string $place
-     * @param array|null $attributes
-     * @param array|null $options
+     * @param array $attributes
+     * @param array $options
      *
      * @return string
      */
-    public function widgets($place, $attributes = [], $options = [])
+    public function widgets($place, array $attributes = [], array $options = [])
     {
         $result = '';
         foreach ($this->widgets->getWidgetsForPlace($place) as $controller) {
