@@ -12,7 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Form\Field\Image;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Image upload form
