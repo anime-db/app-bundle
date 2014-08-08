@@ -117,7 +117,7 @@ class Task
     /**
      * Get supported statuses
      *
-     * @return array
+     * @return integer[]
      */
     public static function getStatuses()
     {
@@ -140,7 +140,7 @@ class Task
     /**
      * Get command
      *
-     * @return string 
+     * @return string
      */
     public function getCommand()
     {
@@ -196,7 +196,7 @@ class Task
     /**
      * Get next_run
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getNextRun()
     {
@@ -234,7 +234,7 @@ class Task
     /**
      * Get modify
      *
-     * @return string 
+     * @return string
      */
     public function getModify()
     {

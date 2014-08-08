@@ -121,7 +121,7 @@ class Notice
      * @Assert\NotBlank()
      * @Assert\Type(type="integer", message="The value {{ value }} is not a valid {{ type }}.")
      *
-     * @var string
+     * @var integer
      */
     protected $lifetime = self::DEFAULT_LIFETIME;
 
@@ -156,7 +156,7 @@ class Notice
     /**
      * Get supported statuses
      *
-     * @return array
+     * @return integer[]
      */
     public static function getStatuses()
     {
@@ -178,7 +178,7 @@ class Notice
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -201,7 +201,7 @@ class Notice
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -234,7 +234,7 @@ class Notice
     /**
      * Get date created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateCreated()
     {
@@ -257,7 +257,7 @@ class Notice
     /**
      * Get date start show
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateStart()
     {
@@ -280,7 +280,7 @@ class Notice
     /**
      * Get lifetime
      *
-     * @return integer 
+     * @return integer
      */
     public function getLifetime()
     {
@@ -303,7 +303,7 @@ class Notice
     /**
      * Get status
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -326,7 +326,7 @@ class Notice
     /**
      * Get type
      *
-     * @return string 
+     * @return integer
      */
     public function getType()
     {
