@@ -4,7 +4,7 @@
     "type": "library",
     "description": "The application for making home collection anime",
     "homepage": "http://anime-db.org",
-    "version": "0.3.17",
+    "version": "0.3.18",
     "authors": [
         {
             "name": "Anime DB",
@@ -21,14 +21,18 @@
     ],
     "autoload": {
         "psr-4": {
-            "AnimeDb\\Bundle\\AppBundle\\": "src/",
+            "AnimeDb\\Bundle\\AppBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "AnimeDb\\Bundle\\AppBundle\\Tests\\": "tests/"
         }
     },
     "require": {
         "php": ">=5.4.0",
         "anime-db/anime-db": ">=0.3.8",
-        "patchwork/utf8": "dev-lab-windows-fs"
+        "patchwork/utf8": "1.2.*"
     },
     "suggest": {
         "ext-com_dotnet": "Allows to switch between drives in Windows"

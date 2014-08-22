@@ -19,6 +19,7 @@ use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Field\LocalPath\Choice as ChoiceLocalPath;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AnimeDb\Bundle\AppBundle\Util\Filesystem;
+use Patchwork\Utf8;
 
 /**
  * Form
@@ -79,12 +80,8 @@ class FormController extends Controller
         $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
         $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
         $origin_path = $path;
+        $path = Utf8::wrapPath($path); // wrap path for current fs
 
-        // wrap fs
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            stream_wrapper_register('win', 'Patchwork\Utf8\WinFsStreamWrapper');
-            $path = 'win://'.$path;
-        }
 
         if (!is_dir($path) || !is_readable($path)) {
             throw new NotFoundHttpException('Cen\'t read directory: '.$origin_path);
@@ -92,7 +89,7 @@ class FormController extends Controller
 
         // caching
         $response = new JsonResponse();
-        $response->setLastModified(new \DateTime('@'.filemtime($path)));
+        $response->setLastModified((new \DateTime)->setTimestamp(filemtime($path)));
         if ( // project update date
             ($last_update = $this->container->getParameter('last_update')) &&
             ($last_update = new \DateTime($last_update)) > $response->getLastModified()
