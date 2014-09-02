@@ -52,14 +52,14 @@ services:
 
     anime_db.app.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine.orm.entity_manager, @anime_db.cache_clearer, %kernel.root_dir% ]
+        arguments: [ @doctrine, @anime_db.cache_clearer, %kernel.root_dir% ]
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
 
     anime_db.app.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
-        arguments: [ @doctrine.orm.entity_manager, @filesystem, %locale% ]
+        arguments: [ @doctrine, @filesystem, %locale% ]
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }

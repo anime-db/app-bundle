@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
@@ -47,13 +47,13 @@ class Project
     /**
      * Construct
      *
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
      * @param string $root
      */
-    public function __construct(EntityManager $em, CacheClearer $cache_clearer, $root)
+    public function __construct(Registry $doctrine, CacheClearer $cache_clearer, $root)
     {
-        $this->em = $em;
+        $this->em = $doctrine->getManager();
         $this->cache_clearer = $cache_clearer;
         $this->root = $root;
     }
