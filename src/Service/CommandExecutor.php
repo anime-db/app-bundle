@@ -220,7 +220,7 @@ class CommandExecutor
     {
         // change path for php
         if (substr($command, 0, 4) == 'php ') {
-            $command = $this->finder->getPath().substr($command, 3);
+            $command = escapeshellarg($this->finder->getPath()).substr($command, 3);
         }
 
         // change path to console
