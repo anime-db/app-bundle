@@ -141,7 +141,7 @@ class Notice
      * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank()
      *
-     * @var integer
+     * @var string
      */
     protected $type = self::DEFAULT_TYPE;
 
@@ -326,7 +326,7 @@ class Notice
     /**
      * Get type
      *
-     * @return integer
+     * @return string
      */
     public function getType()
     {
