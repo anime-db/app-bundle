@@ -10,8 +10,7 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service;
 
-use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
-use Symfony\Component\Process\Process;
+use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 
 /**
  * Cache clearer
@@ -29,55 +28,31 @@ class CacheClearer
     protected $env;
 
     /**
-     * Console
+     * Command executor
      *
-     * @var string
+     * @var \AnimeDb\Bundle\AppBundle\Service\CommandExecutor
      */
-    protected $console;
-
-    /**
-     * Php finder
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\PhpFinder
-     */
-    protected $finder;
+    protected $executor;
 
     /**
      * Construct
      *
-     * @param \AnimeDb\Bundle\AppBundle\Service\PhpFinder $finder
+     * @param \AnimeDb\Bundle\AppBundle\Service\CommandExecutor $executor
      * @param string $env
-     * @param string $root
      */
-    public function __construct($finder, $env, $root)
+    public function __construct(CommandExecutor $executor, $env)
     {
-        $this->finder = $finder;
+        $this->executor = $executor;
         $this->env = $env;
-        $this->console = escapeshellarg($root).'/console';
     }
 
     /**
      * Clear cache
      *
-     * @param string|null $env
+     * @param string $env
      */
-    public function clear($env = null)
+    public function clear($env = '')
     {
-        $this->executeCommand('cache:clear --no-debug --env='.($env ?: $this->env));
-    }
-
-    /**
-     * Execute command
-     *
-     * @param string $cmd
-     * @param integer $timeout
-     */
-    protected function executeCommand($cmd, $timeout = 300)
-    {
-        $process = new Process($this->finder->getPath().' '.$this->console.' '.$cmd, null, null, null, $timeout);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', $cmd));
-        }
+        $this->executor->console('cache:clear --no-debug --env='.($env ?: $this->env));
     }
 }
