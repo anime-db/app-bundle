@@ -129,13 +129,14 @@ class NoticeController extends Controller
                     AnimeDbAppBundle:Notice n
                 SET
                     n.date_start = :start,
-                    n.date_closed = DATETIME(n.date_closed, \'+'.self::SEE_LATER_INTERVAL.' seconds\')
+                    n.date_closed = DATETIME(n.date_closed, :interval)
                 WHERE
                     n.status != :closed AND
                     n.date_closed IS NOT NULL AND
                     n.date_closed > :time
             ')
             ->setParameter('start', $start)
+            ->setParameter('interval', '+'.self::SEE_LATER_INTERVAL.' seconds')
             ->setParameter('closed', Notice::STATUS_CLOSED)
             ->setParameter('time', $time)
             ->execute();
