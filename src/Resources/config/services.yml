@@ -5,11 +5,12 @@ services:
         class: AnimeDb\Bundle\AppBundle\Util\Filesystem
     anime_db.cache_clearer:
         class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
-        arguments: [ @kernel, %kernel.root_dir% ]
+        arguments: [ @anime_db.command, %kernel.environment% ]
     anime_db.command:
-        class: AnimeDb\Bundle\AppBundle\Service\Command
-        arguments: [ @request, @router ]
-        scope: request
+        class: AnimeDb\Bundle\AppBundle\Service\CommandExecutor
+        arguments: [ @anime_db.php_finder, @router, %kernel.root_dir% ]
+        calls:
+            - [setRequest, ['@?request=']]
 
     anime_db.widgets:
         class: AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
@@ -69,3 +70,11 @@ services:
         class: AnimeDb\Bundle\AppBundle\Form\Type\Help
         tags:
           - { name: "form.type_extension", alias: "form" }
+
+    anime_db.php_finder:
+        class: AnimeDb\Bundle\AppBundle\Service\PhpFinder
+        arguments: [@anime_db.php_finder.finder]
+
+    anime_db.php_finder.finder:
+        class: Symfony\Component\Process\PhpExecutableFinder
+        public: false

@@ -19,40 +19,66 @@ namespace AnimeDb\Bundle\AppBundle\Util;
 class Filesystem
 {
     /**
+     * Gets the name of the owner of the current PHP script
+     *
+     * @return string
+     */
+    public static function getUserName()
+    {
+        return get_current_user() ?: getenv('USERNAME');
+    }
+
+    /**
      * Get user home dir
      *
      * @return string
      */
     public static function getUserHomeDir() {
+        $home = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, self::doUserHomeDir());
+
+        if (substr($home, -1) != DIRECTORY_SEPARATOR) {
+            $home .= DIRECTORY_SEPARATOR;
+        }
+        return $home;
+    }
+
+    /**
+     * Do user home dir
+     *
+     * @return string
+     */
+    private function doUserHomeDir()
+    {
         // have home env var
         if ($home = getenv('HOME')) {
-            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
+            return $home;
         }
 
         // *nix os
         if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $username = get_current_user() ?: getenv('USERNAME');
-            return '/home/'.($username ? $username.'/' : '');
+            return '/home/'.self::getUserName();
         }
 
         // have drive and path env vars
         if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
-            $home = getenv('HOMEDRIVE').getenv('HOMEPATH');
-            $home = iconv('cp1251', 'utf-8', $home);
-            return in_array(substr($home, -1), ['/', '\\']) ? $home : $home.DIRECTORY_SEPARATOR;
+            return iconv('cp1251', 'utf-8', getenv('HOMEDRIVE').getenv('HOMEPATH'));
         }
 
         // Windows
-        $username = get_current_user() ?: getenv('USERNAME');
-        $username = iconv('cp1251', 'utf-8', $username);
-        if ($username && is_dir($win7path = 'C:\Users\\'.$username.'\\')) { // is Vista or older
-            return $win7path;
-        } elseif ($username) {
+        if ($username = self::getUserName()) {
+            $username = iconv('cp1251', 'utf-8', $username);
+            // is Vista or older
+            if (is_dir($win7path = 'C:\Users\\'.$username.'\\')) {
+                return $win7path;
+            }
             return 'C:\Documents and Settings\\'.$username.'\\';
-        } elseif (is_dir('C:\Users\\')) { // is Vista or older
-            return 'C:\Users\\';
-        } else {
-            return 'C:\Documents and Settings\\';
         }
+
+        // is Vista or older
+        if (is_dir('C:\Users\\')) {
+            return 'C:\Users\\';
+        }
+
+        return 'C:\Documents and Settings\\';
     }
 }
