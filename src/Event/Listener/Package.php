@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Filesystem\Filesystem;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
@@ -92,13 +92,13 @@ class Package
     /**
      * Construct
      *
-     * @param \Doctrine\ORM\EntityManager $em
-     * @param \Symfony\Component\Filesystem\Filesystem $em
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param string $locale
      */
-    public function __construct(EntityManager $em, Filesystem $fs, $locale)
+    public function __construct(Registry $doctrine, Filesystem $fs, $locale)
     {
-        $this->em = $em;
+        $this->em = $doctrine->getManager();
         $this->fs = $fs;
         $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
         $this->locale = substr($locale, 0, 2);
