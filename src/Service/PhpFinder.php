@@ -45,13 +45,13 @@ class PhpFinder
     }
 
     /**
-     * Get path to php
+     * Get path to php executable
      *
      * @throws \RuntimeException
      *
      * @return string
      */
-    public function getPathToPhp()
+    public function getPath()
     {
         if (!$this->php_path) {
             if (!($this->php_path = $this->finder->find())) {
