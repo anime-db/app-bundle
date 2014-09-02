@@ -28,7 +28,7 @@ use Symfony\Component\Process\Process;
  * @package AnimeDb\Bundle\AppBundle\Service
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Command
+class CommandExecutor
 {
     /**
      * Host
