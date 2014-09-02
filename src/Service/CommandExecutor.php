@@ -45,6 +45,13 @@ class CommandExecutor
     protected $path;
 
     /**
+     * Working directory
+     *
+     * @var string
+     */
+    protected $cwd;
+
+    /**
      * Console
      *
      * @var string
@@ -75,6 +82,7 @@ class CommandExecutor
     public function __construct(PhpFinder $finder, RouterInterface $router, $root_dir)
     {
         $this->finder = $finder;
+        $this->cwd = $root_dir.'/../';
         $this->console = escapeshellarg($root_dir.DIRECTORY_SEPARATOR.'console');
         $this->path = $router->generate('command_exec');
     }
@@ -149,7 +157,7 @@ class CommandExecutor
      */
     protected function executeCommand($command, $timeout = 300, $callback = null)
     {
-        $process = new Process($this->prepare($command), null, null, null, $timeout);
+        $process = new Process($this->prepare($command), $this->cwd, null, null, $timeout);
         $process->run($callback);
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', $command));
@@ -163,12 +171,17 @@ class CommandExecutor
      */
     protected function executeCommandInBackground($command)
     {
+        $cwd = getcwd();
+        chdir($this->cwd);
+
         $command = $this->prepare($command);
         if (defined('PHP_WINDOWS_VERSION_BUILD') && function_exists('popen')) {
             pclose(popen('start /b call '.$command, 'r'));
         } else {
             exec($command.' &');
         }
+
+        chdir($cwd);
     }
 
     /**
