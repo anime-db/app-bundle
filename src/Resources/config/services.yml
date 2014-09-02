@@ -5,7 +5,7 @@ services:
         class: AnimeDb\Bundle\AppBundle\Util\Filesystem
     anime_db.cache_clearer:
         class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
-        arguments: [ @kernel, %kernel.root_dir% ]
+        arguments: [ @anime_db.php_finder, %kernel.environment%, %kernel.root_dir% ]
     anime_db.command:
         class: AnimeDb\Bundle\AppBundle\Service\Command
         arguments: [ @request, @router ]

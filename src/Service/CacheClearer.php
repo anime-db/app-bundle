@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service;
 
-use Symfony\Component\Process\PhpExecutableFinder;
+use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
 use Symfony\Component\Process\Process;
 
 /**
@@ -22,18 +22,11 @@ use Symfony\Component\Process\Process;
 class CacheClearer
 {
     /**
-     * Path to php executable
+     * Environment
      *
-     * @var string|null
+     * @var string
      */
-    private $php_path;
-
-    /**
-     * Kernel
-     *
-     * @var \AppKernel
-     */
-    protected $kernal;
+    protected $env;
 
     /**
      * Console
@@ -43,14 +36,23 @@ class CacheClearer
     protected $console;
 
     /**
+     * Php finder
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Service\PhpFinder
+     */
+    protected $finder;
+
+    /**
      * Construct
      *
-     * @param \AppKernel $kernal
+     * @param \AnimeDb\Bundle\AppBundle\Service\PhpFinder $finder
+     * @param string $env
      * @param string $root
      */
-    public function __construct(\AppKernel $kernal, $root)
+    public function __construct($finder, $env, $root)
     {
-        $this->kernal = $kernal;
+        $this->finder = $finder;
+        $this->env = $env;
         $this->console = escapeshellarg($root).'/console';
     }
 
@@ -61,7 +63,7 @@ class CacheClearer
      */
     public function clear($env = null)
     {
-        $this->executeCommand('cache:clear --no-debug --env='.($env ?: $this->kernal->getEnvironment()));
+        $this->executeCommand('cache:clear --no-debug --env='.($env ?: $this->env));
     }
 
     /**
@@ -72,31 +74,10 @@ class CacheClearer
      */
     protected function executeCommand($cmd, $timeout = 300)
     {
-        $process = new Process($this->getPhp().' '.$this->console.' '.$cmd, null, null, null, $timeout);
+        $process = new Process($this->finder->getPath().' '.$this->console.' '.$cmd, null, null, null, $timeout);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', $cmd));
         }
-    }
-
-    /**
-     * Get path to php executable
-     *
-     * @throws \RuntimeException
-     *
-     * @return string
-     */
-    protected function getPhp()
-    {
-        if (!$this->php_path) {
-            $finder = new PhpExecutableFinder();
-            if (!($this->php_path = $finder->find())) {
-                throw new \RuntimeException(
-                    'The php executable could not be found, add it to your PATH environment variable and try again'
-                );
-            }
-            $this->php_path = escapeshellarg($this->php_path);
-        }
-        return $this->php_path;
     }
 }
