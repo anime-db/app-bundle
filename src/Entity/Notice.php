@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
