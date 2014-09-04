@@ -13,7 +13,7 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 
 /**
- * Test php finder
+ * Test command executor
  *
  * @package AnimeDb\Bundle\AppBundle\Tests\Service
  * @author  Peter Gribanov <info@peter-gribanov.ru>

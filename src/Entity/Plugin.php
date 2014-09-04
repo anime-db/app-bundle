@@ -35,7 +35,7 @@ class Plugin
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * Title
@@ -45,7 +45,7 @@ class Plugin
      *
      * @var string
      */
-    protected $title;
+    protected $title = '';
 
     /**
      * Description
@@ -55,7 +55,7 @@ class Plugin
      *
      * @var string
      */
-    protected $description;
+    protected $description = '';
 
     /**
      * Logo
@@ -206,7 +206,7 @@ class Plugin
      */
     public function getAbsolutePath()
     {
-        return $this->logo !== null ? $this->getUploadRootDir().'/'.$this->logo : null;
+        return $this->logo && $this->name ? $this->getUploadRootDir().'/'.$this->logo : '';
     }
 
     /**
@@ -236,7 +236,7 @@ class Plugin
      */
     public function getLogoWebPath()
     {
-        return $this->logo ? '/'.$this->getUploadDir().'/'.$this->logo : null;
+        return $this->logo && $this->name ? '/'.$this->getUploadDir().'/'.$this->logo : '';
     }
 
     /**
@@ -246,8 +246,8 @@ class Plugin
      */
     public function doRemoveLogo()
     {
-        if ($this->logo && file_exists($this->getAbsolutePath())) {
-            unlink($this->getAbsolutePath());
+        if (($file = $this->getAbsolutePath()) && file_exists($file)) {
+            unlink($file);
         }
     }
 }

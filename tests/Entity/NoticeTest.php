@@ -92,7 +92,7 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
      */
     public function testMessage()
     {
-        $this->assertNull($this->notice->getMessage());
+        $this->assertEmpty($this->notice->getMessage());
         $this->assertEquals($this->notice, $this->notice->setMessage('foo'));
         $this->assertEquals('foo', $this->notice->getMessage());
     }
