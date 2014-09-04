@@ -83,7 +83,7 @@ class Notice
      *
      * @var string
      */
-    protected $message;
+    protected $message = '';
 
     /**
      * Date closed notice

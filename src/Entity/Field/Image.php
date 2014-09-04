@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Item images
+ * Item image
  *
  * @package AnimeDb\Bundle\AppBundle\Entity\Field
  * @author  Peter Gribanov <info@peter-gribanov.ru>
@@ -29,7 +29,7 @@ class Image
      *
      * @var string
      */
-    protected $remote;
+    protected $remote = '';
 
     /**
      * Local image
@@ -51,7 +51,7 @@ class Image
      *
      * @var string
      */
-    protected $path;
+    protected $path = '';
 
     /**
      * Set remote image
@@ -186,7 +186,7 @@ class Image
      */
     public function getAbsolutePath()
     {
-        return $this->path !== null ? $this->getUploadRootDir().'/../../'.$this->path : null;
+        return $this->path ? $this->getUploadRootDir().'/../../'.$this->path : '';
     }
 
     /**
@@ -196,7 +196,7 @@ class Image
      */
     public function getWebPath()
     {
-        return $this->path ? '/media/'.$this->path : null;
+        return $this->path ? '/media/'.$this->path : '';
     }
 
     /**

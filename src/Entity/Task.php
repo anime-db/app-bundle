@@ -63,7 +63,7 @@ class Task
      *
      * @var string
      */
-    protected $command;
+    protected $command = '';
 
     /**
      * Last run
@@ -95,7 +95,7 @@ class Task
      *
      * @var string
      */
-    protected $modify;
+    protected $modify = '';
 
     /**
      * Task status
@@ -213,8 +213,8 @@ class Task
      */
     public function setInterval($interval)
     {
-        if ($interval) {
-            $this->setModify('+'.$interval.' second');
+        if ($interval > 0) {
+            $this->setModify('+'.(int)$interval.' second');
         }
         return $this;
     }
@@ -222,7 +222,7 @@ class Task
     /**
      * Set modify
      *
-     * @param string|null $modify
+     * @param string $modify
      *
      * @return \AnimeDb\Bundle\AppBundle\Entity\Task
      */
@@ -285,13 +285,14 @@ class Task
         $this->setLastRun(new \DateTime());
         if (!$this->getModify()) {
             $this->setStatus(self::STATUS_DISABLED);
-        } else {
+        }
+        if ($this->getStatus() == self::STATUS_ENABLED) {
             // find near time task launch
             $next_run = $this->getNextRun();
             do {
                 // failed to compute time of next run
-                if ($next_run->modify($this->getModify()) === false) {
-                    $this->setModify(null);
+                if (@$next_run->modify($this->getModify()) === false) {
+                    $this->setModify('');
                     $this->setStatus(self::STATUS_DISABLED);
                     break;
                 }
