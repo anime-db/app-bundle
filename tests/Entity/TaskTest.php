@@ -38,39 +38,6 @@ class TaskTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods
-     *
-     * @return array
-     */
-    public function getMethods()
-    {
-        return [
-            ['getCommand', 'setCommand'],
-            ['getLastRun', 'setLastRun', null, new \DateTime()],
-            ['getNextRun', 'setNextRun', new \DateTime(), new \DateTime()],
-            ['getModify', 'setModify'],
-            ['getStatus', 'setStatus', Task::STATUS_DISABLED, Task::STATUS_ENABLED]
-        ];
-    }
-
-    /**
-     * Test getters and setters
-     *
-     * @dataProvider getMethods
-     * 
-     * @param string $getter
-     * @param string $setter
-     * @param mixed $default
-     * @param mixed $new
-     */
-    public function testGettersAndSetters($getter, $setter, $default = '', $new = 'foo')
-    {
-        $this->assertEquals($default, call_user_func([$this->task, $getter]));
-        $this->assertEquals($this->task, call_user_func([$this->task, $setter], $new));
-        $this->assertEquals($new, call_user_func([$this->task, $getter]));
-    }
-
-    /**
      * Test get id
      */
     public function testGetId()
@@ -184,14 +151,12 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         $modify = '+10 second';
         $this->task->setModify($modify);
         $this->task->setStatus(Task::STATUS_ENABLED);
+        $next_run = $this->task->getNextRun();
 
         // actual next run date
-        $last_run = $this->task->getNextRun();
-        $next_run = clone $last_run;
-        $last_run->modify('-55 second');
+        $this->task->setNextRun($this->task->getNextRun()->modify('-55 second'));
 
         // expected next run date
-        $this->task->setNextRun($last_run);
         $next_run->modify('+5 second');
 
         $this->executed(Task::STATUS_ENABLED);

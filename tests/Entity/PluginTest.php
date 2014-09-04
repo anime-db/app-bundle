@@ -38,39 +38,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods
-     *
-     * @return array
-     */
-    public function getMethods()
-    {
-        return [
-            ['getName', 'setName'],
-            ['getTitle', 'setTitle'],
-            ['getDescription', 'setDescription'],
-            ['getLogo', 'setLogo'],
-            ['getDateInstall', 'setDateInstall', new \DateTime(), (new \DateTime())->modify('+100 seconds')]
-        ];
-    }
-
-    /**
-     * Test getters and setters
-     *
-     * @dataProvider getMethods
-     * 
-     * @param string $getter
-     * @param string $setter
-     * @param mixed $default
-     * @param mixed $new
-     */
-    public function testGettersAndSetters($getter, $setter, $default = '', $new = 'foo')
-    {
-        $this->assertEquals($default, call_user_func([$this->plugin, $getter]));
-        $this->assertEquals($this->plugin, call_user_func([$this->plugin, $setter], $new));
-        $this->assertEquals($new, call_user_func([$this->plugin, $getter]));
-    }
-
-    /**
      * Test get upload root dir
      */
     public function testGetUploadRootDir()
