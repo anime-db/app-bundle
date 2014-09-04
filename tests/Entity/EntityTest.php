@@ -73,13 +73,9 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     {
         $now = new \DateTime();
         $modify = (new \DateTime())->modify('+100 seconds');
-        $file = $this->getMockBuilder('\Symfony\Component\HttpFoundation\File\UploadedFile')
-            ->disableOriginalConstructor()
-            ->getMock();
         return [
             // Image
             ['image', 'getRemote', 'setRemote'],
-            ['image', 'getLocal', 'setLocal', null, $file],
             // Notice
             ['notice', 'getMessage', 'setMessage'],
             ['notice', 'getDateClosed', 'setDateClosed', null, $now],

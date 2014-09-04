@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Entity\Field;
 
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Test item image
@@ -28,13 +29,31 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     protected $image;
 
     /**
+     * Uploaded file
+     *
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    protected $file;
+
+    /**
      * (non-PHPdoc)
      * @see PHPUnit_Framework_TestCase::setUp()
      */
     protected function setUp()
     {
         parent::setUp();
+        $this->file = new UploadedFile(tempnam(sys_get_temp_dir(), 'foo'), 'bar');
         $this->image = new Image();
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see PHPUnit_Framework_TestCase::tearDown()
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unlink($this->file->getPathname());
     }
 
     /**
@@ -43,6 +62,17 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     public function testGetPath()
     {
         $this->assertEmpty($this->image->getPath());
+    }
+
+    /**
+     * Test set and get local file
+     */
+    public function testLocal()
+    {
+        $this->assertNull($this->image->getLocal());
+
+        $this->image->setLocal($this->file);
+        $this->assertEquals($this->file, $this->image->getLocal());
     }
 
     /**
@@ -61,10 +91,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsSetImageLocal()
     {
-        $file = $this->getMockBuilder('\Symfony\Component\HttpFoundation\File\UploadedFile')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->image->setLocal($file);
+        $this->image->setLocal($this->file);
 
         $this->assertTrue($this->image->isSetImage());
     }
