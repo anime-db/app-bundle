@@ -60,7 +60,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      * 
      * @param string $getter
      * @param string $setter
-     * @param mixed $data
+     * @param mixed $default
+     * @param mixed $new
      */
     public function testGettersAndSetters($getter, $setter, $default = '', $new = 'foo')
     {
