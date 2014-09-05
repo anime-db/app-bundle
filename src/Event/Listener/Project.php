@@ -26,7 +26,7 @@ class Project
     /**
      * Entity manager
      *
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $em;
 
