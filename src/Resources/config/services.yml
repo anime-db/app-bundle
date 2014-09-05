@@ -32,8 +32,8 @@ services:
         arguments:
             - @gedmo.listener.translatable
             - @validator
-            - @service_container
             - @anime_db.cache_clearer
+            - %locale%
             - %kernel.root_dir%
 
     # Console listener
