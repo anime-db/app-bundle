@@ -16,7 +16,6 @@ use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -44,11 +43,11 @@ class Request
     private $validator;
 
     /**
-     * Container
+     * Locale
      *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var string
      */
-    private $container;
+    private $locale;
 
     /**
      * Cache clearer
@@ -69,21 +68,21 @@ class Request
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
+     * @param string $locale
      * @param string $root
      */
     public function __construct(
         TranslatableListener $translatable,
         ValidatorInterface $validator,
-        ContainerInterface $container,
         CacheClearer $cache_clearer,
+        $locale,
         $root
     ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
-        $this->container = $container;
         $this->cache_clearer = $cache_clearer;
+        $this->locale = $locale;
         $this->root = $root;
     }
 
@@ -123,7 +122,7 @@ class Request
 
         $locale = substr($locale, 0, 2);
         // update parameters
-        if ($this->container->getParameter('locale') != $locale) {
+        if ($this->locale != $locale) {
             $parameters = Yaml::parse($this->root.'/config/parameters.yml');
             $parameters['parameters']['locale'] = $locale;
             $parameters['parameters']['last_update'] = gmdate('r');
@@ -143,8 +142,8 @@ class Request
      */
     public function getLocale(HttpRequest $request)
     {
-        if ($this->container->getParameter('locale')) {
-            return $this->container->getParameter('locale');
+        if ($this->locale) {
+            return $this->locale;
         }
 
         // get locale from language list
@@ -166,12 +165,12 @@ class Request
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        // cache response
-        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST &&
-            $event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()
-        ) {
+        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
             $event->getResponse()->setPublic();
-            $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+            // cache must revalidate
+            if ($event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()) {
+                $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+            }
         }
     }
 }
