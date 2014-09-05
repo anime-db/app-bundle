@@ -63,14 +63,14 @@ class Node
     protected $type = Pagination::TYPE_PAGE;
 
     /**
-     * Set is current page
+     * Set current page
      *
-     * @param boolean $is_current
+     * @param boolean $current
      *
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
      */
-    public function setIsCurrent($is_current) {
-        $this->is_current = $is_current;
+    public function setCurrent($current) {
+        $this->is_current = $current;
         return $this;
     }
 
@@ -143,11 +143,11 @@ class Node
     }
 
     /**
-     * Get is current page
+     * Is current page
      *
      * @return boolean
      */
-    public function getIsCurrent()
+    public function isCurrent()
     {
         return $this->is_current;
     }
