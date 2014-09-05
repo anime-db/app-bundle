@@ -165,12 +165,12 @@ class Request
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        // cache response
-        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST &&
-            $event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()
-        ) {
+        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
             $event->getResponse()->setPublic();
-            $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+            // cache must revalidate
+            if ($event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()) {
+                $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+            }
         }
     }
 }
