@@ -69,7 +69,7 @@ class MediaController extends Controller
             $fs->copy('http://'.$host.'/favicon.ico', $target);
 
             // site has a standard favicon
-            if (($info = @getimagesize($target)) !== false) {
+            if (@getimagesize($target) !== false) {
                 return $response->setContent(file_get_contents($target));
             }
             $fs->remove($target);
