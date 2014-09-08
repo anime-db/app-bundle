@@ -12,11 +12,11 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Filesystem\Filesystem;
+use AnimeDb\Bundle\ApiClientBundle\Service\Client;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
-use Guzzle\Http\Client;
 
 /**
  * Package listener
@@ -26,34 +26,6 @@ use Guzzle\Http\Client;
  */
 class Package
 {
-    /**
-     * Type of plugin package
-     *
-     * @var string
-     */
-    const PLUGIN_TYPE = 'anime-db-plugin';
-
-    /**
-     * API server host
-     *
-     * @var string
-     */
-    const API_HOST = 'http://anime-db.org/';
-
-    /**
-     * API version
-     *
-     * @var string
-     */
-    const API_VERSION = 1;
-
-    /**
-     * API default locale
-     *
-     * @var string
-     */
-    const API_DEFAULT_LOCALE = 'en';
-
     /**
      * Entity manager
      *
@@ -76,33 +48,25 @@ class Package
     protected $fs;
 
     /**
-     * Locale
+     * API client
      *
-     * @var string
+     * @var \AnimeDb\Bundle\ApiClientBundle\Service\Client
      */
-    protected $locale;
-
-    /**
-     * List of available locales
-     *
-     * @var array
-     */
-    protected $locales = ['ru', 'en'];
+    protected $client;
 
     /**
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Filesystem\Filesystem $fs
-     * @param string $locale
+     * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
      */
-    public function __construct(Registry $doctrine, Filesystem $fs, $locale)
+    public function __construct(Registry $doctrine, Filesystem $fs, Client $client)
     {
-        $this->em = $doctrine->getManager();
         $this->fs = $fs;
+        $this->client = $client;
+        $this->em = $doctrine->getManager();
         $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
-        $this->locale = substr($locale, 0, 2);
-        $this->locale = in_array($this->locale, $this->locales) ? $locale : self::API_DEFAULT_LOCALE;
     }
 
     /**
@@ -173,23 +137,16 @@ class Package
      */
     protected function fillPluginData(Plugin $plugin)
     {
-        $path = 'api/v'.self::API_VERSION.'/'.$this->locale.'/plugin/'.$plugin->getName().'/';
-        $client = new Client(self::API_HOST);
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = $client->get($path)->send();
+        list($vendor, $package) = explode('/', $plugin->getName());
 
-        if ($response->isSuccessful()) {
-            $data = json_decode($response->getBody(true), true);
+        try {
+            $data = $this->client->getPlugin($vendor, $package);
             $plugin->setTitle($data['title'])->setDescription($data['description']);
-
             if ($data['logo']) {
-                if (!file_exists($plugin->getUploadRootDir())) {
-                    $this->fs->mkdir($plugin->getUploadRootDir());
-                }
                 $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
-                copy($data['logo'], $plugin->getAbsolutePath());
+                $this->fs->mirror($data['logo'], $plugin->getAbsolutePath());
             }
-        }
+        } catch (\RuntimeException $e) {} // is not a critical error
 
         return $plugin;
     }

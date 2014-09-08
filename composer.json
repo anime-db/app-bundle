@@ -32,7 +32,8 @@
     "require": {
         "php": ">=5.4.0",
         "anime-db/anime-db": ">=0.3.8",
-        "patchwork/utf8": "1.2.*"
+        "patchwork/utf8": "1.2.*",
+        "anime-db/api-client-bundle": "0.1.*"
     },
     "suggest": {
         "ext-com_dotnet": "Allows to switch between drives in Windows"
