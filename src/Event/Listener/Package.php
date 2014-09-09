@@ -17,6 +17,7 @@ use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Package listener
@@ -55,17 +56,26 @@ class Package
     protected $client;
 
     /**
+     * Path to parameters
+     *
+     * @var string
+     */
+    protected $parameters;
+
+    /**
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
+     * @param string $parameters
      */
-    public function __construct(Registry $doctrine, Filesystem $fs, Client $client)
+    public function __construct(Registry $doctrine, Filesystem $fs, Client $client, $parameters)
     {
         $this->fs = $fs;
         $this->client = $client;
         $this->em = $doctrine->getManager();
+        $this->parameters = $parameters;
         $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
     }
 
@@ -149,5 +159,35 @@ class Package
         } catch (\RuntimeException $e) {} // is not a critical error
 
         return $plugin;
+    }
+
+    /**
+     * Configure shmop
+     *
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed $event
+     */
+    public function onInstalledConfigureShmop(InstalledEvent $event)
+    {
+        // use Shmop as driver for Cache Time Keeper
+        if ($event->getPackage()->getName() == 'anime-db/shmop') {
+            $parameters = Yaml::parse($this->parameters);
+            $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.multi';
+            $parameters['parameters']['cache_time_keeper.driver.multi.fast'] = 'cache_time_keeper.driver.shmop';
+            file_put_contents($this->parameters, Yaml::dump($parameters));
+        }
+    }
+
+    /**
+     * Restore config on removed shmop
+     *
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed $event
+     */
+    public function onRemovedShmop(RemovedEvent $event)
+    {
+        if ($event->getPackage()->getName() == 'anime-db/shmop') {
+            $parameters = Yaml::parse($this->parameters);
+            $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.file';
+            file_put_contents($this->parameters, Yaml::dump($parameters));
+        }
     }
 }

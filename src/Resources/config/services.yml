@@ -66,11 +66,17 @@ services:
 
     anime_db.app.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
-        arguments: [ @doctrine, @filesystem, @anime_db.api.client ]
+        arguments:
+            - @doctrine
+            - @filesystem
+            - @anime_db.api.client
+            - %kernel.root_dir%/config/parameters.yml
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }
             - { name: kernel.event_listener, event: anime_db.package.removed, method: onRemoved }
+            - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalledConfigureShmop }
+            - { name: kernel.event_listener, event: anime_db.package.removed, method: onRemovedShmop }
 
     anime_db.form.type_extension.help:
         class: AnimeDb\Bundle\AppBundle\Form\Type\Help
