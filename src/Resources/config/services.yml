@@ -55,6 +55,7 @@ services:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
         arguments:
             - @doctrine
+            - @filesystem
             - @anime_db.cache_clearer
             - @anime_db.manipulator.composer
             - %kernel.root_dir%/config/parameters.yml

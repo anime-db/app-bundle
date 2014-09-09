@@ -173,7 +173,7 @@ class Package
             $parameters = Yaml::parse($this->parameters);
             $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.multi';
             $parameters['parameters']['cache_time_keeper.driver.multi.fast'] = 'cache_time_keeper.driver.shmop';
-            file_put_contents($this->parameters, Yaml::dump($parameters));
+            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
         }
     }
 
@@ -187,7 +187,7 @@ class Package
         if ($event->getPackage()->getName() == 'anime-db/shmop') {
             $parameters = Yaml::parse($this->parameters);
             $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.file';
-            file_put_contents($this->parameters, Yaml::dump($parameters));
+            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
         }
     }
 }

@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\Filesystem\Filesystem;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
@@ -30,6 +31,13 @@ class Project
      * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $em;
+
+    /**
+     * Filesystem
+     *
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
 
     /**
      * Cache clearer
@@ -56,12 +64,14 @@ class Project
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
      * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer $composer
      * @param string $parameters
      */
-    public function __construct(Registry $doctrine, CacheClearer $cache_clearer, Composer $composer, $parameters)
+    public function __construct(Registry $doctrine, Filesystem $fs, CacheClearer $cache_clearer, Composer $composer, $parameters)
     {
+        $this->fs = $fs;
         $this->em = $doctrine->getManager();
         $this->cache_clearer = $cache_clearer;
         $this->composer = $composer;
@@ -96,7 +106,7 @@ class Project
         // update params
         $parameters = Yaml::parse($this->parameters);
         $parameters['parameters']['last_update'] = date('r');
-        file_put_contents($this->parameters, Yaml::dump($parameters));
+        $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
     }
 
     /**
