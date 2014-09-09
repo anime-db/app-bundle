@@ -53,10 +53,16 @@ services:
 
     anime_db.app.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine, @anime_db.cache_clearer, %kernel.root_dir% ]
+        arguments:
+            - @doctrine
+            - @anime_db.cache_clearer
+            - @anime_db.manipulator.composer
+            - %kernel.root_dir%/config/parameters.yml
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
+            - { name: kernel.event_listener, event: anime_db.project.updated, method: onInstalledOrUpdatedAddShmop }
+            - { name: kernel.event_listener, event: anime_db.project.installed, method: onInstalledOrUpdatedAddShmop }
 
     anime_db.app.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package

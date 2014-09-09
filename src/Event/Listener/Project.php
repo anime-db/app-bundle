@@ -12,6 +12,7 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
 
@@ -38,24 +39,33 @@ class Project
     protected $cache_clearer;
 
     /**
-     * Root dir
+     * Path to parameters
      *
      * @var string
      */
-    protected $root;
+    protected $parameters;
+
+    /**
+     * Composer manipulator
+     *
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer
+     */
+    protected $composer;
 
     /**
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param string $root
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer $composer
+     * @param string $parameters
      */
-    public function __construct(Registry $doctrine, CacheClearer $cache_clearer, $root)
+    public function __construct(Registry $doctrine, CacheClearer $cache_clearer, Composer $composer, $parameters)
     {
         $this->em = $doctrine->getManager();
         $this->cache_clearer = $cache_clearer;
-        $this->root = $root;
+        $this->composer = $composer;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -78,12 +88,27 @@ class Project
 
     /**
      * Update last update date
+     *
+     * @deprecated use Cache Time Keeper
      */
     public function onUpdatedSaveLastUpdateDate()
     {
         // update params
-        $parameters = Yaml::parse($this->root.'/config/parameters.yml');
+        $parameters = Yaml::parse($this->parameters);
         $parameters['parameters']['last_update'] = date('r');
-        file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
+        file_put_contents($this->parameters, Yaml::dump($parameters));
+    }
+
+    /**
+     * On installed or updated try add a Shmop package
+     */
+    public function onInstalledOrUpdatedAddShmop()
+    {
+        // if the extension shmop is installed, can use the appropriate driver for store the key cache
+        if (extension_loaded('shmop')) {
+            $this->composer->addPackage('anime-db/shmop', '1.0.*');
+        } else {
+            $this->composer->removePackage('anime-db/shmop');
+        }
     }
 }
