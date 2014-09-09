@@ -17,6 +17,7 @@ use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
+use Composer\Package\Package as ComposerPackage;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -27,6 +28,13 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Package
 {
+    /**
+     * Type of plugin package
+     *
+     * @var string
+     */
+    const PLUGIN_TYPE = 'anime-db-plugin';
+
     /**
      * Entity manager
      *
@@ -87,16 +95,7 @@ class Package
     public function onUpdated(UpdatedEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->rep->find($event->getPackage()->getName());
-
-            // create new plugin if not exists
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setName($event->getPackage()->getName());
-            }
-
-            $this->em->persist($this->fillPluginData($plugin));
-            $this->em->flush();
+            $this->addPackage($event->getPackage());
         }
     }
 
@@ -108,17 +107,38 @@ class Package
     public function onInstalled(InstalledEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->rep->find($event->getPackage()->getName());
-
-            // create new plugin if not exists #55
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setName($event->getPackage()->getName());
-            }
-
-            $this->em->persist($this->fillPluginData($plugin));
-            $this->em->flush();
+            $this->addPackage($event->getPackage());
         }
+    }
+
+    /**
+     * Add plugin from package
+     *
+     * @param \Composer\Package\Package $package
+     */
+    protected function addPackage(ComposerPackage $package)
+    {
+        $plugin = $this->rep->find($package->getName());
+
+        // create new plugin if not exists
+        if (!$plugin) {
+            $plugin = new Plugin();
+            $plugin->setName($package->getName());
+        }
+
+        list($vendor, $package) = explode('/', $plugin->getName());
+
+        try {
+            $data = $this->client->getPlugin($vendor, $package);
+            $plugin->setTitle($data['title'])->setDescription($data['description']);
+            if ($data['logo']) {
+                $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
+                $this->fs->mirror($data['logo'], $plugin->getAbsolutePath());
+            }
+        } catch (\Exception $e) {} // is not a critical error
+
+        $this->em->persist($plugin);
+        $this->em->flush();
     }
 
     /**
@@ -136,29 +156,6 @@ class Package
                 $this->em->flush();
             }
         }
-    }
-
-    /**
-     * Fill plugin data from server API
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Plugin $plugin
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
-     */
-    protected function fillPluginData(Plugin $plugin)
-    {
-        list($vendor, $package) = explode('/', $plugin->getName());
-
-        try {
-            $data = $this->client->getPlugin($vendor, $package);
-            $plugin->setTitle($data['title'])->setDescription($data['description']);
-            if ($data['logo']) {
-                $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
-                $this->fs->mirror($data['logo'], $plugin->getAbsolutePath());
-            }
-        } catch (\RuntimeException $e) {} // is not a critical error
-
-        return $plugin;
     }
 
     /**
