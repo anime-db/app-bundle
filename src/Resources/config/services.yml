@@ -33,8 +33,9 @@ services:
             - @gedmo.listener.translatable
             - @validator
             - @anime_db.cache_clearer
+            - @filesystem
+            - %kernel.root_dir%/config/parameters.yml
             - %locale%
-            - %kernel.root_dir%
 
     # Console listener
     anime_db.app.listener.console:
