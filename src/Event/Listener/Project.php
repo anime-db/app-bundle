@@ -78,9 +78,9 @@ class Project
             ->getRepository('AnimeDbAppBundle:Task')
             ->findOneByCommand('animedb:propose-update');
 
-        $next_run = time()+ProposeUpdateCommand::INERVAL_UPDATE;
-        $next_run = mktime(1, 0, 0, date('m', $next_run), date('d', $next_run), date('y', $next_run));
-        $task->setNextRun(new \DateTime(date('Y-m-d H:i:s', $next_run)));
+        $next_run = new \DateTime();
+        $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');
+        $task->setNextRun($next_run);
 
         $this->em->persist($task);
         $this->em->flush();
