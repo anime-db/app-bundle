@@ -252,7 +252,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     /**
      * Get package
      *
-     * @param \PHPUnit_Framework_MockObject_Matcher_Invocation $matcher
+     * @param \PHPUnit_Framework_MockObject_Matcher_Invocation|null $matcher
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -339,5 +339,65 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->method('getPackage')
             ->willReturn($package);
         return $event;
+    }
+
+    /**
+     * Test ignore package on removed
+     */
+    public function testOnRemovedIgnorePackage()
+    {
+        $package = $this->getMockBuilder('\Composer\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package
+            ->expects($this->once())
+            ->method('getType')
+            ->willReturn('foo');
+        $this->em
+            ->expects($this->never())
+            ->method('find');
+
+        // test
+        $this->listener->onRemoved($this->getEvent($package, '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed'));
+    }
+
+    /**
+     * Test on removed no found plugin
+     */
+    public function testOnRemovedNoFoundPlugin()
+    {
+        $this->rep
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn(null)
+            ->with('foo/bar');
+
+        // test
+        $event = '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed';
+        $this->listener->onRemoved($this->getEvent($this->getPackage(), $event));
+    }
+
+    /**
+     * Test on removed remove plugin
+     */
+    public function testOnRemovedRemovePlugin()
+    {
+        $plugin = $this->getMock('\AnimeDb\Bundle\AppBundle\Entity\Plugin');
+        $this->rep
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn($plugin)
+            ->with('foo/bar');
+        $this->em
+            ->expects($this->once())
+            ->method('remove')
+            ->with($plugin);
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
+
+        // test
+        $event = '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed';
+        $this->listener->onRemoved($this->getEvent($this->getPackage(), $event));
     }
 }
