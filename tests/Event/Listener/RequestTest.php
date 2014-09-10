@@ -107,6 +107,99 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test get default locale
+     */
+    public function testGetLocaleDefault()
+    {
+        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->assertEquals($this->locale, $this->listener->getLocale($request));
+    }
+
+    /**
+     * Get languages
+     *
+     * @return array
+     */
+    public function getLanguages()
+    {
+        return [
+            [
+                [],
+                'en',
+                'en'
+            ],
+            [
+                ['ru'],
+                'ru'
+            ],
+            [
+                ['rus', 'fra', 'en'],
+                'en'
+            ],
+            [
+                ['rus', 'fra', 'en_US'],
+                'en_US'
+            ]
+        ];
+    }
+
+    /**
+     * Test get locale from request
+     *
+     * @dataProvider getLanguages
+     *
+     * @param array $languages
+     * @param string $expected
+     * @param string $locale
+     */
+    public function testGetLocaleFromRequest(array $languages, $expected, $locale = '')
+    {
+        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $request
+            ->expects($this->once())
+            ->method('getLanguages')
+            ->willReturn($languages);
+        $request
+            ->expects($locale ? $this->once() : $this->never())
+            ->method('getLocale')
+            ->willReturn($locale);
+
+        // validate languages
+        $that = $this;
+        for ($i = 0; $i < count($languages); $i++) {
+            $this->validator
+                ->expects($this->at($i))
+                ->method('validate')
+                ->willReturnCallback(function ($language, $constraint) use ($that, $i, $languages, $locale) {
+                    $that->assertEquals($languages[$i], $language);
+                    $that->assertInstanceOf('\Symfony\Component\Validator\Constraints\Locale', $constraint);
+
+                    $list = $that->getMock('\Symfony\Component\Validator\ConstraintViolationListInterface');
+                    $list
+                        ->expects($that->once())
+                        ->method('has')
+                        ->willReturn($i+1 < count($languages) || $locale)
+                        ->with(0);
+                    return $list;
+                });
+        }
+
+        $listener = new Request(
+            $this->translatable,
+            $this->validator,
+            $this->cache_clearer,
+            $this->fs,
+            $this->parameters,
+            ''
+        );
+        $this->assertEquals($expected, $listener->getLocale($request));
+    }
+
+    /**
      * Test on kernel response ignore
      */
     public function testOnKernelResponseIgnore()
