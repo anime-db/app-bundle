@@ -36,6 +36,13 @@ class Package
     const PLUGIN_TYPE = 'anime-db-plugin';
 
     /**
+     * Package shmop
+     *
+     * @var string
+     */
+    const PACKAGE_SHMOP = 'anime-db/shmop';
+
+    /**
      * Entity manager
      *
      * @var \Doctrine\Common\Persistence\ObjectManager
@@ -166,7 +173,7 @@ class Package
     public function onInstalledConfigureShmop(InstalledEvent $event)
     {
         // use Shmop as driver for Cache Time Keeper
-        if ($event->getPackage()->getName() == 'anime-db/shmop') {
+        if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
             $parameters = Yaml::parse($this->parameters);
             $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.multi';
             $parameters['parameters']['cache_time_keeper.driver.multi.fast'] = 'cache_time_keeper.driver.shmop';
@@ -181,7 +188,7 @@ class Package
      */
     public function onRemovedShmop(RemovedEvent $event)
     {
-        if ($event->getPackage()->getName() == 'anime-db/shmop') {
+        if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
             $parameters = Yaml::parse($this->parameters);
             $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.file';
             $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);

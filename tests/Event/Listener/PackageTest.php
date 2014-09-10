@@ -12,6 +12,7 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Package;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Test listener package
@@ -399,5 +400,153 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         // test
         $event = '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed';
         $this->listener->onRemoved($this->getEvent($this->getPackage(), $event));
+    }
+
+    /**
+     * Get shmop events
+     *
+     * @return array
+     */
+    public function getShmopEvents()
+    {
+        return [
+            ['onInstalledConfigureShmop', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed'],
+            ['onRemovedShmop', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed']
+        ];
+    }
+
+    /**
+     * Test on installed ignore configure shmop
+     *
+     * @dataProvider getShmopEvents
+     *
+     * @param string $method
+     * @param string $event
+     */
+    public function testOnInstalledIgnoreConfigureShmop($method, $event)
+    {
+        $package = $this->getMockBuilder('\Composer\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn('foo');
+        $event = $this->getMockBuilder($event)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event
+            ->expects($this->once())
+            ->method('getPackage')
+            ->willReturn($package);
+        $this->fs
+            ->expects($this->never())
+            ->method('dumpFile');
+
+        // test
+        call_user_func([$this->listener, $method], $event);
+    }
+
+    /**
+     * Get parameters
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return [
+            [
+                'onInstalledConfigureShmop',
+                '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed',
+                [
+                    'parameters' => []
+                ],
+                [
+                    'parameters' => [
+                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi',
+                        'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop'
+                    ]
+                ]
+            ],
+            [
+                'onInstalledConfigureShmop',
+                '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed',
+                [
+                    'parameters' => [
+                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.file',
+                        'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.memcache'
+                    ]
+                ],
+                [
+                    'parameters' => [
+                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi',
+                        'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop'
+                    ]
+                ]
+            ],
+            [
+                'onRemovedShmop',
+                '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed',
+                [
+                    'parameters' => []
+                ],
+                [
+                    'parameters' => [
+                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.file'
+                    ]
+                ]
+            ],
+            [
+                'onRemovedShmop',
+                '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed',
+                [
+                    'parameters' => [
+                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi'
+                    ]
+                ],
+                [
+                    'parameters' => [
+                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.file'
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Test on installed configure shmop
+     *
+     * @dataProvider getParameters
+     *
+     * @param string $method
+     * @param string $event
+     * @param array $actual
+     * @param array $expected
+     */
+    public function testOnInstalledConfigureShmop($method, $event, array $actual, array $expected)
+    {
+        file_put_contents($this->parameters, Yaml::dump($actual));
+
+        $package = $this->getMockBuilder('\Composer\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn(Package::PACKAGE_SHMOP);
+        $event = $this->getMockBuilder($event)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event
+            ->expects($this->once())
+            ->method('getPackage')
+            ->willReturn($package);
+        $this->fs
+            ->expects($this->once())
+            ->method('dumpFile')
+            ->with($this->parameters, Yaml::dump($expected));
+
+        // test
+        call_user_func([$this->listener, $method], $event);
     }
 }
