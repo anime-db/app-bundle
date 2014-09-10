@@ -104,7 +104,7 @@ class Project
     {
         // update params
         $parameters = Yaml::parse($this->parameters);
-        $parameters['parameters']['last_update'] = date('r');
+        $parameters['parameters']['last_update'] = gmdate('r');
         $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
     }
 

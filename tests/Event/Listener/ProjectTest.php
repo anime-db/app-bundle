@@ -160,19 +160,19 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'parameters' => [
-                        'last_update' => date('r')
+                        'last_update' => gmdate('r')
                     ]
                 ],
             ],
             [
                 [
                     'parameters' => [
-                        'last_update' => date('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
+                        'last_update' => gmdate('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
                     ]
                 ],
                 [
                     'parameters' => [
-                        'last_update' => date('r')
+                        'last_update' => gmdate('r')
                     ]
                 ],
             ]

@@ -12,6 +12,7 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Test listener request
@@ -104,6 +105,86 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         unlink($this->parameters);
+    }
+
+    /**
+     * Get locales
+     *
+     * @return array
+     */
+    public function getLocales()
+    {
+        return [
+            [
+                'ru',
+                [
+                    'parameters' => [
+                        'locale' => $this->locale,
+                        'last_update' => gmdate('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
+                    ]
+                ],
+                [
+                    'parameters' => [
+                        'locale' => 'ru',
+                        'last_update' => gmdate('r')
+                    ]
+                ]
+            ],
+            [
+                $this->locale,
+                [
+                    'parameters' => [
+                        'locale' => $this->locale,
+                        'last_update' => gmdate('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
+                    ]
+                ],
+                [
+                    'parameters' => [
+                        'locale' => $this->locale,
+                        'last_update' => gmdate('r')
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Test set locale
+     *
+     * @dataProvider getLocales
+     *
+     * @param string $locale
+     * @param array $actual
+     * @param array $expected
+     */
+    public function testSetLocale($locale, array $actual, array $expected)
+    {
+        file_put_contents($this->parameters, Yaml::dump($actual));
+
+        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $request
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with($locale);
+        $this->translatable
+            ->expects($this->once())
+            ->method('setTranslatableLocale')
+            ->with($locale);
+
+        // change origin locale
+        if ($locale != $this->locale) {
+            $this->fs
+                ->expects($this->once())
+                ->method('dumpFile')
+                ->with($this->parameters, Yaml::dump($expected));
+            $this->cache_clearer
+                ->expects($this->once())
+                ->method('clear');
+        }
+
+        $this->listener->setLocale($request, $locale);
     }
 
     /**
