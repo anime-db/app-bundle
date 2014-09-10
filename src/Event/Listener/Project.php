@@ -90,9 +90,8 @@ class Project
 
         $next_run = new \DateTime();
         $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');
-        $task->setNextRun($next_run);
 
-        $this->em->persist($task);
+        $this->em->persist($task->setNextRun($next_run));
         $this->em->flush();
     }
 
