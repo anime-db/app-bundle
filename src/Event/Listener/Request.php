@@ -158,9 +158,9 @@ class Request
         }
 
         // get locale from language list
-        $locale_constraint = new Locale();
+        $constraint = new Locale();
         foreach ($request->getLanguages() as $language) {
-            if (!count($this->validator->validateValue($language, $locale_constraint))) {
+            if (!$this->validator->validate($language, $constraint)->has(0)) {
                 return $language;
             }
         }
