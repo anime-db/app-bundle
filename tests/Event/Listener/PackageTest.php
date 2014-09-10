@@ -202,11 +202,61 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test add new plugin
+     *
+     * @dataProvider getPlugins
+     *
+     * @param string $method
+     * @param string $event
+     * @param array $data
+     */
+    public function testAddNewPlugin($method, $event, array $data) {
+        $that = $this;
+        // check upload logo
+        if ($data['logo']) {
+            $this->fs
+                ->expects($this->once())
+                ->method('mirror')
+                ->with($data['logo']);
+        }
+        $this->rep
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn(null)
+            ->with('foo/bar');
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->willReturnCallback(function ($plugin) use ($that, $data) {
+                $that->assertInstanceOf('\AnimeDb\Bundle\AppBundle\Entity\Plugin', $plugin);
+                $that->assertEquals('foo/bar', $plugin->getName());
+                $that->assertEquals($data['title'], $plugin->getTitle());
+                $that->assertEquals($data['description'], $plugin->getDescription());
+                if ($data['logo']) {
+                    $that->assertEquals(pathinfo($data['logo'], PATHINFO_BASENAME), $plugin->getLogo());
+                }
+            });
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
+        $this->client
+            ->expects($this->once())
+            ->method('getPlugin')
+            ->with('foo', 'bar')
+            ->willReturn($data);
+
+        // test
+        call_user_func([$this->listener, $method], $this->getEvent($this->getPackage($this->exactly(2)), $event));
+    }
+
+    /**
      * Get package
+     *
+     * @param \PHPUnit_Framework_MockObject_Matcher_Invocation $matcher
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getPackage()
+    protected function getPackage(\PHPUnit_Framework_MockObject_Matcher_Invocation $matcher = null)
     {
         $package = $this->getMockBuilder('\Composer\Package\Package')
             ->disableOriginalConstructor()
@@ -216,7 +266,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->method('getType')
             ->willReturn(Package::PLUGIN_TYPE);
         $package
-            ->expects($this->once())
+            ->expects($matcher ?: $this->once())
             ->method('getName')
             ->willReturn('foo/bar');
         return $package;
