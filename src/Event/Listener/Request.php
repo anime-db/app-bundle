@@ -41,7 +41,7 @@ class Request
      *
      * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
-    private $validator;
+    protected $validator;
 
     /**
      * Cache clearer
@@ -62,7 +62,7 @@ class Request
      *
      * @var string
      */
-    private $locale;
+    protected $locale;
 
     /**
      * Path to parameters
