@@ -136,7 +136,7 @@ class Request
         if ($this->locale != $locale) {
             $parameters = Yaml::parse($this->parameters);
             $parameters['parameters']['locale'] = $locale;
-            $parameters['parameters']['last_update'] = gmdate('r');
+            $parameters['parameters']['last_update'] = gmdate('r'); // TODO @deprecated
             $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
             // clear cache
             $this->cache_clearer->clear();

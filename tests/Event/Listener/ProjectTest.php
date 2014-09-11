@@ -147,58 +147,6 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return [
-            [
-                [
-                    'parameters' => []
-                ],
-                [
-                    'parameters' => [
-                        'last_update' => gmdate('r')
-                    ]
-                ],
-            ],
-            [
-                [
-                    'parameters' => [
-                        'last_update' => gmdate('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
-                    ]
-                ],
-                [
-                    'parameters' => [
-                        'last_update' => gmdate('r')
-                    ]
-                ],
-            ]
-        ];
-    }
-
-    /**
-     * Test on updated save last update date
-     *
-     * @dataProvider getParameters
-     *
-     * @param array $actual
-     * @param array $expected
-     */
-    public function testOnUpdatedSaveLastUpdateDate(array $actual, array $expected)
-    {
-        file_put_contents($this->parameters, Yaml::dump($actual));
-        $this->fs
-            ->expects($this->once())
-            ->method('dumpFile')
-            ->with($this->parameters, Yaml::dump($expected));
-
-        $this->listener->onUpdatedSaveLastUpdateDate();
-    }
-
-    /**
      * Test on installed or updated try add a Shmop package
      */
     public function testOnInstalledOrUpdatedAddShmop()

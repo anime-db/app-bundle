@@ -98,6 +98,7 @@ class Project
     /**
      * Update last update date
      *
+     * @codeCoverageIgnore
      * @deprecated use Cache Time Keeper
      */
     public function onUpdatedSaveLastUpdateDate()

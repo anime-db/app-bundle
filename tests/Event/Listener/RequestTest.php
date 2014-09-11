@@ -193,36 +193,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function getLocales()
     {
         return [
-            [
-                'ru',
-                [
-                    'parameters' => [
-                        'locale' => $this->locale,
-                        'last_update' => gmdate('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
-                    ]
-                ],
-                [
-                    'parameters' => [
-                        'locale' => 'ru',
-                        'last_update' => gmdate('r')
-                    ]
-                ]
-            ],
-            [
-                $this->locale,
-                [
-                    'parameters' => [
-                        'locale' => $this->locale,
-                        'last_update' => gmdate('r', mktime(0, 0, 0, date('n'), date('d')-1, date('Y')))
-                    ]
-                ],
-                [
-                    'parameters' => [
-                        'locale' => $this->locale,
-                        'last_update' => gmdate('r')
-                    ]
-                ]
-            ]
+            ['ru', $this->locale, 'ru'],
+            [$this->locale, $this->locale, $this->locale]
         ];
     }
 
@@ -232,12 +204,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getLocales
      *
      * @param string $locale
-     * @param array $actual
-     * @param array $expected
+     * @param string $actual
+     * @param string $expected
      */
-    public function testSetLocale($locale, array $actual, array $expected)
+    public function testSetLocale($locale, $actual, $expected)
     {
-        file_put_contents($this->parameters, Yaml::dump($actual));
+        $that = $this;
+        file_put_contents($this->parameters, Yaml::dump([
+            'parameters' => [
+                'locale' => $actual
+            ]
+        ]));
 
         $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
@@ -256,7 +233,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->fs
                 ->expects($this->once())
                 ->method('dumpFile')
-                ->with($this->parameters, Yaml::dump($expected));
+                ->willReturnCallback(function($file, $yaml) use ($that, $expected) {
+                    $yaml = Yaml::parse($yaml);
+                    $that->assertEquals($expected, $yaml['parameters']['locale']);
+                })
+                ->with($this->parameters);
             $this->cache_clearer
                 ->expects($this->once())
                 ->method('clear');
