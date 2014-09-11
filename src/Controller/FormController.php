@@ -38,15 +38,10 @@ class FormController extends Controller
      */
     public function localPathAction(Request $request)
     {
-        $response = new Response();
-        // caching
-        if ($last_update = $this->container->getParameter('last_update')) {
-            $response->setLastModified(new \DateTime($last_update));
-
-            // response was not modified for this request
-            if ($response->isNotModified($request)) {
-                return $response;
-            }
+        $response = $this->get('cache_time_keeper')->getResponse();
+        // response was not modified for this request
+        if ($response->isNotModified($request)) {
+            return $response;
         }
 
         $form = $this->createForm(
@@ -87,16 +82,8 @@ class FormController extends Controller
             throw new NotFoundHttpException('Cen\'t read directory: '.$origin_path);
         }
 
-        // caching
-        $response = new JsonResponse();
-        $response->setLastModified((new \DateTime)->setTimestamp(filemtime($path)));
-        if ( // project update date
-            ($last_update = $this->container->getParameter('last_update')) &&
-            ($last_update = new \DateTime($last_update)) > $response->getLastModified()
-        ) {
-            $response->setLastModified($last_update);
-        }
-
+        $response = $this->get('cache_time_keeper')
+            ->getResponse([(new \DateTime)->setTimestamp(filemtime($path))], -1, new JsonResponse());
         // response was not modified for this request
         if ($response->isNotModified($request)) {
             return $response;
@@ -143,15 +130,10 @@ class FormController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function imageAction(Request $request) {
-        $response = new Response();
-        // caching
-        if ($last_update = $this->container->getParameter('last_update')) {
-            $response->setLastModified(new \DateTime($last_update));
-
-            // response was not modified for this request
-            if ($response->isNotModified($request)) {
-                return $response;
-            }
+        $response = $this->get('cache_time_keeper')->getResponse();
+        // response was not modified for this request
+        if ($response->isNotModified($request)) {
+            return $response;
         }
 
         return $this->render('AnimeDbAppBundle:Form:image.html.twig', [
