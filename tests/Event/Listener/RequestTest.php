@@ -108,6 +108,84 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test on kernel request ignore
+     */
+    public function testOnKernelRequestIgnore()
+    {
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event
+            ->expects($this->once())
+            ->method('getRequestType')
+            ->willReturn(HttpKernelInterface::SUB_REQUEST);
+        $event
+            ->expects($this->never())
+            ->method('getRequest');
+
+        $this->listener->onKernelRequest($event);
+    }
+
+    /**
+     * Get preferred languages
+     *
+     * @return array
+     */
+    public function getPreferredLanguages()
+    {
+        return [
+            ['ru'],
+            ['en'],
+            [null]
+        ];
+    }
+
+    /**
+     * Test on kernel request
+     *
+     * @dataProvider getPreferredLanguages
+     *
+     * @param string $language
+     */
+    public function testOnKernelRequest($language)
+    {
+        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $request
+            ->expects($this->once())
+            ->method('getPreferredLanguage')
+            ->willReturn($language);
+        if ($language) {
+            $request
+                ->expects($this->once())
+                ->method('setDefaultLocale')
+                ->willReturn($language);
+        } else {
+            $request
+                ->expects($this->never())
+                ->method('setDefaultLocale');
+        }
+        $request
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with($this->locale);
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event
+            ->expects($this->once())
+            ->method('getRequestType')
+            ->willReturn(HttpKernelInterface::MASTER_REQUEST);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $this->listener->onKernelRequest($event);
+    }
+
+    /**
      * Get locales
      *
      * @return array
