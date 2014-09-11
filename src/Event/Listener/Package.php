@@ -17,6 +17,8 @@ use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
+use Composer\Package\Package as ComposerPackage;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Package listener
@@ -26,6 +28,20 @@ use AnimeDb\Bundle\AppBundle\Entity\Plugin;
  */
 class Package
 {
+    /**
+     * Type of plugin package
+     *
+     * @var string
+     */
+    const PLUGIN_TYPE = 'anime-db-plugin';
+
+    /**
+     * Package shmop
+     *
+     * @var string
+     */
+    const PACKAGE_SHMOP = 'anime-db/shmop';
+
     /**
      * Entity manager
      *
@@ -55,17 +71,26 @@ class Package
     protected $client;
 
     /**
+     * Path to parameters
+     *
+     * @var string
+     */
+    protected $parameters;
+
+    /**
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
+     * @param string $parameters
      */
-    public function __construct(Registry $doctrine, Filesystem $fs, Client $client)
+    public function __construct(Registry $doctrine, Filesystem $fs, Client $client, $parameters)
     {
         $this->fs = $fs;
         $this->client = $client;
         $this->em = $doctrine->getManager();
+        $this->parameters = $parameters;
         $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
     }
 
@@ -77,16 +102,7 @@ class Package
     public function onUpdated(UpdatedEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->rep->find($event->getPackage()->getName());
-
-            // create new plugin if not exists
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setName($event->getPackage()->getName());
-            }
-
-            $this->em->persist($this->fillPluginData($plugin));
-            $this->em->flush();
+            $this->addPackage($event->getPackage());
         }
     }
 
@@ -98,17 +114,38 @@ class Package
     public function onInstalled(InstalledEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->rep->find($event->getPackage()->getName());
-
-            // create new plugin if not exists #55
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setName($event->getPackage()->getName());
-            }
-
-            $this->em->persist($this->fillPluginData($plugin));
-            $this->em->flush();
+            $this->addPackage($event->getPackage());
         }
+    }
+
+    /**
+     * Add plugin from package
+     *
+     * @param \Composer\Package\Package $package
+     */
+    protected function addPackage(ComposerPackage $package)
+    {
+        $plugin = $this->rep->find($package->getName());
+
+        // create new plugin if not exists
+        if (!$plugin) {
+            $plugin = new Plugin();
+            $plugin->setName($package->getName());
+        }
+
+        list($vendor, $package) = explode('/', $plugin->getName());
+
+        try {
+            $data = $this->client->getPlugin($vendor, $package);
+            $plugin->setTitle($data['title'])->setDescription($data['description']);
+            if ($data['logo']) {
+                $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
+                $this->fs->mirror($data['logo'], $plugin->getAbsolutePath());
+            }
+        } catch (\Exception $e) {} // is not a critical error
+
+        $this->em->persist($plugin);
+        $this->em->flush();
     }
 
     /**
@@ -129,25 +166,32 @@ class Package
     }
 
     /**
-     * Fill plugin data from server API
+     * Configure shmop
      *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Plugin $plugin
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed $event
      */
-    protected function fillPluginData(Plugin $plugin)
+    public function onInstalledConfigureShmop(InstalledEvent $event)
     {
-        list($vendor, $package) = explode('/', $plugin->getName());
+        // use Shmop as driver for Cache Time Keeper
+        if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
+            $parameters = Yaml::parse($this->parameters);
+            $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.multi';
+            $parameters['parameters']['cache_time_keeper.driver.multi.fast'] = 'cache_time_keeper.driver.shmop';
+            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
+        }
+    }
 
-        try {
-            $data = $this->client->getPlugin($vendor, $package);
-            $plugin->setTitle($data['title'])->setDescription($data['description']);
-            if ($data['logo']) {
-                $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
-                $this->fs->mirror($data['logo'], $plugin->getAbsolutePath());
-            }
-        } catch (\RuntimeException $e) {} // is not a critical error
-
-        return $plugin;
+    /**
+     * Restore config on removed shmop
+     *
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed $event
+     */
+    public function onRemovedShmop(RemovedEvent $event)
+    {
+        if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
+            $parameters = Yaml::parse($this->parameters);
+            $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.file';
+            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
+        }
     }
 }

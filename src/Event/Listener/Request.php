@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Gedmo\Translatable\TranslatableListener;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
@@ -40,14 +41,7 @@ class Request
      *
      * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
-    private $validator;
-
-    /**
-     * Locale
-     *
-     * @var string
-     */
-    private $locale;
+    protected $validator;
 
     /**
      * Cache clearer
@@ -57,11 +51,25 @@ class Request
     protected $cache_clearer;
 
     /**
-     * Root dir
+     * Filesystem
+     *
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
+
+    /**
+     * Locale
      *
      * @var string
      */
-    protected $root;
+    protected $locale;
+
+    /**
+     * Path to parameters
+     *
+     * @var string
+     */
+    protected $parameters;
 
     /**
      * Construct
@@ -69,21 +77,24 @@ class Request
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     * @param string $parameters
      * @param string $locale
-     * @param string $root
      */
     public function __construct(
         TranslatableListener $translatable,
         ValidatorInterface $validator,
         CacheClearer $cache_clearer,
-        $locale,
-        $root
+        Filesystem $fs,
+        $parameters,
+        $locale
     ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
         $this->cache_clearer = $cache_clearer;
+        $this->parameters = $parameters;
         $this->locale = $locale;
-        $this->root = $root;
+        $this->fs = $fs;
     }
 
     /**
@@ -123,10 +134,10 @@ class Request
         $locale = substr($locale, 0, 2);
         // update parameters
         if ($this->locale != $locale) {
-            $parameters = Yaml::parse($this->root.'/config/parameters.yml');
+            $parameters = Yaml::parse($this->parameters);
             $parameters['parameters']['locale'] = $locale;
-            $parameters['parameters']['last_update'] = gmdate('r');
-            file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
+            $parameters['parameters']['last_update'] = gmdate('r'); // TODO @deprecated
+            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
             // clear cache
             $this->cache_clearer->clear();
         }
@@ -147,9 +158,9 @@ class Request
         }
 
         // get locale from language list
-        $locale_constraint = new Locale();
+        $constraint = new Locale();
         foreach ($request->getLanguages() as $language) {
-            if (!count($this->validator->validateValue($language, $locale_constraint))) {
+            if (!$this->validator->validate($language, $constraint)->has(0)) {
                 return $language;
             }
         }

@@ -11,7 +11,9 @@
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\Filesystem\Filesystem;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\Yaml\Yaml;
 
@@ -31,6 +33,13 @@ class Project
     protected $em;
 
     /**
+     * Filesystem
+     *
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
+
+    /**
      * Cache clearer
      *
      * @var \AnimeDb\Bundle\AppBundle\Service\CacheClearer
@@ -38,24 +47,35 @@ class Project
     protected $cache_clearer;
 
     /**
-     * Root dir
+     * Path to parameters
      *
      * @var string
      */
-    protected $root;
+    protected $parameters;
+
+    /**
+     * Composer manipulator
+     *
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer
+     */
+    protected $composer;
 
     /**
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param string $root
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer $composer
+     * @param string $parameters
      */
-    public function __construct(Registry $doctrine, CacheClearer $cache_clearer, $root)
+    public function __construct(Registry $doctrine, Filesystem $fs, CacheClearer $cache_clearer, Composer $composer, $parameters)
     {
+        $this->fs = $fs;
         $this->em = $doctrine->getManager();
         $this->cache_clearer = $cache_clearer;
-        $this->root = $root;
+        $this->composer = $composer;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -68,22 +88,37 @@ class Project
             ->getRepository('AnimeDbAppBundle:Task')
             ->findOneByCommand('animedb:propose-update');
 
-        $next_run = time()+ProposeUpdateCommand::INERVAL_UPDATE;
-        $next_run = mktime(1, 0, 0, date('m', $next_run), date('d', $next_run), date('y', $next_run));
-        $task->setNextRun(new \DateTime(date('Y-m-d H:i:s', $next_run)));
+        $next_run = new \DateTime();
+        $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');
 
-        $this->em->persist($task);
+        $this->em->persist($task->setNextRun($next_run));
         $this->em->flush();
     }
 
     /**
      * Update last update date
+     *
+     * @codeCoverageIgnore
+     * @deprecated use Cache Time Keeper
      */
     public function onUpdatedSaveLastUpdateDate()
     {
         // update params
-        $parameters = Yaml::parse($this->root.'/config/parameters.yml');
-        $parameters['parameters']['last_update'] = date('r');
-        file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
+        $parameters = Yaml::parse($this->parameters);
+        $parameters['parameters']['last_update'] = gmdate('r');
+        $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
+    }
+
+    /**
+     * On installed or updated try add a Shmop package
+     */
+    public function onInstalledOrUpdatedAddShmop()
+    {
+        // if the extension shmop is installed, can use the appropriate driver for store the key cache
+        if (extension_loaded('shmop')) {
+            $this->composer->addPackage('anime-db/shmop', '1.0.*');
+        } else {
+            $this->composer->removePackage('anime-db/shmop');
+        }
     }
 }

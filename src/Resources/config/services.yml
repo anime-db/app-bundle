@@ -33,8 +33,9 @@ services:
             - @gedmo.listener.translatable
             - @validator
             - @anime_db.cache_clearer
+            - @filesystem
+            - %kernel.root_dir%/config/parameters.yml
             - %locale%
-            - %kernel.root_dir%
 
     # Console listener
     anime_db.app.listener.console:
@@ -53,18 +54,31 @@ services:
 
     anime_db.app.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine, @anime_db.cache_clearer, %kernel.root_dir% ]
+        arguments:
+            - @doctrine
+            - @filesystem
+            - @anime_db.cache_clearer
+            - @anime_db.manipulator.composer
+            - %kernel.root_dir%/config/parameters.yml
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
+            - { name: kernel.event_listener, event: anime_db.project.updated, method: onInstalledOrUpdatedAddShmop }
+            - { name: kernel.event_listener, event: anime_db.project.installed, method: onInstalledOrUpdatedAddShmop }
 
     anime_db.app.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
-        arguments: [ @doctrine, @filesystem, @anime_db.api.client ]
+        arguments:
+            - @doctrine
+            - @filesystem
+            - @anime_db.api.client
+            - %kernel.root_dir%/config/parameters.yml
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }
             - { name: kernel.event_listener, event: anime_db.package.removed, method: onRemoved }
+            - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalledConfigureShmop }
+            - { name: kernel.event_listener, event: anime_db.package.removed, method: onRemovedShmop }
 
     anime_db.form.type_extension.help:
         class: AnimeDb\Bundle\AppBundle\Form\Type\Help
