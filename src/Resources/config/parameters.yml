@@ -2,3 +2,6 @@ parameters:
     serial_number: ''
     task_scheduler.enabled: true
     last_update: null
+    anime_db.downloader.root: %kernel.root_dir%/../web/media/
+    anime_db.downloader.favicon.root: %anime_db.downloader.root%favicon/
+    anime_db.downloader.favicon.proxy: 'http://www.google.com/s2/favicons?domain=%s'

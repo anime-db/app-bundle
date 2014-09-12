@@ -92,3 +92,12 @@ services:
     anime_db.php_finder.finder:
         class: Symfony\Component\Process\PhpExecutableFinder
         public: false
+
+    anime_db.downloader:
+        class: AnimeDb\Bundle\AppBundle\Service\Downloader
+        arguments:
+            - @filesystem
+            - @anime_db.client
+            - %anime_db.downloader.root%
+            - %anime_db.downloader.favicon.root%
+            - %anime_db.downloader.favicon.proxy%
