@@ -13,6 +13,8 @@ namespace AnimeDb\Bundle\AppBundle\Service;
 use Symfony\Component\Filesystem\Filesystem;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\HttpException;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 
 /**
  * Downloader
@@ -166,5 +168,29 @@ class Downloader
         }
 
         return false;
+    }
+
+    /**
+     * Download entity
+     *
+     * @param string $url
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
+     * @param boolean $override
+     *
+     * @return boolean
+     */
+    public function entity($url, EntityInterface $entity, $override = false)
+    {
+        if (!($path = parse_url($url, PHP_URL_PATH))) {
+            throw new \InvalidArgumentException('It is invalid URL: '.$url);
+        }
+        $entity->setFilename(pathinfo($path, PATHINFO_BASENAME));
+        $target = $this->root.$entity->getDownloadPath().'/'.$entity->getFilename();
+
+        if ($entity instanceof ImageInterface) {
+            return $this->image($url, $target, $override);
+        } else {
+            return $this->download($url, $target, $override);
+        }
     }
 }
