@@ -14,12 +14,12 @@ services:
 
     anime_db.widgets:
         class: AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
-        arguments: [@event_dispatcher]
+        arguments: [ @event_dispatcher ]
 
     # Twig extension
     anime_db.app.twig_extension:
         class: AnimeDb\Bundle\AppBundle\Service\TwigExtension
-        arguments: [@router, @fragment.handler, @anime_db.widgets]
+        arguments: [ @router, @fragment.handler, @anime_db.widgets ]
         tags:
             - { name: twig.extension }
 
@@ -85,14 +85,16 @@ services:
         tags:
           - { name: "form.type_extension", alias: "form" }
 
+    # PHP finder
     anime_db.php_finder:
         class: AnimeDb\Bundle\AppBundle\Service\PhpFinder
-        arguments: [@anime_db.php_finder.finder]
+        arguments: [ @anime_db.php_finder.finder ]
 
     anime_db.php_finder.finder:
         class: Symfony\Component\Process\PhpExecutableFinder
         public: false
 
+    # Downloader
     anime_db.downloader:
         class: AnimeDb\Bundle\AppBundle\Service\Downloader
         arguments:
@@ -101,3 +103,10 @@ services:
             - %anime_db.downloader.root%
             - %anime_db.downloader.favicon.root%
             - %anime_db.downloader.favicon.proxy%
+
+    anime_db.app.listener.entity:
+        class: AnimeDb\Bundle\AppBundle\Event\Listener\Entity
+        arguments: [ @filesystem, %anime_db.downloader.root% ]
+        tags:
+            - { name: doctrine.event_listener, event: postRemove }
+            - { name: doctrine.event_listener, event: postUpdate }
