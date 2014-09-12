@@ -3,7 +3,6 @@ services:
         class: AnimeDb\Bundle\AppBundle\Util\Pagination
     anime_db.filesystem:
         class: AnimeDb\Bundle\AppBundle\Util\Filesystem
-        arguments: [ @filesystem ]
     anime_db.cache_clearer:
         class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
         arguments: [ @anime_db.command, %kernel.environment% ]

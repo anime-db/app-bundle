@@ -10,8 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Util;
 
-use Symfony\Component\Filesystem\Filesystem as Component;
-
 /**
  * Filesystem
  *
@@ -20,38 +18,6 @@ use Symfony\Component\Filesystem\Filesystem as Component;
  */
 class Filesystem
 {
-    /**
-     * Filesystem
-     *
-     * @var \Symfony\Component\Filesystem\Filesystem
-     */
-    protected $fs;
-
-    /**
-     * Construct
-     *
-     * @param \Symfony\Component\Filesystem\Filesystem $fs
-     */
-    public function __construct(Component $fs)
-    {
-        $this->fs = $fs;
-    }
-
-    /**
-     * Download image
-     *
-     * @param string $url
-     * @param string $target
-     * @param boolean $override
-     */
-    public function downloadImage($url, $target, $override = false)
-    {
-        $this->fs->copy($url, $target, $override);
-        if (@getimagesize($target) === false) {
-            unlink($target);
-        }
-    }
-
     /**
      * Gets the name of the owner of the current PHP script
      *
