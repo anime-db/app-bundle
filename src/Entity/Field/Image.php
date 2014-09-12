@@ -126,10 +126,12 @@ class Image
             file_put_contents($tempname, $content);
 
             // create local file from remote
-            if (!($info = getimagesize($tempname))) {
+            if (($info = @getimagesize($tempname)) === false) {
+                unlink($tempname);
                 throw new \InvalidArgumentException('This is not a image file');
             }
             if (!($path = parse_url($this->getRemote(), PHP_URL_PATH))) {
+                unlink($tempname);
                 throw new \InvalidArgumentException('Invalid image URL');
             }
             $originalName = pathinfo($path, PATHINFO_BASENAME);
@@ -145,8 +147,8 @@ class Image
 
             // revalidate entity
             $errors = $validator->validate($this);
-            if (count($errors)) {
-                throw new \InvalidArgumentException($errors[0]->getMessage());
+            if ($errors->has(0)) {
+                throw new \InvalidArgumentException($errors->get(0)->getMessage());
             }
         }
 
