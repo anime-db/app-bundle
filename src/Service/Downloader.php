@@ -99,14 +99,11 @@ class Downloader
 
         $this->fs->mkdir(dirname($target), 0755);
 
-        $response = $this->client
+        return $this->client
             ->get($url)
             ->setResponseBody($target)
-            ->send();
-        if ($response->isSuccessful()) {
-            return true;
-        }
-        return false;
+            ->send()
+            ->isSuccessful();
     }
 
     /**
@@ -153,7 +150,7 @@ class Downloader
     }
 
     /**
-     * Download
+     * Download favicon
      *
      * @param string $host
      * @param boolean $override
@@ -162,24 +159,12 @@ class Downloader
      */
     public function favicon($host, $override = false)
     {
-        $target = $this->getFaviconFilename($host);
+        $target = $this->favicon_root.$host.'.ico';
 
         if ($this->image(sprintf($this->favicon_proxy, $host), $target, $override)) {
             return $target;
         }
 
         return false;
-    }
-
-    /**
-     * Get favicon filename
-     *
-     * @param string $host
-     *
-     * @return string
-     */
-    protected function getFaviconFilename($host)
-    {
-        return $this->favicon_root.$host.'.ico';
     }
 }
