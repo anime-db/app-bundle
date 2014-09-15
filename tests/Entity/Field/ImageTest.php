@@ -57,14 +57,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get path
-     */
-    public function testGetPath()
-    {
-        $this->assertEmpty($this->image->getPath());
-    }
-
-    /**
      * Test set and get local file
      */
     public function testLocal()

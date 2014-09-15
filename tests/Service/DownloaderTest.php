@@ -72,6 +72,13 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     protected $client;
 
     /**
+     * Validator
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $validator;
+
+    /**
      * Request
      *
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -104,6 +111,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         mkdir($this->favicon, 0755, true);
         $this->fs = $this->getMock('\Symfony\Component\Filesystem\Filesystem');
         $this->client = $this->getMock('\Guzzle\Http\Client');
+        $this->validator = $this->getMock('\Symfony\Component\Validator\Validator\ValidatorInterface');
         $this->request = $this->getMock('\Guzzle\Http\Message\RequestInterface');
         $this->response = $this->getMockBuilder('\Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
@@ -111,6 +119,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->downloader = new Downloader(
             $this->fs,
             $this->client,
+            $this->validator,
             $this->dir,
             $this->favicon,
             $this->proxy
