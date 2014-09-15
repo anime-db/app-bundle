@@ -11,10 +11,13 @@
 namespace AnimeDb\Bundle\AppBundle\Service;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\HttpException;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
+use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
 
 /**
  * Downloader
@@ -46,6 +49,13 @@ class Downloader
     protected $client;
 
     /**
+     * Validator
+     *
+     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+     */
+    protected $validator;
+
+    /**
      * Download root dir
      *
      * @var string
@@ -71,17 +81,35 @@ class Downloader
      *
      * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \Guzzle\Http\Client $client
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param string $root
      * @param string $favicon_root
      * @param string $favicon_proxy
      */
-    public function __construct(Filesystem $fs, Client $client, $root, $favicon_root, $favicon_proxy)
-    {
+    public function __construct(
+        Filesystem $fs,
+        Client $client,
+        ValidatorInterface $validator,
+        $root,
+        $favicon_root,
+        $favicon_proxy
+    ) {
         $this->fs = $fs;
         $this->client = $client;
+        $this->validator = $validator;
         $this->root = $root;
         $this->favicon_root = $favicon_root;
         $this->favicon_proxy = $favicon_proxy;
+    }
+
+    /**
+     * Get root dir
+     *
+     * @return string
+     */
+    public function getRoot()
+    {
+        return $this->root;
     }
 
     /**
@@ -192,5 +220,92 @@ class Downloader
         } else {
             return $this->download($url, $target, $override);
         }
+    }
+
+    /**
+     * Download image field
+     *
+     * @param \AnimeDb\Bundle\AppBundle\Entity\Field\Image $entity
+     * @param string $url
+     * @param boolean $override
+     */
+    public function imageField(Image $entity, $url = '', $override = false)
+    {
+        if ($url) {
+            $entity->setRemote($url);
+        }
+
+        // upload remote file
+        if (!$entity->getLocal() && $entity->getRemote()) {
+            if (!($path = parse_url($entity->getRemote(), PHP_URL_PATH))) {
+                throw new \InvalidArgumentException('It is invalid URL: '.$entity->getRemote());
+            }
+            $entity->setFilename(pathinfo($path, PATHINFO_BASENAME));
+            $target = $this->getTargetDirForImageField($entity, $override);
+
+            if (!$this->image($entity->getRemote(), $target, $override)) {
+                throw new \RuntimeException('Failed download image');
+            }
+
+            // set remote as local for validate
+            $entity->setLocal(new UploadedFile(
+                $target,
+                $filename,
+                getimagesize($target)['mime'],
+                filesize($target),
+                UPLOAD_ERR_OK,
+                true
+            ));
+            // validate entity
+            $errors = $this->validator->validate($entity);
+            if ($errors->has(0)) {
+                throw new \InvalidArgumentException($errors->get(0)->getMessage());
+            }
+            $entity->clear();
+        }
+
+        // upload local file
+        if ($entity->getLocal() instanceof UploadedFile) {
+            $entity->setFilename($this->getLocal()->getClientOriginalName());
+            $info = pathinfo($this->getTargetDirForImageField($entity, $override));
+
+            // upload from original name
+            $entity->getLocal()->move($info['dirname'], $info['basename']);
+            $entity->clear();
+        }
+    }
+
+    /**
+     * Get target download dir for image field
+     *
+     * @param \AnimeDb\Bundle\AppBundle\Entity\Field\Image $entity
+     * @param string $override
+     *
+     * @return string
+     */
+    protected function getTargetDirForImageField(Image $entity, $override = false)
+    {
+        $target = $this->root.$entity->getDownloadPath().'/'.$entity->getFilename();
+        if (!$override) {
+            $target = $this->getUniqueFilename($target);
+            $entity->setFilename(pathinfo($target, PATHINFO_BASENAME)); // update filename
+        }
+        return $target;
+    }
+
+    /**
+     * Get unique filename
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    public function getUniqueFilename($filename) {
+        $info = pathinfo($filename);
+        $name = $info['basename'];
+        for ($i = 1; file_exists($info['dirname'].'/'.$name); $i++) {
+            $name = $info['filename'].'['.$i.'].'.$info['extension'];
+        }
+        return $info['dirname'].'/'.$name;
     }
 }

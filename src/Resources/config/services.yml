@@ -100,6 +100,7 @@ services:
         arguments:
             - @filesystem
             - @anime_db.client
+            - @validator
             - %anime_db.downloader.root%
             - %anime_db.downloader.favicon.root%
             - %anime_db.downloader.favicon.proxy%
