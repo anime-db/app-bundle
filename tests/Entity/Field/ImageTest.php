@@ -76,23 +76,23 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test is set image
+     * Test has image
      */
-    public function testIsSetImage()
+    public function testHasImage()
     {
-        $this->assertFalse($this->image->isSetImage());
+        $this->assertFalse($this->image->hasImage());
 
         $this->image->setRemote('foo');
-        $this->assertTrue($this->image->isSetImage());
+        $this->assertTrue($this->image->hasImage());
     }
 
     /**
-     * Test is set image from local file
+     * Test has image from local file
      */
-    public function testIsSetImageLocal()
+    public function testHasImageLocal()
     {
         $this->image->setLocal($this->file);
 
-        $this->assertTrue($this->image->isSetImage());
+        $this->assertTrue($this->image->hasImage());
     }
 }
