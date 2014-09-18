@@ -487,6 +487,61 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get bad remotes
+     *
+     * @return array
+     */
+    public function getBadRemotes()
+    {
+        return [
+            ['///', ''],
+            ['', '///']
+        ];
+    }
+
+    /**
+     * Test image field remote fail
+     *
+     * @dataProvider getBadRemotes
+     * @expectedException \InvalidArgumentException
+     *
+     * @param string $remote
+     * @param string $url
+     */
+    public function testImageFieldRemoteFail($remote, $url = '')
+    {
+        $this->downloader->imageField($this->getImageFieldRemote($remote, $url), $url);
+    }
+
+    /**
+     * Get image field remote
+     *
+     * @param string $remote
+     * @param string $url
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getImageFieldRemote($remote, $url)
+    {
+        $entity = $this->getMock('\AnimeDb\Bundle\AppBundle\Entity\Field\Image');
+        if ($url) {
+            $entity
+                ->expects($this->atLeastOnce())
+                ->method('setRemote')
+                ->with($url);
+        }
+        $entity
+            ->expects($this->atLeastOnce())
+            ->method('getRemote')
+            ->willReturn($url ?: $remote);
+        $entity
+            ->expects($this->once())
+            ->method('getLocal')
+            ->willReturn(null);
+        return $entity;
+    }
+
+    /**
      * Test get unique filename
      */
     public function testGetUniqueFilename()
