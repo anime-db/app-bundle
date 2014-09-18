@@ -125,7 +125,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
             $this->proxy
         );
     }
-
     /**
      * (non-PHPdoc)
      * @see PHPUnit_Framework_TestCase::tearDown()
@@ -134,6 +133,14 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         (new Filesystem())->remove($this->dir);
+    }
+
+    /**
+     * Test get root
+     */
+    public function testGetRoot()
+    {
+        $this->assertEquals($this->dir, $this->downloader->getRoot());
     }
 
     /**
@@ -340,5 +347,20 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getCurlOptions')
             ->willReturn($options);
+    }
+
+    /**
+     * Test get unique filename
+     */
+    public function testGetUniqueFilename()
+    {
+        $filename = $this->dir.'foo.txt';
+        touch($new = $this->downloader->getUniqueFilename($filename));
+        $this->assertEquals($this->dir.'foo.txt', $new);
+
+        touch($new = $this->downloader->getUniqueFilename($filename));
+        $this->assertEquals($this->dir.'foo[1].txt', $new);
+
+        $this->assertEquals($this->dir.'foo[2].txt', $this->downloader->getUniqueFilename($filename));
     }
 }
