@@ -410,11 +410,24 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get override
+     * Get toggle
      *
      * @return array
      */
-    public function getOverride()
+    public function getToggle()
+    {
+        return [
+            [true],
+            [false]
+        ];
+    }
+
+    /**
+     * Get toggle multilevel
+     *
+     * @return array
+     */
+    public function getToggleMultilevel()
     {
         return [
             [false, false],
@@ -427,7 +440,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test image field local
      *
-     * @dataProvider getOverride
+     * @dataProvider getToggleMultilevel
      *
      * @param boolean $override
      * @param boolean $exists
@@ -487,30 +500,55 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get bad remotes
+     * Test image field remote fail
      *
-     * @return array
+     * @dataProvider getToggle
+     * @expectedException \InvalidArgumentException
+     *
+     * @param boolean $toggle
      */
-    public function getBadRemotes()
+    public function testImageFieldRemoteFail($toggle)
     {
-        return [
-            ['///', ''],
-            ['', '///']
-        ];
+        $remote = $toggle ? '///' : '';
+        $url = $toggle ? '' : '///';
+        $this->downloader->imageField($this->getImageFieldRemote($remote, $url), $url);
     }
 
     /**
-     * Test image field remote fail
+     * Test image field remote bad image
      *
-     * @dataProvider getBadRemotes
-     * @expectedException \InvalidArgumentException
+     * @dataProvider getToggleMultilevel
+     * @expectedException \RuntimeException
      *
-     * @param string $remote
-     * @param string $url
+     * @param boolean $toggle
+     * @param boolean $is_successful
      */
-    public function testImageFieldRemoteFail($remote, $url = '')
+    public function testImageFieldRemoteBadImage($toggle, $is_successful)
     {
-        $this->downloader->imageField($this->getImageFieldRemote($remote, $url), $url);
+        $file = 'foo.txt';
+        $path = 'bar';
+        $remote = $toggle ? 'http://example.com/test/'.$file : '';
+        $url = $toggle ? '' : 'http://example.com/test/'.$file;
+
+        mkdir($this->dir.$path, 0755, true);
+        touch($this->dir.$path.'/'.$file);
+        $entity = $this->getImageFieldRemote($remote, $url);
+        $entity
+            ->expects($this->once())
+            ->method('setFilename')
+            ->with($file);
+        $entity
+            ->expects($this->once())
+            ->method('getFilename')
+            ->willReturn($file);
+        $entity
+            ->expects($this->once())
+            ->method('getDownloadPath')
+            ->willReturn($path);
+        $this->download($this->dir.$path.'/'.$file, $is_successful, $url ?: $remote);
+
+        // test
+        $this->downloader->imageField($entity, $url, true);
     }
 
     /**
