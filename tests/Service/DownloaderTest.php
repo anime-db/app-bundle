@@ -552,6 +552,107 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test image field remote validator fail
+     *
+     * @dataProvider getToggle
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Error message
+     *
+     * @param boolean $toggle
+     */
+    public function testImageFieldRemoteValidatorFail($toggle)
+    {
+        $this->downloadImageFieldRemote($toggle, 'Error message');
+    }
+
+    /**
+     * Test image field remote
+     *
+     * @dataProvider getToggle
+     *
+     * @param boolean $toggle
+     */
+    public function testImageFieldRemote($toggle)
+    {
+        $this->downloadImageFieldRemote($toggle);
+    }
+
+    /**
+     * Download image field remote
+     *
+     * @param boolean $toggle
+     * @param string $message
+     */
+    protected function downloadImageFieldRemote($toggle, $message = '')
+    {
+        $that = $this;
+        $file = 'foo.txt';
+        $path = 'bar';
+        $target = $this->dir.$path.'/'.$file;
+        $remote = $toggle ? 'http://example.com/test/'.$file : '';
+        $url = $toggle ? '' : 'http://example.com/test/'.$file;
+        mkdir($this->dir.$path, 0755, true);
+        file_put_contents($target, base64_decode(self::IMAGE));
+
+        $entity = $this->getImageFieldRemote($remote, $url);
+        $entity
+            ->expects($this->once())
+            ->method('setFilename')
+            ->with($file);
+        $entity
+            ->expects($this->atLeastOnce())
+            ->method('getFilename')
+            ->willReturn($file);
+        $entity
+            ->expects($this->once())
+            ->method('getDownloadPath')
+            ->willReturn($path);
+        $entity
+            ->expects($this->once())
+            ->method('setLocal')
+            ->willReturnCallback(function ($uploaded_file) use ($that, $target, $file) {
+                // test uploaded file
+                $that->assertInstanceOf('\Symfony\Component\HttpFoundation\File\UploadedFile', $uploaded_file);
+                $that->assertEquals($target, $uploaded_file->getPathname());
+                $that->assertEquals($file, $uploaded_file->getClientOriginalName());
+                $that->assertEquals(getimagesize($target)['mime'], $uploaded_file->getClientMimeType());
+                $that->assertEquals(filesize($target), $uploaded_file->getClientSize());
+                $that->assertEquals(UPLOAD_ERR_OK, $uploaded_file->getError());
+            });
+        $entity
+            ->expects($message ? $this->never() : $this->once())
+            ->method('clear');
+        // validation
+        $list = $this->getMock('\Symfony\Component\Validator\ConstraintViolationListInterface');
+        $list
+            ->expects($this->once())
+            ->method('has')
+            ->willReturn(!!$message)
+            ->with(0);
+        if ($message) {
+            $error = $this->getMock('\Symfony\Component\Validator\ConstraintViolationInterface');
+            $error
+                ->expects($this->once())
+                ->method('getMessage')
+                ->willReturn($message);
+            $list
+                ->expects($this->once())
+                ->method('get')
+                ->willReturn($error)
+                ->with(0);
+        }
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn($list)
+            ->with($entity);
+        $this->download($this->dir.$path.'/'.$file, true, $url ?: $remote);
+
+        // test
+        $this->downloader->imageField($entity, $url, true);
+    }
+
+    /**
      * Get image field remote
      *
      * @param string $remote
@@ -573,7 +674,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
             ->method('getRemote')
             ->willReturn($url ?: $remote);
         $entity
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getLocal')
             ->willReturn(null);
         return $entity;
