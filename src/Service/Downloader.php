@@ -250,15 +250,15 @@ class Downloader
             // set remote as local for validate
             $entity->setLocal(new UploadedFile(
                 $target,
-                $filename,
+                pathinfo($entity->getFilename(), PATHINFO_BASENAME),
                 getimagesize($target)['mime'],
                 filesize($target),
-                UPLOAD_ERR_OK,
-                true
+                UPLOAD_ERR_OK
             ));
             // validate entity
             $errors = $this->validator->validate($entity);
             if ($errors->has(0)) {
+                unlink($target);
                 throw new \InvalidArgumentException($errors->get(0)->getMessage());
             }
             $entity->clear();
