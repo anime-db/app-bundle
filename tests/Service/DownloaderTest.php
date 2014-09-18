@@ -410,6 +410,83 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get override
+     *
+     * @return array
+     */
+    public function getOverride()
+    {
+        return [
+            [false, false],
+            [false, true],
+            [true, false],
+            [true, true],
+        ];
+    }
+
+    /**
+     * Test image field local
+     *
+     * @dataProvider getOverride
+     *
+     * @param boolean $override
+     * @param boolean $exists
+     */
+    public function testImageFieldLocal($override, $exists)
+    {
+        if ($exists) {
+            mkdir($this->dir.'bar');
+            touch($this->dir.'bar/foo');
+        }
+
+        $file = $this->getMockBuilder('\Symfony\Component\HttpFoundation\File\UploadedFile')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $file
+            ->expects($this->once())
+            ->method('getClientOriginalName')
+            ->willReturn('foo');
+        $file
+            ->expects($this->once())
+            ->method('getClientOriginalName')
+            ->willReturn('foo');
+        $file
+            ->expects($this->once())
+            ->method('move')
+            ->with($this->dir.'bar', $exists && !$override ? 'foo[1]' : 'foo');
+
+        $entity = $this->getMock('\AnimeDb\Bundle\AppBundle\Entity\Field\Image');
+        $entity
+            ->expects($this->atLeastOnce())
+            ->method('getLocal')
+            ->willReturn($file);
+        $entity
+            ->expects($this->once())
+            ->method('getFilename')
+            ->willReturn('foo');
+        $entity
+            ->expects($this->at(3))
+            ->method('setFilename')
+            ->with('foo');
+        if (!$override) {
+            $entity
+                ->expects($this->at(6))
+                ->method('setFilename')
+                ->with($exists ? 'foo[1]' : 'foo');
+        }
+        $entity
+            ->expects($this->once())
+            ->method('getDownloadPath')
+            ->willReturn('bar');
+        $entity
+            ->expects($this->once())
+            ->method('clear');
+
+        // test
+        $this->downloader->imageField($entity, '', $override);
+    }
+
+    /**
      * Test get unique filename
      */
     public function testGetUniqueFilename()
