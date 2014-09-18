@@ -236,7 +236,7 @@ class Downloader
         }
 
         // upload remote file
-        if (!$entity->getLocal() && $entity->getRemote()) {
+        if (!($entity->getLocal() instanceof UploadedFile) && $entity->getRemote()) {
             if (!($path = parse_url($entity->getRemote(), PHP_URL_PATH))) {
                 throw new \InvalidArgumentException('It is invalid URL: '.$entity->getRemote());
             }
@@ -266,7 +266,7 @@ class Downloader
 
         // upload local file
         if ($entity->getLocal() instanceof UploadedFile) {
-            $entity->setFilename($this->getLocal()->getClientOriginalName());
+            $entity->setFilename($entity->getLocal()->getClientOriginalName());
             $info = pathinfo($this->getTargetDirForImageField($entity, $override));
 
             // upload from original name
@@ -302,10 +302,11 @@ class Downloader
      */
     public function getUniqueFilename($filename) {
         $info = pathinfo($filename);
-        $name = $info['basename'];
-        for ($i = 1; file_exists($info['dirname'].'/'.$name); $i++) {
-            $name = $info['filename'].'['.$i.'].'.$info['extension'];
+        $name = $info['filename'];
+        $ext = isset($info['extension']) ? '.'.$info['extension'] : '';
+        for ($i = 1; file_exists($info['dirname'].'/'.$name.$ext); $i++) {
+            $name = $info['filename'].'['.$i.']';
         }
-        return $info['dirname'].'/'.$name;
+        return $info['dirname'].'/'.$name.$ext;
     }
 }
