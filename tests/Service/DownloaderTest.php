@@ -350,6 +350,66 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test entity fail
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testEntityFail()
+    {
+        $entity = $this->getMock('\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface');
+        $this->downloader->entity('http://example.com', $entity);
+    }
+
+    /**
+     * Get entity
+     *
+     * @return array
+     */
+    public function getEntity()
+    {
+        return [
+            [true, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface'],
+            [false, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface'],
+            [true, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface'],
+            [false, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface']
+        ];
+    }
+
+    /**
+     * Test entity
+     *
+     * @dataProvider getEntity
+     *
+     * @param boolean $is_successful
+     * @param string $entity
+     */
+    public function testEntity($is_successful, $entity)
+    {
+        $file = $this->dir.'bar/foo';
+        $url = 'http://example.com/test/foo';
+        mkdir($this->dir.'bar');
+        file_put_contents($file, base64_decode(self::IMAGE));
+        $this->download($file, $is_successful, $url);
+
+        $entity = $this->getMock($entity);
+        $entity
+            ->expects($this->once())
+            ->method('setFilename')
+            ->with('foo');
+        $entity
+            ->expects($this->once())
+            ->method('getFilename')
+            ->willReturn('foo');
+        $entity
+            ->expects($this->once())
+            ->method('getDownloadPath')
+            ->willReturn('bar');
+        // test
+        $actual = $this->downloader->entity($url, $entity, true);
+        $this->assertEquals($is_successful, $actual);
+    }
+
+    /**
      * Test get unique filename
      */
     public function testGetUniqueFilename()
