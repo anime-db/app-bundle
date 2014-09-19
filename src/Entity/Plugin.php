@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 
 /**
  * Installed plugin
@@ -25,7 +26,7 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
  * @package AnimeDb\Bundle\AppBundle\Entity
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Plugin extends BaseEntity
+class Plugin extends BaseEntity implements ImageInterface
 {
     /**
      * Name
