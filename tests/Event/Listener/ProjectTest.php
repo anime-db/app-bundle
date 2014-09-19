@@ -107,8 +107,6 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnUpdatedProposeUpdateTask()
     {
-        $this->markTestSkipped('Faild mock magic method findOneByCommand');
-
         $that = $this;
         $next_run = new \DateTime();
         $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');
@@ -126,14 +124,14 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
         $rep
             ->expects($this->any())
-            ->method('findOneByCommand')
+            ->method('findOneBy')
             ->willReturn($task)
-            ->with('animedb:propose-update');
+            ->with(['command' => 'animedb:propose-update']);
         $this->em
             ->expects($this->once())
             ->method('getRepository')
             ->with('AnimeDbAppBundle:Task')
-            ->willReturn($task);
+            ->willReturn($rep);
         $this->em
             ->expects($this->once())
             ->method('persist')

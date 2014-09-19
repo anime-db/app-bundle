@@ -86,7 +86,7 @@ class Project
         /* @var $task \AnimeDb\Bundle\AppBundle\Entity\Task */
         $task = $this->em
             ->getRepository('AnimeDbAppBundle:Task')
-            ->findOneByCommand('animedb:propose-update');
+            ->findOneBy(['command' => 'animedb:propose-update']);
 
         $next_run = new \DateTime();
         $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');

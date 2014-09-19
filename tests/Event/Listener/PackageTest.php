@@ -37,6 +37,13 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     protected $client;
 
     /**
+     * Downloader
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $downloader;
+
+    /**
      * Entity manager
      *
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -75,6 +82,9 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $this->client = $this->getMockBuilder('\AnimeDb\Bundle\ApiClientBundle\Service\Client')
             ->disableOriginalConstructor()
             ->getMock();
+        $this->downloader = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\Downloader')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->em = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
             ->disableOriginalConstructor()
             ->getMock();
@@ -94,7 +104,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->with('AnimeDbAppBundle:Plugin')
             ->willReturn($this->rep);
 
-        $this->listener = new Package($doctrine, $this->fs, $this->client, $this->parameters);
+        $this->listener = new Package($doctrine, $this->fs, $this->client, $this->downloader, $this->parameters);
     }
 
     /**
@@ -213,12 +223,16 @@ class PackageTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddNewPlugin($method, $event, array $data) {
         $that = $this;
-        // check upload logo
+        // check download logo
         if ($data['logo']) {
-            $this->fs
+            $this->downloader
                 ->expects($this->once())
-                ->method('mirror')
-                ->with($data['logo']);
+                ->method('entity')
+                ->willReturnCallback(function ($logo, $plugin, $override) use ($that, $data) {
+                    $that->assertEquals($data['logo'], $logo);
+                    $that->assertTrue($override);
+                    $that->checkNewPlugin($plugin, $data);
+                });
         }
         $this->rep
             ->expects($this->once())
@@ -229,13 +243,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('persist')
             ->willReturnCallback(function ($plugin) use ($that, $data) {
-                $that->assertInstanceOf('\AnimeDb\Bundle\AppBundle\Entity\Plugin', $plugin);
-                $that->assertEquals('foo/bar', $plugin->getName());
-                $that->assertEquals($data['title'], $plugin->getTitle());
-                $that->assertEquals($data['description'], $plugin->getDescription());
-                if ($data['logo']) {
-                    $that->assertEquals(pathinfo($data['logo'], PATHINFO_BASENAME), $plugin->getLogo());
-                }
+                $that->checkNewPlugin($plugin, $data);
             });
         $this->em
             ->expects($this->once())
@@ -248,6 +256,20 @@ class PackageTest extends \PHPUnit_Framework_TestCase
 
         // test
         call_user_func([$this->listener, $method], $this->getEvent($this->getPackage($this->exactly(2)), $event));
+    }
+
+    /**
+     * Check new plugin
+     *
+     * @param \AnimeDb\Bundle\AppBundle\Entity\Plugin $plugin
+     * @param array $data
+     */
+    public function checkNewPlugin($plugin, array $data)
+    {
+        $this->assertInstanceOf('\AnimeDb\Bundle\AppBundle\Entity\Plugin', $plugin);
+        $this->assertEquals('foo/bar', $plugin->getName());
+        $this->assertEquals($data['title'], $plugin->getTitle());
+        $this->assertEquals($data['description'], $plugin->getDescription());
     }
 
     /**
@@ -289,35 +311,26 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->willReturn('foo/bar');
 
         $setters = [
-            'logo' => 'setLogo',
             'title' => 'setTitle',
             'description' => 'setDescription'
         ];
         foreach ($setters as $key => $method) {
-            if (!empty($data[$key])) {
-                // upload logo
-                if ($key == 'logo') {
-                    $plugin
-                        ->expects($this->once())
-                        ->method('getAbsolutePath')
-                        ->willReturn('/absolute/path');
-                    $this->fs
-                        ->expects($this->once())
-                        ->method('mirror')
-                        ->with($data[$key], '/absolute/path');
-                    $data[$key] = pathinfo($data[$key], PATHINFO_BASENAME);
-                }
+            if(empty($data[$key])) {
+                $plugin
+                    ->expects($this->never())
+                    ->method($method);
+            } else {
                 $plugin
                     ->expects($this->once())
                     ->method($method)
                     ->with($data[$key])
                     ->willReturnSelf();
-            } else {
-                $plugin
-                    ->expects($this->never())
-                    ->method($method);
             }
         }
+        $this->downloader
+            ->expects(!empty($data['logo']) ? $this->once() : $this->never())
+            ->method('entity')
+            ->with($data['logo'], $plugin, true);
 
         return $plugin;
     }

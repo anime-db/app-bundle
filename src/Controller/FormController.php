@@ -162,9 +162,9 @@ class FormController extends Controller
 
         // try upload file
         try {
-            $image->upload($this->get('validator'));
+            $this->get('anime_db.downloader')->imageField($image);
             return new JsonResponse([
-                'path'  => $image->getPath(),
+                'path'  => $image->getFilename(),
                 'image' => $image->getWebPath(),
             ]);
         } catch (\InvalidArgumentException $e) {

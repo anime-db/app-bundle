@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Filesystem\Filesystem;
 use AnimeDb\Bundle\ApiClientBundle\Service\Client;
+use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
@@ -78,17 +79,31 @@ class Package
     protected $parameters;
 
     /**
+     * Downloader
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
+     */
+    protected $downloader;
+
+    /**
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
      * @param string $parameters
      */
-    public function __construct(Registry $doctrine, Filesystem $fs, Client $client, $parameters)
-    {
+    public function __construct(
+        Registry $doctrine,
+        Filesystem $fs,
+        Client $client,
+        Downloader $downloader,
+        $parameters
+    ) {
         $this->fs = $fs;
         $this->client = $client;
+        $this->downloader = $downloader;
         $this->em = $doctrine->getManager();
         $this->parameters = $parameters;
         $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
@@ -139,8 +154,7 @@ class Package
             $data = $this->client->getPlugin($vendor, $package);
             $plugin->setTitle($data['title'])->setDescription($data['description']);
             if ($data['logo']) {
-                $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
-                $this->fs->mirror($data['logo'], $plugin->getAbsolutePath());
+                $this->downloader->entity($data['logo'], $plugin, true);
             }
         } catch (\Exception $e) {} // is not a critical error
 
