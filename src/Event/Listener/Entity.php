@@ -56,8 +56,11 @@ class Entity
     public function postRemove(LifecycleEventArgs $args)
     {
         if ($args->getEntity() instanceof EntityInterface) {
-            $this->removeFile($args->getEntity());
-            $this->removeOldFiles($args->getEntity());
+            $entity = $args->getEntity();
+            if ($entity->getFilename() && file_exists($root.$entity->getFilename())) {
+                unlink($root.$entity->getFilename());
+            }
+            $this->removeOldFiles($entity);
         }
     }
 
@@ -70,19 +73,6 @@ class Entity
     {
         if ($args->getEntity() instanceof EntityInterface) {
             $this->removeOld($args->getEntity());
-        }
-    }
-
-    /**
-     * Remove file
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
-     */
-    protected function removeFile(EntityInterface $entity)
-    {
-        $root = $this->root.$entity->getDownloadPath().'/';
-        if ($entity->getFilename() && file_exists($root.$entity->getFilename())) {
-            unlink($root.$entity->getFilename());
         }
     }
 
