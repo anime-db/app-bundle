@@ -13,19 +13,19 @@ namespace AnimeDb\Bundle\AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
 
 /**
  * Installed plugin
  *
  * @ORM\Entity
  * @ORM\Table(name="plugin")
- * @ORM\HasLifecycleCallbacks
  * @IgnoreAnnotation("ORM")
  *
  * @package AnimeDb\Bundle\AppBundle\Entity
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Plugin
+class Plugin extends BaseEntity
 {
     /**
      * Name
@@ -162,7 +162,7 @@ class Plugin
      */
     public function setLogo($logo)
     {
-        $this->logo = $logo;
+        $this->setFilename($logo);
         return $this;
     }
 
@@ -173,7 +173,26 @@ class Plugin
      */
     public function getLogo()
     {
-        return $this->logo;
+        return $this->getFilename();
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::getFilename()
+     */
+    public function getFilename()
+    {
+        return $this->logo ?: parent::getFilename();
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::setFilename()
+     */
+    public function setFilename($filename)
+    {
+        $this->logo = $filename;
+        parent::setFilename($filename);
     }
 
     /**
@@ -200,54 +219,24 @@ class Plugin
     }
 
     /**
-     * Get absolute path
-     *
-     * @return string
+     * (non-PHPdoc)
+     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::getDownloadPath()
      */
-    public function getAbsolutePath()
+    public function getDownloadPath()
     {
-        return $this->logo && $this->name ? $this->getUploadRootDir().'/'.$this->logo : '';
-    }
-
-    /**
-     * Get upload root dir
-     *
-     * @return string
-     */
-    public function getUploadRootDir()
-    {
-        return __DIR__.'/../../../../../web/'.$this->getUploadDir();
-    }
-
-    /**
-     * Get upload dir
-     *
-     * @return string
-     */
-    protected function getUploadDir()
-    {
-        return 'media/plugin/'.$this->getName();
+        return parent::getDownloadPath().'/plugin/'.$this->getName();
     }
 
     /**
      * Get logo web path
      *
+     * @deprecated use getWebPath()
+     * @codeCoverageIgnore
+     *
      * @return string
      */
     public function getLogoWebPath()
     {
-        return $this->logo && $this->name ? '/'.$this->getUploadDir().'/'.$this->logo : '';
-    }
-
-    /**
-     * Remove logo file
-     *
-     * @ORM\PostRemove
-     */
-    public function doRemoveLogo()
-    {
-        if (($file = $this->getAbsolutePath()) && file_exists($file)) {
-            unlink($file);
-        }
+        return $this->getWebPath();
     }
 }
