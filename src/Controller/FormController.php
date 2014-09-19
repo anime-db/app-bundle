@@ -70,17 +70,6 @@ class FormController extends Controller
             $path = $root;
         }
 
-        // add slash if need
-        $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
-        $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
-        $origin_path = $path;
-        $path = Utf8::wrapPath($path); // wrap path for current fs
-
-
-        if (!is_dir($path) || !is_readable($path)) {
-            throw new NotFoundHttpException('Cen\'t read directory: '.$origin_path);
-        }
-
         $response = $this->get('cache_time_keeper')
             ->getResponse([(new \DateTime)->setTimestamp(filemtime($path))], -1, new JsonResponse());
         // response was not modified for this request
@@ -88,36 +77,9 @@ class FormController extends Controller
             return $response;
         }
 
-        // scan directory
-        $folders = [];
-        /* @var $file \SplFileInfo */
-        foreach (new \DirectoryIterator($path) as $file) {
-            if (
-                $file->getFilename()[0] != '.' &&
-                substr($file->getFilename(), -1) != '~' &&
-                $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
-                $file->isDir() && $file->isReadable()
-            ) {
-                $folders[$file->getFilename()] = [
-                    'name' => $file->getFilename(),
-                    'path' => $origin_path.$file->getFilename().DIRECTORY_SEPARATOR
-                ];
-            }
-        }
-        ksort($folders);
-
-        // add link on parent folder
-        if (substr_count($origin_path, DIRECTORY_SEPARATOR) > 1) {
-            $pos = strrpos(substr($origin_path, 0, -1), DIRECTORY_SEPARATOR) + 1;
-            array_unshift($folders, [
-                'name' => '..',
-                'path' => substr($origin_path, 0, $pos)
-            ]);
-        }
-
         return $response->setData([
-            'path' => $origin_path,
-            'folders' => array_values($folders)
+            'path' => $path,
+            'folders' => Filesystem::scandir($path, Filesystem::DIRECTORY)
         ]);
     }
 
