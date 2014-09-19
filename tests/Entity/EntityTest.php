@@ -87,7 +87,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             ['plugin', 'getName', 'setName'],
             ['plugin', 'getTitle', 'setTitle'],
             ['plugin', 'getDescription', 'setDescription'],
-            ['plugin', 'getLogo', 'setLogo'],
             ['plugin', 'getDateInstall', 'setDateInstall', $now, $modify],
             // Task
             ['task', 'getCommand', 'setCommand'],

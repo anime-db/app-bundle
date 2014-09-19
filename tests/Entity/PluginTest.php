@@ -38,49 +38,64 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get upload root dir
+     * Get logo setters
+     *
+     * @return array
      */
-    public function testGetUploadRootDir()
+    public function getLogoSetters()
     {
-        $this->plugin->setName('foo');
-
-        $this->assertEquals(
-            str_replace('/tests/', '/src/', __DIR__).'/../../../../../web/media/plugin/foo',
-            $this->plugin->getUploadRootDir()
-        );
+        return [
+            ['setLogo'],
+            ['setFilename']
+        ];
     }
 
     /**
-     * Test get absolute path
+     * Test logo
+     *
+     * @dataProvider getLogoSetters
+     *
+     * @param string $method
      */
-    public function testGetAbsolutePath()
+    public function testLogo($method)
     {
-        $this->plugin->setName('foo');
-        $this->plugin->setLogo('bar.jpg');
+        $this->assertEmpty($this->plugin->getLogo());
+        $this->assertEmpty($this->plugin->getFilename());
+        $this->assertEmpty($this->plugin->getOldFilenames());
 
-        $this->assertEquals(
-            str_replace('/tests/', '/src/', __DIR__).'/../../../../../web/media/plugin/foo/bar.jpg',
-            $this->plugin->getAbsolutePath()
-        );
+        call_user_func([$this->plugin, $method], 'foo');
+        $this->assertEquals('foo', $this->plugin->getLogo());
+        $this->assertEquals('foo', $this->plugin->getFilename());
+        $this->assertEmpty($this->plugin->getOldFilenames());
+
+        call_user_func([$this->plugin, $method], 'bar');
+        $this->assertEquals('bar', $this->plugin->getLogo());
+        $this->assertEquals('bar', $this->plugin->getFilename());
+        $this->assertEquals(['foo'], $this->plugin->getOldFilenames());
     }
 
     /**
-     * Test get logo web path
+     * Test get download path
      */
-    public function testGetLogoWebPath()
+    public function testGetDownloadPath()
     {
-        $this->assertEmpty($this->plugin->getLogoWebPath());
+        $this->assertEquals('media/plugin/', $this->plugin->getDownloadPath());
 
-        $this->plugin->setName('foo');
-        $this->plugin->setLogo('bar.jpg');
-        $this->assertEquals('/media/plugin/foo/bar.jpg', $this->plugin->getLogoWebPath());
+        $this->plugin->setName('foo/bar');
+        $this->assertEquals('media/plugin/foo/bar', $this->plugin->getDownloadPath());
     }
 
     /**
-     * Test do remove logo
+     * Test get web path
      */
-    public function testDoRemoveLogo()
+    public function testGetWebPath()
     {
-        $this->plugin->doRemoveLogo();
+        $this->assertEmpty($this->plugin->getWebPath());
+
+        $this->plugin->setLogo('foo');
+        $this->assertEquals('/media/plugin//foo', $this->plugin->getWebPath());
+
+        $this->plugin->setName('foo/bar');
+        $this->assertEquals('/media/plugin/foo/bar/foo', $this->plugin->getWebPath());
     }
 }
