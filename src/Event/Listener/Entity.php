@@ -57,8 +57,8 @@ class Entity
     {
         if ($args->getEntity() instanceof EntityInterface) {
             $entity = $args->getEntity();
-            if ($entity->getFilename() && file_exists($root.$entity->getFilename())) {
-                unlink($root.$entity->getFilename());
+            if ($entity->getFilename()) {
+                $this->fs->remove($this->root.$entity->getDownloadPath().'/'.$entity->getFilename());
             }
             $this->removeOldFiles($entity);
         }
@@ -72,7 +72,7 @@ class Entity
     public function postUpdate(LifecycleEventArgs $args)
     {
         if ($args->getEntity() instanceof EntityInterface) {
-            $this->removeOld($args->getEntity());
+            $this->removeOldFiles($args->getEntity());
         }
     }
 
@@ -85,9 +85,7 @@ class Entity
     {
         $root = $this->root.$entity->getDownloadPath().'/';
         foreach ($entity->getOldFilenames() as $filename) {
-            if (file_exists($root.$filename)) {
-                unlink($root.$filename);
-            }
+            $this->fs->remove($root.$filename);
         }
     }
 }
