@@ -16,9 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Field\LocalPath\Choice as ChoiceLocalPath;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AnimeDb\Bundle\AppBundle\Util\Filesystem;
-use Patchwork\Utf8;
 
 /**
  * Form
