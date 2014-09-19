@@ -63,7 +63,7 @@ abstract class BaseEntity implements EntityInterface
      */
     public function getOldFilenames()
     {
-        return $this->filename;
+        return $this->old_filenames;
     }
 
     /**
