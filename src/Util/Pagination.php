@@ -97,7 +97,7 @@ class Pagination
      * @param integer         $max_navigate    The number of pages displayed in the navigation
      * @param string|\Closure $link            Basic reference, for example page_% s.html where% s page number,
      *                                          or circuit which takes one parameter - the number of the page
-     * @param string|null     $ferst_page_link Link to the first page
+     * @param string          $ferst_page_link Link to the first page
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class Pagination
         $current_page = 1,
         $max_navigate = self::DEFAULT_LIST_LENGTH,
         $link = '%s',
-        $ferst_page_link = null
+        $ferst_page_link = ''
     ) {
         $current_page = (int)$current_page > 1 ? $current_page : 1;
         $result = [
@@ -116,67 +116,78 @@ class Pagination
             'list' => []
         ];
 
-        if ($total > 1) {
-            // definition of offset to the left and to the right of the selected page
-            $left_offset = floor(($max_navigate - 1) / 2);
-            $right_offset = ceil(($max_navigate - 1) / 2);
-            // adjustment, if the offset is too large left
-            if ($current_page - $left_offset < 1) {
-                $offset = abs($current_page - 1 - $left_offset);
-                $left_offset = $left_offset - $offset;
-                $right_offset = $right_offset + $offset;
-            }
-            // adjustment, if the offset is too large right
-            if ($current_page + $right_offset > $total) {
-                $offset = abs($total - $current_page - $right_offset);
-                $left_offset = $left_offset + $offset;
-                $right_offset = $right_offset - $offset;
-            }
-            // determining the first and last pages in paging based on the current page and offset
-            $page_from = $current_page - $left_offset;
-            $page_to = $current_page + $right_offset;
-            $page_from = $page_from > 1 ? $page_from : 1;
+        if ($total <= 1) {
+            return $result;
+        }
 
-            // first page
-            if ($current_page != 1) {
-                $result['list'][] = $this->getNode(self::TYPE_FIRST)
-                    ->setLink($this->buildLink($link, 1, $ferst_page_link));
-            }
-            // previous page
-            if ($current_page > 1) {
-                $result['list'][] = $this->getNode(self::TYPE_PREV)
-                    ->setLink($this->buildLink($link, ($current_page - 1), $ferst_page_link))
-                    ->setPage($current_page - 1);
-            }
+        // definition of offset to the left and to the right of the selected page
+        $left_offset = floor(($max_navigate - 1) / 2);
+        $right_offset = ceil(($max_navigate - 1) / 2);
+        // adjustment, if the offset is too large left
+        if ($current_page - $left_offset < 1) {
+            $offset = abs($current_page - 1 - $left_offset);
+            $left_offset = $left_offset - $offset;
+            $right_offset = $right_offset + $offset;
+        }
+        // adjustment, if the offset is too large right
+        if ($current_page + $right_offset > $total) {
+            $offset = abs($total - $current_page - $right_offset);
+            $left_offset = $left_offset + $offset;
+            $right_offset = $right_offset - $offset;
+        }
+        // determining the first and last pages in paging based on the current page and offset
+        $page_from = $current_page - $left_offset;
+        $page_to = $current_page + $right_offset;
+        $page_from = $page_from > 1 ? $page_from : 1;
 
-            // pages list
-            for ($page = $page_from; $page <= $page_to; $page++) {
-                if ($page == $current_page) {
-                $result['list'][] = $this->getNode(self::TYPE_CURENT)
-                    ->setLink($this->buildLink($link, $current_page))
-                    ->setName($current_page)
-                    ->setPage($current_page);
-                } else {
-                    $result['list'][] = $this->getNode(self::TYPE_PAGE)
-                        ->setLink($this->buildLink($link, $page, $ferst_page_link))
-                        ->setName($page)
-                        ->setPage($page);
-                }
-            }
+        // first page
+        if ($current_page != 1) {
+            $result['list'][] = $this->getNode(self::TYPE_FIRST, $this->buildLink($link, 1, $ferst_page_link));
+        }
+        // previous page
+        if ($current_page > 1) {
+            $result['list'][] = $this->getNode(
+                self::TYPE_PREV,
+                $this->buildLink($link, ($current_page - 1), $ferst_page_link),
+                $current_page - 1
+            );
+        }
 
-            // next page
-            if ($current_page != $total) {
-                $result['list'][] = $this->getNode(self::TYPE_NEXT)
-                    ->setLink($this->buildLink($link, ($current_page + 1)))
-                    ->setPage($current_page + 1);
+        // pages list
+        for ($page = $page_from; $page <= $page_to; $page++) {
+            if ($page == $current_page) {
+                $result['list'][] = $this->getNode(
+                    self::TYPE_CURENT,
+                    $this->buildLink($link, $current_page),
+                    $current_page,
+                    $current_page
+                );
+            } else {
+                $result['list'][] = $this->getNode(
+                    self::TYPE_PAGE,
+                    $this->buildLink($link, $page, $ferst_page_link),
+                    $page,
+                    $page
+                );
             }
+        }
 
-            // last page
-            if ($current_page < $total) {
-                $result['list'][] = $this->getNode(self::TYPE_LAST)
-                    ->setLink($this->buildLink($link, $total))
-                    ->setPage($total);
-            }
+        // next page
+        if ($current_page != $total) {
+            $result['list'][] = $this->getNode(
+                self::TYPE_NEXT,
+                $this->buildLink($link, ($current_page + 1)),
+                $current_page + 1
+            );
+        }
+
+        // last page
+        if ($current_page < $total) {
+            $result['list'][] = $this->getNode(
+                self::TYPE_LAST,
+                $this->buildLink($link, $total),
+                $total
+            );
         }
 
         return $result;
@@ -192,7 +203,7 @@ class Pagination
      *
      * @return string
      */
-    protected function buildLink($link, $page, $ferst_page_link = null) {
+    protected function buildLink($link, $page, $ferst_page_link = '') {
         if ($page == 1 && $ferst_page_link) {
             return $ferst_page_link;
         }
@@ -208,25 +219,42 @@ class Pagination
      * Get node by type
      *
      * @param string $type
+     * @param string $link
+     * @param integer $page
+     * @param string $name
      *
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
      */
-    protected function getNode($type) {
+    protected function getNode($type, $link = '', $page = 0, $name = '') {
         switch ($type) {
             case self::TYPE_CURENT:
-                return new Current();
+                $node = new Current();
+                break;
             case self::TYPE_FIRST:
-                return new First();
+                $node = new First();
+                break;
             case self::TYPE_LAST:
-                return new Last();
+                $node = new Last();
+                break;
             case self::TYPE_NEXT:
-                return new Next();
+                $node = new Next();
+                break;
             case self::TYPE_PAGE:
-                return new Page();
+                $node = new Page();
+                break;
             case self::TYPE_PREV:
-                return new Previous();
-            default:
-                return new Node();
+                $node = new Previous();
+                break;
         }
+        if ($link) {
+            $node->setLink($link);
+        }
+        if ($page) {
+            $node->setPage($page);
+        }
+        if ($name) {
+            $node->setName($name);
+        }
+        return $node;
     }
 }
