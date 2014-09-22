@@ -71,15 +71,11 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      */
     public function getMethods()
     {
-        $now = new \DateTime();
-        $modify = (new \DateTime())->modify('+100 seconds');
         return [
             // Image
             ['image', 'getRemote', 'setRemote'],
             // Notice
             ['notice', 'getMessage', 'setMessage'],
-            ['notice', 'getDateClosed', 'setDateClosed', null, $now],
-            ['notice', 'getDateStart', 'setDateStart', $now, $modify],
             ['notice', 'getLifetime', 'setLifetime', Notice::DEFAULT_LIFETIME, 100500],
             ['notice', 'getStatus', 'setStatus', Notice::STATUS_CREATED, Notice::STATUS_SHOWN],
             ['notice', 'getType', 'setType', Notice::DEFAULT_TYPE],
@@ -87,11 +83,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             ['plugin', 'getName', 'setName'],
             ['plugin', 'getTitle', 'setTitle'],
             ['plugin', 'getDescription', 'setDescription'],
-            ['plugin', 'getDateInstall', 'setDateInstall', $now, $modify],
             // Task
             ['task', 'getCommand', 'setCommand'],
-            ['task', 'getLastRun', 'setLastRun', null, $modify],
-            ['task', 'getNextRun', 'setNextRun', $now, $modify],
             ['task', 'getModify', 'setModify'],
             ['task', 'getStatus', 'setStatus', Task::STATUS_DISABLED, Task::STATUS_ENABLED]
         ];
@@ -111,6 +104,49 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     public function testGetSet($entity, $getter, $setter, $default = '', $new = 'foo')
     {
         $this->assertEquals($default, call_user_func([$this->$entity, $getter]));
+        $this->assertEquals($this->$entity, call_user_func([$this->$entity, $setter], $new));
+        $this->assertEquals($new, call_user_func([$this->$entity, $getter]));
+    }
+
+    /**
+     * Get methods DateTime
+     *
+     * @return array
+     */
+    public function getMethodsTime()
+    {
+        $now = new \DateTime();
+        return [
+            // Notice
+            ['notice', 'getDateClosed', 'setDateClosed'],
+            ['notice', 'getDateStart', 'setDateStart', $now],
+            // Plugin
+            ['plugin', 'getDateInstall', 'setDateInstall', $now],
+            // Task
+            ['task', 'getLastRun', 'setLastRun'],
+            ['task', 'getNextRun', 'setNextRun', $now]
+        ];
+    }
+
+    /**
+     * Test getters and setters DateTime
+     *
+     * @dataProvider getMethodsTime
+     * 
+     * @param string $entity
+     * @param string $getter
+     * @param string $setter
+     * @param mixed $default
+     * @param mixed $new
+     */
+    public function testGetSetTime($entity, $getter, $setter, $default = null)
+    {
+        $new = (new \DateTime())->modify('+100 seconds');
+        if ($default) {
+            $this->assertInstanceOf('\DateTime', call_user_func([$this->$entity, $getter]));
+        } else {
+            $this->assertNull(call_user_func([$this->$entity, $getter]));
+        }
         $this->assertEquals($this->$entity, call_user_func([$this->$entity, $setter], $new));
         $this->assertEquals($new, call_user_func([$this->$entity, $getter]));
     }
