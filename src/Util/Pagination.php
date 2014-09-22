@@ -245,8 +245,6 @@ class Pagination
             case self::TYPE_PREV:
                 $node = new Previous();
                 break;
-            default:
-                $node = new Node();
         }
         if ($link) {
             $node->setLink($link);
