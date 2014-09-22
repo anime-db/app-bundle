@@ -97,7 +97,7 @@ class Pagination
      * @param integer         $max_navigate    The number of pages displayed in the navigation
      * @param string|\Closure $link            Basic reference, for example page_% s.html where% s page number,
      *                                          or circuit which takes one parameter - the number of the page
-     * @param string|null     $ferst_page_link Link to the first page
+     * @param string          $ferst_page_link Link to the first page
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class Pagination
         $current_page = 1,
         $max_navigate = self::DEFAULT_LIST_LENGTH,
         $link = '%s',
-        $ferst_page_link = null
+        $ferst_page_link = ''
     ) {
         $current_page = (int)$current_page > 1 ? $current_page : 1;
         $result = [
@@ -203,7 +203,7 @@ class Pagination
      *
      * @return string
      */
-    protected function buildLink($link, $page, $ferst_page_link = null) {
+    protected function buildLink($link, $page, $ferst_page_link = '') {
         if ($page == 1 && $ferst_page_link) {
             return $ferst_page_link;
         }
