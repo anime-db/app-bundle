@@ -452,8 +452,17 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
             touch($this->dir.'bar/foo');
         }
 
-        $file = $this->getMockBuilder('\Symfony\Component\HttpFoundation\File\UploadedFile')
-            ->disableOriginalConstructor()
+        // Travis CI throws an error if not set constructor arguments #82
+        $file = tempnam($this->dir, 'UploadedFile');
+        $file = $this
+            ->getMockBuilder('\Symfony\Component\HttpFoundation\File\UploadedFile')
+            ->setConstructorArgs([
+                $file,
+                pathinfo($file, PATHINFO_BASENAME),
+                'text/plain',
+                0,
+                UPLOAD_ERR_OK
+            ])
             ->getMock();
         $file
             ->expects($this->once())
