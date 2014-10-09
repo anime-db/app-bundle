@@ -31,7 +31,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "anime-db/anime-db": ">=0.3.8",
+        "anime-db/anime-db": "dev-develop",
         "patchwork/utf8": "1.2.*",
         "anime-db/api-client-bundle": "0.1.*",
         "anime-db/cache-time-keeper-bundle": "1.0.*"
