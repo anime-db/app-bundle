@@ -98,11 +98,11 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'php app/console cache:clear > /dev/null 2>&1',
-                "'/path/to/php' '{$this->root_dir}/console' cache:clear > /dev/null 2>&1",
+                "/path/to/php '{$this->root_dir}/console' cache:clear > /dev/null 2>&1",
             ],
             [
                 'php composer.phar update',
-                "'/path/to/php' composer.phar update",
+                "/path/to/php composer.phar update",
             ],
             [
                 'ping > ping.log',
