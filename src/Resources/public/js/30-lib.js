@@ -329,7 +329,7 @@ UpdateLogBlock.prototype = {
 			success: function(data) {
 				if (that.block.text() != data) {
 					that.block.text(data).animate({scrollTop: that.block[0].scrollHeight}, 'slow');
-					if (data.indexOf(that.end_message)) {
+					if (data.indexOf(that.end_message) != -1) {
 						that.complete();
 						return;
 					}
