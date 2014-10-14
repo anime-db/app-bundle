@@ -134,4 +134,43 @@ class Notice extends EntityRepository
             ->setParameter('time', $time)
             ->execute();
     }
+
+    /**
+     * Remove by ids
+     *
+     * @param array $ids
+     */
+    public function remove(array $ids)
+    {
+        $this->_em
+            ->createQuery('
+                DELETE FROM
+                    AnimeDbAppBundle:Notice n
+                WHERE
+                    n.id IN (:ids)'
+            )
+            ->setParameter('ids', $ids)
+            ->execute();
+    }
+
+    /**
+     * Set status
+     *
+     * @param array $ids
+     * @param string $status
+     */
+    public function setStatus(array $ids, $status)
+    {
+        $this->getEntityManager()
+            ->createQuery('
+                UPDATE
+                    AnimeDbAppBundle:Notice n
+                SET
+                    n.status = :status
+                WHERE
+                    n.id IN (:ids)
+            ')
+            ->setParameter('ids', $ids)
+            ->setParameter('status', $status);
+    }
 }
