@@ -58,7 +58,7 @@ class Filesystem
      *
      * @return string
      */
-    private function doUserHomeDir()
+    private static function doUserHomeDir()
     {
         // have home env var
         if ($home = getenv('HOME')) {
