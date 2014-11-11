@@ -12,7 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Package;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Test listener package
@@ -22,13 +21,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 class PackageTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Filesystem
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $fs;
-
     /**
      * API client
      *
@@ -65,9 +57,9 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     protected $listener;
 
     /**
-     * Path to parameters
+     * Parameters manipulator
      *
-     * @var string
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $parameters;
 
@@ -77,8 +69,9 @@ class PackageTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->parameters = tempnam(sys_get_temp_dir(), 'test');
-        $this->fs = $this->getMock('\Symfony\Component\Filesystem\Filesystem');
+        $this->parameters = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->client = $this->getMockBuilder('\AnimeDb\Bundle\ApiClientBundle\Service\Client')
             ->disableOriginalConstructor()
             ->getMock();
@@ -104,17 +97,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->with('AnimeDbAppBundle:Plugin')
             ->willReturn($this->rep);
 
-        $this->listener = new Package($doctrine, $this->fs, $this->client, $this->downloader, $this->parameters);
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::tearDown()
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-        unlink($this->parameters);
+        $this->listener = new Package($doctrine, $this->client, $this->downloader, $this->parameters);
     }
 
     /**
@@ -452,9 +435,9 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getPackage')
             ->willReturn($package);
-        $this->fs
+        $this->parameters
             ->expects($this->never())
-            ->method('dumpFile');
+            ->method('save');
 
         // test
         call_user_func([$this->listener, $method], $event);
@@ -472,55 +455,15 @@ class PackageTest extends \PHPUnit_Framework_TestCase
                 'onInstalledConfigureShmop',
                 '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed',
                 [
-                    'parameters' => []
-                ],
-                [
-                    'parameters' => [
-                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi',
-                        'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop'
-                    ]
-                ]
-            ],
-            [
-                'onInstalledConfigureShmop',
-                '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed',
-                [
-                    'parameters' => [
-                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.file',
-                        'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.memcache'
-                    ]
-                ],
-                [
-                    'parameters' => [
-                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi',
-                        'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop'
-                    ]
+                    'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi',
+                    'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop'
                 ]
             ],
             [
                 'onRemovedShmop',
                 '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed',
                 [
-                    'parameters' => []
-                ],
-                [
-                    'parameters' => [
-                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.file'
-                    ]
-                ]
-            ],
-            [
-                'onRemovedShmop',
-                '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed',
-                [
-                    'parameters' => [
-                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi'
-                    ]
-                ],
-                [
-                    'parameters' => [
-                        'cache_time_keeper.driver' => 'cache_time_keeper.driver.file'
-                    ]
+                    'cache_time_keeper.driver' => 'cache_time_keeper.driver.file'
                 ]
             ]
         ];
@@ -533,13 +476,10 @@ class PackageTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $method
      * @param string $event
-     * @param array $actual
      * @param array $expected
      */
-    public function testOnInstalledConfigureShmop($method, $event, array $actual, array $expected)
+    public function testOnInstalledConfigureShmop($method, $event, array $expected)
     {
-        file_put_contents($this->parameters, Yaml::dump($actual));
-
         $package = $this->getMockBuilder('\Composer\Package\Package')
             ->disableOriginalConstructor()
             ->getMock();
@@ -554,10 +494,14 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getPackage')
             ->willReturn($package);
-        $this->fs
-            ->expects($this->once())
-            ->method('dumpFile')
-            ->with($this->parameters, Yaml::dump($expected));
+        $index = 0;
+        foreach ($expected as $key => $value) {
+            $this->parameters
+                ->expects($this->at($index))
+                ->method('set')
+                ->with($key, $value);
+            $index++;
+        }
 
         // test
         call_user_func([$this->listener, $method], $event);
