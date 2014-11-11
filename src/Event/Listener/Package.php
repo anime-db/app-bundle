@@ -11,7 +11,6 @@
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Filesystem\Filesystem;
 use AnimeDb\Bundle\ApiClientBundle\Service\Client;
 use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
@@ -19,7 +18,7 @@ use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 use Composer\Package\Package as ComposerPackage;
-use Symfony\Component\Yaml\Yaml;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Package listener
@@ -58,13 +57,6 @@ class Package
     protected $rep;
 
     /**
-     * Filesystem
-     *
-     * @var \Symfony\Component\Filesystem\Filesystem
-     */
-    protected $fs;
-
-    /**
      * API client
      *
      * @var \AnimeDb\Bundle\ApiClientBundle\Service\Client
@@ -72,9 +64,9 @@ class Package
     protected $client;
 
     /**
-     * Path to parameters
+     * Parameters manipulator
      *
-     * @var string
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
      */
     protected $parameters;
 
@@ -89,19 +81,16 @@ class Package
      * Construct
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \Symfony\Component\Filesystem\Filesystem $fs
      * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
      * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
-     * @param string $parameters
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
      */
     public function __construct(
         Registry $doctrine,
-        Filesystem $fs,
         Client $client,
         Downloader $downloader,
-        $parameters
+        Parameters $parameters
     ) {
-        $this->fs = $fs;
         $this->client = $client;
         $this->downloader = $downloader;
         $this->em = $doctrine->getManager();
@@ -188,10 +177,8 @@ class Package
     {
         // use Shmop as driver for Cache Time Keeper
         if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
-            $parameters = Yaml::parse($this->parameters);
-            $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.multi';
-            $parameters['parameters']['cache_time_keeper.driver.multi.fast'] = 'cache_time_keeper.driver.shmop';
-            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
+            $this->parameters->set('cache_time_keeper.driver', 'cache_time_keeper.driver.multi');
+            $this->parameters->set('cache_time_keeper.driver.multi.fast', 'cache_time_keeper.driver.shmop');
         }
     }
 
@@ -203,9 +190,7 @@ class Package
     public function onRemovedShmop(RemovedEvent $event)
     {
         if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
-            $parameters = Yaml::parse($this->parameters);
-            $parameters['parameters']['cache_time_keeper.driver'] = 'cache_time_keeper.driver.file';
-            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
+            $this->parameters->set('cache_time_keeper.driver', 'cache_time_keeper.driver.file');
         }
     }
 }

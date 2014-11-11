@@ -12,7 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Project;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Test listener project
@@ -22,13 +21,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ProjectTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Filesystem
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $fs;
-
     /**
      * Cache clearer
      *
@@ -58,9 +50,9 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
     protected $listener;
 
     /**
-     * Path to parameters
+     * Parameters manipulator
      *
-     * @var string
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $parameters;
 
@@ -70,8 +62,9 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->parameters = tempnam(sys_get_temp_dir(), 'test');
-        $this->fs = $this->getMock('\Symfony\Component\Filesystem\Filesystem');
+        $this->parameters = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->cache_clearer = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CacheClearer')
             ->disableOriginalConstructor()
             ->getMock();
@@ -89,17 +82,7 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
             ->method('getManager')
             ->willReturn($this->em);
 
-        $this->listener = new Project($doctrine, $this->fs, $this->cache_clearer, $this->composer, $this->parameters);
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::tearDown()
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-        unlink($this->parameters);
+        $this->listener = new Project($doctrine, $this->cache_clearer, $this->composer, $this->parameters);
     }
 
     /**

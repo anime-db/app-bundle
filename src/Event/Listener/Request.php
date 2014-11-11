@@ -13,13 +13,12 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Gedmo\Translatable\TranslatableListener;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Request listener
@@ -51,13 +50,6 @@ class Request
     protected $cache_clearer;
 
     /**
-     * Filesystem
-     *
-     * @var \Symfony\Component\Filesystem\Filesystem
-     */
-    protected $fs;
-
-    /**
      * Locale
      *
      * @var string
@@ -65,9 +57,9 @@ class Request
     protected $locale;
 
     /**
-     * Path to parameters
+     * Parameters manipulator
      *
-     * @var string
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
      */
     protected $parameters;
 
@@ -77,16 +69,14 @@ class Request
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param \Symfony\Component\Filesystem\Filesystem $fs
-     * @param string $parameters
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
      * @param string $locale
      */
     public function __construct(
         TranslatableListener $translatable,
         ValidatorInterface $validator,
         CacheClearer $cache_clearer,
-        Filesystem $fs,
-        $parameters,
+        Parameters $parameters,
         $locale
     ) {
         $this->translatable = $translatable;
@@ -94,7 +84,6 @@ class Request
         $this->cache_clearer = $cache_clearer;
         $this->parameters = $parameters;
         $this->locale = $locale;
-        $this->fs = $fs;
     }
 
     /**
@@ -134,10 +123,8 @@ class Request
         $locale = substr($locale, 0, 2);
         // update parameters
         if ($this->locale != $locale) {
-            $parameters = Yaml::parse($this->parameters);
-            $parameters['parameters']['locale'] = $locale;
-            $parameters['parameters']['last_update'] = gmdate('r'); // TODO @deprecated
-            $this->fs->dumpFile($this->parameters, Yaml::dump($parameters), 0644);
+            $this->parameters->set('locale', $locale);
+            $this->parameters->set('last_update', gmdate('r')); // TODO @deprecated
             // clear cache
             $this->cache_clearer->clear();
         }
