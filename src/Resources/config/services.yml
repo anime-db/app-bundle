@@ -69,10 +69,9 @@ services:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
         arguments:
             - @doctrine
-            - @filesystem
             - @anime_db.api.client
             - @anime_db.downloader
-            - %kernel.root_dir%/config/parameters.yml
+            - @anime_db.manipulator.parameters
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }
