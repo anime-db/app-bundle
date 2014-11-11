@@ -12,16 +12,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/anime-db.git",
-                "reference": "caf7fc02e9284671f90055de993669f39a9be3e4"
+                "reference": "c0f353fbe1cab43e472bbd9b393ce72ed41d3925"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/anime-db/zipball/caf7fc02e9284671f90055de993669f39a9be3e4",
-                "reference": "caf7fc02e9284671f90055de993669f39a9be3e4",
+                "url": "https://api.github.com/repos/anime-db/anime-db/zipball/c0f353fbe1cab43e472bbd9b393ce72ed41d3925",
+                "reference": "c0f353fbe1cab43e472bbd9b393ce72ed41d3925",
                 "shasum": ""
             },
             "require": {
                 "anime-db/catalog-bundle": "dev-develop",
+                "anime-db/shmop": "1.0.*",
                 "avalanche123/imagine-bundle": "2.*",
                 "composer/composer": "1.0.*",
                 "doctrine/doctrine-bundle": "1.2.*",
@@ -94,7 +95,7 @@
             ],
             "description": "The application for making home collection anime",
             "homepage": "http://anime-db.org",
-            "time": "2014-10-09 11:27:48"
+            "time": "2014-11-11 09:45:20"
         },
         {
             "name": "anime-db/api-client-bundle",
@@ -145,16 +146,16 @@
         },
         {
             "name": "anime-db/cache-time-keeper-bundle",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/cache-time-keeper-bundle.git",
-                "reference": "ec40eeb1af93886f269971b6cb8dd9c07393b14c"
+                "reference": "5496845b7f0e6398bfe166f88e1596b4f4df947f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/cache-time-keeper-bundle/zipball/ec40eeb1af93886f269971b6cb8dd9c07393b14c",
-                "reference": "ec40eeb1af93886f269971b6cb8dd9c07393b14c",
+                "url": "https://api.github.com/repos/anime-db/cache-time-keeper-bundle/zipball/5496845b7f0e6398bfe166f88e1596b4f4df947f",
+                "reference": "5496845b7f0e6398bfe166f88e1596b4f4df947f",
                 "shasum": ""
             },
             "require": {
@@ -188,7 +189,7 @@
                 "php",
                 "shmop"
             ],
-            "time": "2014-09-01 14:46:36"
+            "time": "2014-10-13 09:46:00"
         },
         {
             "name": "anime-db/catalog-bundle",
@@ -196,12 +197,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/catalog-bundle.git",
-                "reference": "ca8c9ac4c4d78e050a91e69a31cbe89fdedf59f1"
+                "reference": "9cf1264452f751985000e8eb4dccd7fe24e3c85d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/ca8c9ac4c4d78e050a91e69a31cbe89fdedf59f1",
-                "reference": "ca8c9ac4c4d78e050a91e69a31cbe89fdedf59f1",
+                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/9cf1264452f751985000e8eb4dccd7fe24e3c85d",
+                "reference": "9cf1264452f751985000e8eb4dccd7fe24e3c85d",
                 "shasum": ""
             },
             "require": {
@@ -240,7 +241,57 @@
             ],
             "description": "The application for making home collection anime",
             "homepage": "http://anime-db.org",
-            "time": "2014-10-09 12:41:19"
+            "time": "2014-10-30 15:29:35"
+        },
+        {
+            "name": "anime-db/shmop",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anime-db/shmop.git",
+                "reference": "44a41b80605b6b66c72086a8bd8c40d638a6cfa5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anime-db/shmop/zipball/44a41b80605b6b66c72086a8bd8c40d638a6cfa5",
+                "reference": "44a41b80605b6b66c72086a8bd8c40d638a6cfa5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-shmop": "*",
+                "php": ">=5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AnimeDb\\Shmop\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anime DB",
+                    "homepage": "http://anime-db.org"
+                },
+                {
+                    "name": "Peter Gribanov",
+                    "email": "info@peter-gribanov.ru"
+                },
+                {
+                    "name": "Anime DB Community",
+                    "homepage": "https://github.com/anime-db/shmop/graphs/contributors"
+                }
+            ],
+            "description": "Shmop is a simple and small abstraction layer for shared memory manipulation using PHP",
+            "homepage": "http://github.com/anime-db/shmop",
+            "keywords": [
+                "php",
+                "shmop"
+            ],
+            "time": "2014-08-11 11:44:00"
         },
         {
             "name": "avalanche123/imagine-bundle",
@@ -338,12 +389,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "73e9db5d9952d52a46ecbc20a269a8c5f9c5b011"
+                "reference": "ffffab37a294f3383c812d0329623f0a4ba45387"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/73e9db5d9952d52a46ecbc20a269a8c5f9c5b011",
-                "reference": "73e9db5d9952d52a46ecbc20a269a8c5f9c5b011",
+                "url": "https://api.github.com/repos/composer/composer/zipball/ffffab37a294f3383c812d0329623f0a4ba45387",
+                "reference": "ffffab37a294f3383c812d0329623f0a4ba45387",
                 "shasum": ""
             },
             "require": {
@@ -398,7 +449,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2014-10-07 15:03:19"
+            "time": "2014-11-05 06:04:18"
         },
         {
             "name": "doctrine/annotations",
@@ -406,12 +457,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "6a6bec0670bb6e71a263b08bc1b98ea242928633"
+                "reference": "3b6668f54ad3f95d68b64a742f6b0de55d6caeb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/6a6bec0670bb6e71a263b08bc1b98ea242928633",
-                "reference": "6a6bec0670bb6e71a263b08bc1b98ea242928633",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/3b6668f54ad3f95d68b64a742f6b0de55d6caeb1",
+                "reference": "3b6668f54ad3f95d68b64a742f6b0de55d6caeb1",
                 "shasum": ""
             },
             "require": {
@@ -466,7 +517,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2014-09-25 16:45:30"
+            "time": "2014-11-04 15:34:10"
         },
         {
             "name": "doctrine/cache",
@@ -474,12 +525,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "f7a1d660c521461b835dc31af0f6c9836769e917"
+                "reference": "912e8a11ce3c75a630b225dd82aed83e00943ed5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/f7a1d660c521461b835dc31af0f6c9836769e917",
-                "reference": "f7a1d660c521461b835dc31af0f6c9836769e917",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/912e8a11ce3c75a630b225dd82aed83e00943ed5",
+                "reference": "912e8a11ce3c75a630b225dd82aed83e00943ed5",
                 "shasum": ""
             },
             "require": {
@@ -535,7 +586,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2014-09-29 13:28:56"
+            "time": "2014-10-20 19:28:25"
         },
         {
             "name": "doctrine/collections",
@@ -543,12 +594,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "8c5148e0ef8cee4afe86d45ba98f7b6d96e780d0"
+                "reference": "38ed66e6606309bec203a9df506ffa26d956d21d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/8c5148e0ef8cee4afe86d45ba98f7b6d96e780d0",
-                "reference": "8c5148e0ef8cee4afe86d45ba98f7b6d96e780d0",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/38ed66e6606309bec203a9df506ffa26d956d21d",
+                "reference": "38ed66e6606309bec203a9df506ffa26d956d21d",
                 "shasum": ""
             },
             "require": {
@@ -601,7 +652,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2014-09-24 12:11:27"
+            "time": "2014-11-05 15:56:21"
         },
         {
             "name": "doctrine/common",
@@ -1000,12 +1051,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "1a9dffa64e33fdc10f4b4c3f5d7230b74d4a1021"
+                "reference": "f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/1a9dffa64e33fdc10f4b4c3f5d7230b74d4a1021",
-                "reference": "1a9dffa64e33fdc10f4b4c3f5d7230b74d4a1021",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0",
+                "reference": "f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0",
                 "shasum": ""
             },
             "require": {
@@ -1050,7 +1101,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2014-08-18 18:03:07"
+            "time": "2014-10-30 14:49:25"
         },
         {
             "name": "doctrine/orm",
@@ -1205,12 +1256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle3.git",
-                "reference": "d27346b6c8cb6a42092e763f8a2f674dfc560956"
+                "reference": "5e6fb7097efac7180bd75006079144025255eb63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/d27346b6c8cb6a42092e763f8a2f674dfc560956",
-                "reference": "d27346b6c8cb6a42092e763f8a2f674dfc560956",
+                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/5e6fb7097efac7180bd75006079144025255eb63",
+                "reference": "5e6fb7097efac7180bd75006079144025255eb63",
                 "shasum": ""
             },
             "require": {
@@ -1289,7 +1340,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-09-16 21:19:27"
+            "time": "2014-10-29 23:08:23"
         },
         {
             "name": "imagine/imagine",
@@ -1557,7 +1608,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -1699,12 +1750,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "940cbe15abe36924e5693abb585215bb322686a7"
+                "reference": "ab41ed9a94196ce2793f400b88313918b4fc64dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/940cbe15abe36924e5693abb585215bb322686a7",
-                "reference": "940cbe15abe36924e5693abb585215bb322686a7",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ab41ed9a94196ce2793f400b88313918b4fc64dc",
+                "reference": "ab41ed9a94196ce2793f400b88313918b4fc64dc",
                 "shasum": ""
             },
             "require": {
@@ -1763,20 +1814,20 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-10-04 15:43:06"
+            "time": "2014-11-11 12:05:51"
         },
         {
             "name": "patchwork/utf8",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nicolas-grekas/Patchwork-UTF8.git",
-                "reference": "2e98a87caf5bcef78a369e03fac0ae806060196e"
+                "url": "https://github.com/tchwork/utf8.git",
+                "reference": "3024ee72d0ce7fc4bf87421f2954f956d3ad2ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nicolas-grekas/Patchwork-UTF8/zipball/2e98a87caf5bcef78a369e03fac0ae806060196e",
-                "reference": "2e98a87caf5bcef78a369e03fac0ae806060196e",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/3024ee72d0ce7fc4bf87421f2954f956d3ad2ee5",
+                "reference": "3024ee72d0ce7fc4bf87421f2954f956d3ad2ee5",
                 "shasum": ""
             },
             "require": {
@@ -1807,19 +1858,19 @@
             "authors": [
                 {
                     "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com",
-                    "role": "Developer"
+                    "email": "p@tchwork.com"
                 }
             ],
-            "description": "Extensive, portable and performant handling of UTF-8 and grapheme clusters for PHP",
-            "homepage": "https://github.com/nicolas-grekas/Patchwork-UTF8",
+            "description": "Portable and performant UTF-8, Unicode and Grapheme Clusters for PHP",
+            "homepage": "https://github.com/tchwork/utf8",
             "keywords": [
+                "grapheme",
                 "i18n",
                 "unicode",
                 "utf-8",
                 "utf8"
             ],
-            "time": "2014-08-05 10:00:12"
+            "time": "2014-11-10 16:16:54"
         },
         {
             "name": "psr/log",
@@ -2061,12 +2112,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "613354e08fbddce0943646932b007be9873c658f"
+                "reference": "d0f361d88e5de851bbb8c542d3b6aa46d61a9ffc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/613354e08fbddce0943646932b007be9873c658f",
-                "reference": "613354e08fbddce0943646932b007be9873c658f",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/d0f361d88e5de851bbb8c542d3b6aa46d61a9ffc",
+                "reference": "d0f361d88e5de851bbb8c542d3b6aa46d61a9ffc",
                 "shasum": ""
             },
             "require": {
@@ -2105,7 +2156,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2014-10-05 19:53:07"
+            "time": "2014-10-30 13:41:35"
         },
         {
             "name": "symfony/assetic-bundle",
@@ -2293,12 +2344,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "d2c6c340676181a6701cad52788eee9c4cabc72a"
+                "reference": "85b016f37b16c60f54eab26786e264ae78d614e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/d2c6c340676181a6701cad52788eee9c4cabc72a",
-                "reference": "d2c6c340676181a6701cad52788eee9c4cabc72a",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/85b016f37b16c60f54eab26786e264ae78d614e3",
+                "reference": "85b016f37b16c60f54eab26786e264ae78d614e3",
                 "shasum": ""
             },
             "require": {
@@ -2398,19 +2449,19 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-10-07 12:35:25"
+            "time": "2014-11-09 07:53:45"
         },
         {
             "name": "twig/extensions",
             "version": "v1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fabpot/Twig-extensions.git",
+                "url": "https://github.com/twigphp/Twig-extensions.git",
                 "reference": "f91a82ec225e5bb108e01a0f93c9be04f84dcfa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig-extensions/zipball/f91a82ec225e5bb108e01a0f93c9be04f84dcfa0",
+                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/f91a82ec225e5bb108e01a0f93c9be04f84dcfa0",
                 "reference": "f91a82ec225e5bb108e01a0f93c9be04f84dcfa0",
                 "shasum": ""
             },
@@ -2435,9 +2486,7 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Common additional features for Twig that do not directly belong in core",
@@ -2454,13 +2503,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fabpot/Twig.git",
-                "reference": "9fb15e343e881c9a89b97ee2262d7b8fbf512c6e"
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "b87cf88f88feee256c1e1ca85ec6677f38fcc238"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/9fb15e343e881c9a89b97ee2262d7b8fbf512c6e",
-                "reference": "9fb15e343e881c9a89b97ee2262d7b8fbf512c6e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b87cf88f88feee256c1e1ca85ec6677f38fcc238",
+                "reference": "b87cf88f88feee256c1e1ca85ec6677f38fcc238",
                 "shasum": ""
             },
             "require": {
@@ -2495,7 +2544,7 @@
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "https://github.com/fabpot/Twig/graphs/contributors",
+                    "homepage": "http://twig.sensiolabs.org/contributors",
                     "role": "Contributors"
                 }
             ],
@@ -2504,7 +2553,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-10-01 17:51:59"
+            "time": "2014-11-10 14:48:15"
         }
     ],
     "packages-dev": [],
