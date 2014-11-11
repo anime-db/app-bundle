@@ -12,7 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Test listener request
@@ -22,13 +21,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Filesystem
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $fs;
-
     /**
      * Translatable
      *
@@ -58,9 +50,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     protected $listener;
 
     /**
-     * Path to parameters
+     * Parameters manipulator
      *
-     * @var string
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $parameters;
 
@@ -77,7 +69,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->parameters = tempnam(sys_get_temp_dir(), 'test');
+        $this->parameters = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->translatable = $this->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
             ->disableOriginalConstructor()
             ->getMock();
@@ -85,26 +79,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->cache_clearer = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CacheClearer')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->fs = $this->getMock('\Symfony\Component\Filesystem\Filesystem');
 
         $this->listener = new Request(
             $this->translatable,
             $this->validator,
             $this->cache_clearer,
-            $this->fs,
             $this->parameters,
             $this->locale
         );
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::tearDown()
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-        unlink($this->parameters);
     }
 
     /**
@@ -193,8 +175,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function getLocales()
     {
         return [
-            ['ru', $this->locale, 'ru'],
-            [$this->locale, $this->locale, $this->locale]
+            ['ru'],
+            [$this->locale]
         ];
     }
 
@@ -207,15 +189,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      * @param string $actual
      * @param string $expected
      */
-    public function testSetLocale($locale, $actual, $expected)
+    public function testSetLocale($locale)
     {
-        $that = $this;
-        file_put_contents($this->parameters, Yaml::dump([
-            'parameters' => [
-                'locale' => $actual
-            ]
-        ]));
-
         $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
@@ -230,14 +205,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         // change origin locale
         if ($locale != $this->locale) {
-            $this->fs
-                ->expects($this->once())
-                ->method('dumpFile')
-                ->willReturnCallback(function($file, $yaml) use ($that, $expected) {
-                    $yaml = Yaml::parse($yaml);
-                    $that->assertEquals($expected, $yaml['parameters']['locale']);
-                })
-                ->with($this->parameters);
+            $this->parameters
+                ->expects($this->at(0)) // TODO use $this->once()
+                ->method('set')
+                ->with('locale', $locale);
             $this->cache_clearer
                 ->expects($this->once())
                 ->method('clear');
@@ -332,7 +303,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->translatable,
             $this->validator,
             $this->cache_clearer,
-            $this->fs,
             $this->parameters,
             ''
         );
