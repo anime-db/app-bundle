@@ -136,12 +136,17 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Remove by ids
+     * Remove notices
      *
-     * @param array $ids
+     * @param array $notices
      */
-    public function remove(array $ids)
+    public function remove(array $notices)
     {
+        $ids = [];
+        /* @var $notice \AnimeDb\Bundle\AppBundle\Entity\Notice */
+        foreach ($notices as $notice) {
+            $ids[] = $notice->getId();
+        }
         $this->_em
             ->createQuery('
                 DELETE FROM
@@ -154,13 +159,18 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Set status
+     * Set status for notices
      *
-     * @param array $ids
+     * @param array $notices
      * @param string $status
      */
-    public function setStatus(array $ids, $status)
+    public function setStatus(array $notices, $status)
     {
+        $ids = [];
+        /* @var $notice \AnimeDb\Bundle\AppBundle\Entity\Notice */
+        foreach ($notices as $notice) {
+            $ids[] = $notice->getId();
+        }
         $this->getEntityManager()
             ->createQuery('
                 UPDATE
