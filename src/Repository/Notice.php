@@ -173,4 +173,28 @@ class Notice extends EntityRepository
             ->setParameter('ids', $ids)
             ->setParameter('status', $status);
     }
+
+    /**
+     * Get filtered query
+     *
+     * @param integer $status
+     * @param string $type
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getFilteredQuery($status, $type)
+    {
+        $query = $this->createQueryBuilder('n');
+        if (in_array($status, NoticeEntity::getStatuses())) {
+            $query
+                ->where('n.status = :status')
+                ->setParameter('status', $status);
+        }
+        if ($type) {
+            $query
+                ->andWhere('n.type = :type')
+                ->setParameter('type', $type);
+        }
+        return $query;
+    }
 }
