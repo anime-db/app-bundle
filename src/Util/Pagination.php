@@ -95,7 +95,7 @@ class Pagination
      * @param integer         $total           Total number of pages
      * @param integer         $current_page    Current page
      * @param integer         $max_navigate    The number of pages displayed in the navigation
-     * @param string|\Closure $link            Basic reference, for example page_% s.html where% s page number,
+     * @param string|\Closure $link            Basic reference, for example page_%s.html where %s page number,
      *                                          or circuit which takes one parameter - the number of the page
      * @param string          $ferst_page_link Link to the first page
      *
