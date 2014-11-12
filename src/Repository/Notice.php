@@ -171,7 +171,8 @@ class Notice extends EntityRepository
                     n.id IN (:ids)
             ')
             ->setParameter('ids', $ids)
-            ->setParameter('status', $status);
+            ->setParameter('status', $status)
+            ->execute();
     }
 
     /**
