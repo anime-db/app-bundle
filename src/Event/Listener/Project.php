@@ -90,17 +90,6 @@ class Project
     }
 
     /**
-     * Update last update date
-     *
-     * @codeCoverageIgnore
-     * @deprecated use Cache Time Keeper
-     */
-    public function onUpdatedSaveLastUpdateDate()
-    {
-        $this->parameters->set('last_update', gmdate('r'));
-    }
-
-    /**
      * On installed or updated try add a Shmop package
      */
     public function onInstalledOrUpdatedAddShmop()
