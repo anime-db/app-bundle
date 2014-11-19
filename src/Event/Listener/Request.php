@@ -124,7 +124,6 @@ class Request
         // update parameters
         if ($this->locale != $locale) {
             $this->parameters->set('locale', $locale);
-            $this->parameters->set('last_update', gmdate('r')); // TODO @deprecated
             // clear cache
             $this->cache_clearer->clear();
         }

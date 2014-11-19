@@ -60,7 +60,6 @@ services:
             - @anime_db.manipulator.parameters
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
-            - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedSaveLastUpdateDate }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onInstalledOrUpdatedAddShmop }
             - { name: kernel.event_listener, event: anime_db.project.installed, method: onInstalledOrUpdatedAddShmop }
 
