@@ -204,7 +204,7 @@ class Builder
      *
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
      */
-    public function setPageLink($ferst_page_link)
+    public function setFerstPageLink($ferst_page_link)
     {
         $this->ferst_page_link = $ferst_page_link;
         return $this;
@@ -217,7 +217,7 @@ class Builder
      */
     public function getNavigation()
     {
-        if (! $this->navigation) {
+        if (!$this->navigation) {
             $this->navigation = new Navigation(
                 $this->getTotalPages(),
                 $this->getCurrentPages(),
