@@ -9,6 +9,7 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last;
@@ -22,7 +23,7 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev;
  * @package AnimeDb\Bundle\AppBundle\Util\Pagination
  * @author Peter Gribanov <info@peter-gribanov.ru>
  */
-class Navigation
+class Navigation implements \IteratorAggregate
 {
     /**
      * Length of the list of pagination defaults
@@ -172,6 +173,13 @@ class Navigation
     protected $last = null;
 
     /**
+     * List page nodes
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection|null
+     */
+    protected $list = null;
+
+    /**
      * Construct
      *
      * @param integer         $total_page      Total number of pages
@@ -278,6 +286,53 @@ class Navigation
                 ->setPage($this->total_pages);
         }
         return $this->last;
+    }
+
+    public function getIterator()
+    {
+        if (!($this->last instanceof ArrayCollection)) {
+            $this->list = new ArrayCollection();
+
+            if (!$this->total_pages) {
+                return $this->list;
+            }
+
+            // definition of offset to the left and to the right of the selected page
+            $left_offset = floor(($this->max_navigate - 1) / 2);
+            $right_offset = ceil(($this->max_navigate - 1) / 2);
+            // adjustment, if the offset is too large left
+            if ($this->current_page - $left_offset < 1) {
+                $offset = abs($this->current_page - 1 - $left_offset);
+                $left_offset = $left_offset - $offset;
+                $right_offset = $right_offset + $offset;
+            }
+            // adjustment, if the offset is too large right
+            if ($this->current_page + $right_offset > $this->total_pages) {
+                $offset = abs($this->total_pages - $this->current_page - $right_offset);
+                $left_offset = $left_offset + $offset;
+                $right_offset = $right_offset - $offset;
+            }
+            // determining the first and last pages in paging based on the current page and offset
+            $page_from = $this->current_page - $left_offset;
+            $page_to = $this->current_page + $right_offset;
+            $page_from = $page_from > 1 ? $page_from : 1;
+
+            // build list
+            for ($page = $page_from; $page <= $page_to; $page++) {
+                if ($page == $this->current_page) {
+                    $this->list->add($this->getCurrent());
+                } else {
+                    $this->list->add(
+                        (new Page())
+                            ->setLink($this->buildLink($page))
+                            ->setPage($page)
+                            ->setName($page)
+                    );
+                }
+            }
+        }
+
+        return $this->list;
     }
 
     /**
