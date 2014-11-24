@@ -9,6 +9,13 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Page;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev;
+
 /**
  * Pagination navigation
  *
@@ -32,13 +39,146 @@ class Navigation
     const DEFAULT_PAGE_LINK = '%s';
 
     /**
+     * Type for first page
+     *
+     * @var string
+     */
+    const TYPE_FIRST = 'first';
+
+    /**
+     * Type for previous page
+     *
+     * @var string
+     */
+    const TYPE_PREV = 'prev';
+
+    /**
+     * Type for other pages
+     *
+     * @var string
+     */
+    const TYPE_PAGE = 'page';
+
+    /**
+     * Type for next page
+     *
+     * @var string
+     */
+    const TYPE_NEXT = 'next';
+
+    /**
+     * Type for last page
+     *
+     * @var string
+     */
+    const TYPE_LAST = 'last';
+
+    /**
+     * Type for current page
+     *
+     * @var string
+     */
+    const TYPE_CURENT = 'current';
+
+    /**
+     * Types list
+     *
+     * @var array
+     */
+    public static $types_list = [
+        self::TYPE_CURENT,
+        self::TYPE_FIRST,
+        self::TYPE_LAST,
+        self::TYPE_NEXT,
+        self::TYPE_PAGE,
+        self::TYPE_PREV,
+    ];
+
+    /**
+     * Total number of pages
+     *
+     * @var integer
+     */
+    protected $total_pages = 0;
+
+    /**
+     * Current page
+     *
+     * @var integer
+     */
+    protected $current_page = 1;
+
+    /**
+     * Navigation
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation
+     */
+    protected $navigation;
+
+    /**
+     * The number of pages displayed in the navigation
+     *
+     * @var integer
+     */
+    protected $max_navigate = self::DEFAULT_LIST_LENGTH;
+
+    /**
+     * Page link
+     *
+     * @var string|callback
+     */
+    protected $page_link = self::DEFAULT_PAGE_LINK;
+
+    /**
+     * Link to the first page
+     *
+     * @var string
+     */
+    protected $ferst_page_link = '';
+
+    /**
+     * First page node
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First|null
+     */
+    protected $first = null;
+
+    /**
+     * Previous page node
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev|null
+     */
+    protected $prev = null;
+
+    /**
+     * Current page node
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current
+     */
+    protected $current;
+
+    /**
+     * Next page node
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next|null
+     */
+    protected $next = null;
+
+    /**
+     * Last page node
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last|null
+     */
+    protected $last = null;
+
+    /**
      * Construct
      *
      * @param integer         $total_page      Total number of pages
      * @param integer         $current_page    Current page
      * @param integer         $max_navigate    The number of pages displayed in the navigation
-     * @param string|callback $page_link       Basic reference, for example page_%s.html where %s page number,
-     *                                          or circuit which takes one parameter - the number of the page
+     * @param string|callback $page_link       Basic reference, for example page_%s.html where %s page number, or
+     *                                          callback function which takes one parameter - the number of the page
      * @param string          $ferst_page_link Link to the first page
      *
      * @return array
@@ -50,6 +190,113 @@ class Navigation
         $page_link = self::DEFAULT_PAGE_LINK,
         $ferst_page_link = ''
     ) {
-        // TODO init navigation
+        $this->total_pages = $total_page;
+        $this->current_page = $current_page;
+        $this->max_navigate = $max_navigate;
+        $this->page_link = $page_link;
+        $this->ferst_page_link = $ferst_page_link;
+    }
+
+    /**
+     * Get total pages
+     *
+     * @return integer
+     */
+    public function getTotal()
+    {
+        return $this->total_pages;
+    }
+
+    /**
+     * Get first page node
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First|null
+     */
+    public function getFirst()
+    {
+        if (!$this->first && $this->current_page > 1) {
+            $this->first = (new First())
+                ->setLink($this->buildLink(1));
+        }
+        return $this->first;
+    }
+
+    /**
+     * Get previous page node
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev|null
+     */
+    public function getPrev()
+    {
+        if (!$this->prev && $this->current_page > 1) {
+            $this->prev = (new Prev())
+                ->setLink($this->buildLink($this->current_page - 1))
+                ->setPage($this->current_page - 1);
+        }
+        return $this->prev;
+    }
+
+    /**
+     * Get current page node
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current
+     */
+    public function getCurrent()
+    {
+        if (!$this->current) {
+            $this->current = (new Current())
+                ->setLink($this->buildLink($this->current_page));
+        }
+        return $this->current;
+    }
+
+    /**
+     * Get next page node
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next|null
+     */
+    public function getNext()
+    {
+        if (!$this->next && $this->current_page < $this->total_pages) {
+            $this->next = (new Next())
+                ->setLink($this->buildLink($this->current_page + 1))
+                ->setPage($this->current_page + 1);
+        }
+        return $this->next;
+    }
+
+    /**
+     * Get last page node
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last|null
+     */
+    public function getLast()
+    {
+        if (!$this->last && $this->current_page < $this->total_pages) {
+            $this->last = (new Last())
+                ->setLink($this->buildLink($this->total_pages))
+                ->setPage($this->total_pages);
+        }
+        return $this->last;
+    }
+
+    /**
+     * Build link
+     *
+     * @param integer $page
+     *
+     * @return string
+     */
+    protected function buildLink($page)
+    {
+        if ($page == 1 && $this->ferst_page_link) {
+            return $this->ferst_page_link;
+        }
+
+        if (is_callable($this->page_link)) {
+            return call_user_func($this->page_link, $page);
+        } else {
+            return sprintf($this->page_link, $page);
+        }
     }
 }
