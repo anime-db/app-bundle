@@ -293,7 +293,7 @@ class Navigation implements \IteratorAggregate
         if (!($this->last instanceof ArrayCollection)) {
             $this->list = new ArrayCollection();
 
-            if (!$this->total_pages) {
+            if ($this->total_pages <= 1) {
                 return $this->list;
             }
 
