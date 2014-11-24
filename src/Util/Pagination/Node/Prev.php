@@ -19,7 +19,7 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
  * @package AnimeDb\Bundle\AppBundle\Util\Pagination\Node
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Previous extends Node
+class Prev extends Node
 {
     /**
      * Name
