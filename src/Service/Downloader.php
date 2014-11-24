@@ -152,7 +152,7 @@ class Downloader
         }
 
         // check file
-        if (@getimagesize($target) === false) {
+        if (getimagesize($target) === false) {
             unlink($target); // remove dangerous file
             return false;
         }
