@@ -8,7 +8,7 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\AppBundle\Form\Field\LocalPath;
+namespace AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +17,7 @@ use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 /**
  * Local path choice form
  *
- * @package AnimeDb\Bundle\AppBundle\Form\Field\LocalPath
+ * @package AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Choice extends AbstractType
