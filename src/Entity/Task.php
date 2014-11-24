@@ -291,7 +291,7 @@ class Task
             $next_run = $this->getNextRun();
             do {
                 // failed to compute time of next run
-                if (@$next_run->modify($this->getModify()) === false) {
+                if ($next_run->modify($this->getModify()) === false) {
                     $this->setModify('');
                     $this->setStatus(self::STATUS_DISABLED);
                     break;
