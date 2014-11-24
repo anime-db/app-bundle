@@ -288,6 +288,10 @@ class Navigation implements \IteratorAggregate
         return $this->last;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see IteratorAggregate::getIterator()
+     */
     public function getIterator()
     {
         if (!($this->last instanceof ArrayCollection)) {
