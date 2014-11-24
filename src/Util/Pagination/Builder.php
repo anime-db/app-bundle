@@ -1,0 +1,231 @@
+<?php
+/**
+ * AnimeDb package
+ *
+ * @package   AnimeDb
+ * @author    Peter Gribanov <info@peter-gribanov.ru>
+ * @copyright Copyright (c) 2011, Peter Gribanov
+ * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
+ */
+namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
+
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation;
+
+/**
+ * Pagination builder
+ *
+ * @package AnimeDb\Bundle\AppBundle\Util\Pagination
+ * @author Peter Gribanov <info@peter-gribanov.ru>
+ */
+class Builder
+{
+    /**
+     * Total number of pages
+     *
+     * @var integer
+     */
+    protected $total_pages = 0;
+
+    /**
+     * Current page
+     *
+     * @var integer
+     */
+    protected $current_page = 1;
+
+    /**
+     * Navigation
+     *
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation
+     */
+    protected $navigation;
+
+    /**
+     * The number of pages displayed in the navigation
+     *
+     * @var integer
+     */
+    protected $max_navigate = Navigation::DEFAULT_LIST_LENGTH;
+
+    /**
+     * Page link
+     *
+     * @var string|callback
+     */
+    protected $page_link = Navigation::DEFAULT_PAGE_LINK;
+
+    /**
+     * Link to the first page
+     *
+     * @var string
+     */
+    protected $ferst_page_link = '';
+
+    /**
+     * Construct
+     *
+     * @param integer $total_pages
+     * @param integer $current_page
+     */
+    public function __construct($total_pages = 0, $current_page = 1)
+    {
+        $this->current_page = $current_page;
+        $this->total_pages = $total_pages;
+    }
+
+    /**
+     * Create builder instance
+     *
+     * @param integer $total_pages
+     * @param integer $current_page
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     */
+    public static function create($total_pages = 0, $current_page = 1)
+    {
+        return new static($total_pages, $current_page);
+    }
+
+    /**
+     * Get total pages
+     *
+     * @return integer
+     */
+    public function getTotalPages()
+    {
+        return $this->total_pages;
+    }
+
+    /**
+     * Set total pages
+     *
+     * @param integer $total_pages
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     */
+    public function setTotalPages($total_pages)
+    {
+        $this->total_pages = $total_pages;
+        return $this;
+    }
+
+    /**
+     * Get current pages
+     *
+     * @return integer
+     */
+    public function getCurrentPages()
+    {
+        return $this->current_page;
+    }
+
+    /**
+     * Set current pages
+     *
+     * @param integer $current_pages
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     */
+    public function setCurrentPages($current_pages)
+    {
+        $this->current_page = $current_pages;
+        return $this;
+    }
+
+    /**
+     * Get number of pages displayed in the navigation
+     *
+     * @return integer
+     */
+    public function getMaxNavigate()
+    {
+        return $this->max_navigate;
+    }
+
+    /**
+     * Set number of pages displayed in the navigation
+     *
+     * @param integer $max_navigate
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     */
+    public function setMaxNavigate($max_navigate)
+    {
+        $this->max_navigate = $max_navigate;
+        return $this;
+    }
+
+    /**
+     * Get page link
+     *
+     * @return string|callback
+     */
+    public function getPageLink()
+    {
+        return $this->page_link;
+    }
+
+    /**
+     * Set page link
+     *
+     * Basic reference, for example `page_%s.html` where %s page number, or
+     * callback function which takes one parameter - the number of the page.
+     *
+     * <code>
+     * function ($number) {
+     *     return 'page_'.$number.'.html';
+     * }
+     * </code>
+     *
+     * @param string|callback $page_link
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     */
+    public function setPageLink($page_link)
+    {
+        $this->page_link = $page_link;
+        return $this;
+    }
+
+    /**
+     * Get ferst page link
+     *
+     * @return string
+     */
+    public function getFerstPageLink()
+    {
+        return $this->ferst_page_link;
+    }
+
+    /**
+     * Set ferst page link
+     *
+     * @param string $ferst_page_link
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     */
+    public function setPageLink($ferst_page_link)
+    {
+        $this->ferst_page_link = $ferst_page_link;
+        return $this;
+    }
+
+    /**
+     * Get navigation
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation
+     */
+    public function getNavigation()
+    {
+        if (! $this->navigation) {
+            $this->navigation = new Navigation(
+                $this->getTotalPages(),
+                $this->getCurrentPages(),
+                $this->getMaxNavigate(),
+                $this->getPageLink(),
+                $this->getFerstPageLink()
+            );
+        }
+        return $this->navigation;
+    }
+}
