@@ -1,12 +1,24 @@
 {% if pagination|default is not empty %}
     <div class="pagination">
         <nav>
+            {% if pagination.first %}
+                <a href="{{ pagination.first.link }}" title="{{ pagination.first.title|trans({'%page%': pagination.first.page}, 'pagination') }}">{{ pagination.first.name | trans({}, 'pagination') }}</a>
+            {% endfor %}
+            {% if pagination.prev %}
+                <a href="{{ pagination.prev.link }}" title="{{ pagination.prev.title|trans({'%page%': pagination.prev.page}, 'pagination') }}">{{ pagination.prev.name | trans({}, 'pagination') }}</a>
+            {% endfor %}
             {% for item in pagination %}
                 {% if item.current %}
                     <span title="{{ item.title|trans({}, 'pagination') }}">{{ item.name | trans({}, 'pagination') }}</span>
                 {% elseif item.type != 'first' and item.type != 'last' %}
                     <a href="{{ item.link }}" title="{{ item.title|trans({'%page%': item.page}, 'pagination') }}">{{ item.name | trans({}, 'pagination') }}</a>
                 {% endif %}
+            {% endfor %}
+            {% if pagination.next %}
+                <a href="{{ pagination.next.link }}" title="{{ pagination.next.title|trans({'%page%': pagination.next.page}, 'pagination') }}">{{ pagination.next.name | trans({}, 'pagination') }}</a>
+            {% endfor %}
+            {% if pagination.last %}
+                <a href="{{ pagination.last.link }}" title="{{ pagination.last.title|trans({'%page%': pagination.first.page}, 'pagination') }}">{{ pagination.last.name | trans({}, 'pagination') }}</a>
             {% endfor %}
         </nav>
     </div>
