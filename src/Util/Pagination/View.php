@@ -18,12 +18,12 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Page;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev;
 
 /**
- * Pagination navigation
+ * Pagination view
  *
  * @package AnimeDb\Bundle\AppBundle\Util\Pagination
  * @author Peter Gribanov <info@peter-gribanov.ru>
  */
-class Navigation implements \IteratorAggregate
+class View implements \IteratorAggregate
 {
     /**
      * Length of the list of pagination defaults
@@ -108,13 +108,6 @@ class Navigation implements \IteratorAggregate
      * @var integer
      */
     protected $current_page = 1;
-
-    /**
-     * Navigation
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation
-     */
-    protected $navigation;
 
     /**
      * The number of pages displayed in the navigation

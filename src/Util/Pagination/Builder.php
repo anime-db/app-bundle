@@ -9,7 +9,7 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 
 /**
  * Pagination builder
@@ -34,25 +34,25 @@ class Builder
     protected $current_page = 1;
 
     /**
-     * Navigation
+     * View
      *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\View
      */
-    protected $navigation;
+    protected $view;
 
     /**
      * The number of pages displayed in the navigation
      *
      * @var integer
      */
-    protected $max_navigate = Navigation::DEFAULT_LIST_LENGTH;
+    protected $max_navigate = View::DEFAULT_LIST_LENGTH;
 
     /**
      * Page link
      *
      * @var string|callback
      */
-    protected $page_link = Navigation::DEFAULT_PAGE_LINK;
+    protected $page_link = View::DEFAULT_PAGE_LINK;
 
     /**
      * Link to the first page
@@ -211,14 +211,14 @@ class Builder
     }
 
     /**
-     * Get navigation
+     * Get view
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Navigation
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\View
      */
-    public function getNavigation()
+    public function getView()
     {
-        if (!$this->navigation) {
-            $this->navigation = new Navigation(
+        if (!$this->view) {
+            $this->view = new View(
                 $this->getTotalPages(),
                 $this->getCurrentPages(),
                 $this->getMaxNavigate(),
@@ -226,6 +226,6 @@ class Builder
                 $this->getFerstPageLink()
             );
         }
-        return $this->navigation;
+        return $this->view;
     }
 }
