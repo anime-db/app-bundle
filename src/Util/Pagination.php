@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AppBundle\Util;
 
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Builder;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
 
 /**
  * Pagination
@@ -21,14 +21,14 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Builder;
 class Pagination
 {
     /**
-     * Returns navigation builder
+     * Create navigation
      *
      * @param integer $total_pages
      * @param integer $current_page
      *
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
      */
-    public function getBuilder($total_pages = 0, $current_page = 1) {
-        return new Builder($total_pages, $current_page);
+    public function create($total_pages = 0, $current_page = 1) {
+        return new Configuration($total_pages, $current_page);
     }
 }

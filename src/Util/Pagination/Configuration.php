@@ -12,12 +12,12 @@ namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 
 /**
- * Pagination builder
+ * Pagination configuration
  *
  * @package AnimeDb\Bundle\AppBundle\Util\Pagination
  * @author Peter Gribanov <info@peter-gribanov.ru>
  */
-class Builder
+class Configuration
 {
     /**
      * Total number of pages
@@ -74,12 +74,12 @@ class Builder
     }
 
     /**
-     * Create builder instance
+     * Create configuration instance
      *
      * @param integer $total_pages
      * @param integer $current_page
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public static function create($total_pages = 0, $current_page = 1)
     {
@@ -101,7 +101,7 @@ class Builder
      *
      * @param integer $total_pages
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function setTotalPages($total_pages)
     {
@@ -124,7 +124,7 @@ class Builder
      *
      * @param integer $current_pages
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function setCurrentPages($current_pages)
     {
@@ -147,7 +147,7 @@ class Builder
      *
      * @param integer $max_navigate
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function setMaxNavigate($max_navigate)
     {
@@ -179,7 +179,7 @@ class Builder
      *
      * @param string|callback $page_link
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function setPageLink($page_link)
     {
@@ -202,7 +202,7 @@ class Builder
      *
      * @param string $ferst_page_link
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function setFerstPageLink($ferst_page_link)
     {
