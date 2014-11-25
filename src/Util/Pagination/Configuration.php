@@ -20,6 +20,20 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 class Configuration
 {
     /**
+     * Length of the list of pagination defaults
+     *
+     * @var integer
+     */
+    const DEFAULT_LIST_LENGTH = 5;
+
+    /**
+     * Default page link
+     *
+     * @var integer
+     */
+    const DEFAULT_PAGE_LINK = '%s';
+
+    /**
      * Total number of pages
      *
      * @var integer
@@ -45,14 +59,14 @@ class Configuration
      *
      * @var integer
      */
-    protected $max_navigate = View::DEFAULT_LIST_LENGTH;
+    protected $max_navigate = self::DEFAULT_LIST_LENGTH;
 
     /**
      * Page link
      *
      * @var string|callback
      */
-    protected $page_link = View::DEFAULT_PAGE_LINK;
+    protected $page_link = self::DEFAULT_PAGE_LINK;
 
     /**
      * Link to the first page
@@ -218,13 +232,7 @@ class Configuration
     public function getView()
     {
         if (!$this->view) {
-            $this->view = new View(
-                $this->getTotalPages(),
-                $this->getCurrentPages(),
-                $this->getMaxNavigate(),
-                $this->getPageLink(),
-                $this->getFerstPageLink()
-            );
+            $this->view = new View($this);
         }
         return $this->view;
     }

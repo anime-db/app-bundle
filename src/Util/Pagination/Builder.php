@@ -11,7 +11,6 @@
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 
 /**
  * Builder
@@ -27,7 +26,7 @@ class Builder
      *
      * @var integer
      */
-    protected $max_navigate = View::DEFAULT_LIST_LENGTH;
+    protected $max_navigate = Configuration::DEFAULT_LIST_LENGTH;
 
     /**
      * Construct
