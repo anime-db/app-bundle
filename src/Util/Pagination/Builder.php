@@ -8,17 +8,17 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\AppBundle\Util;
+namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
 
 /**
- * Pagination
+ * Builder
  *
- * @package AnimeDb\Bundle\AppBundle\Util
+ * @package AnimeDb\Bundle\AppBundle\Util\Pagination
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Pagination
+class Builder
 {
     /**
      * Create navigation
@@ -26,7 +26,7 @@ class Pagination
      * @param integer $total_pages
      * @param integer $current_page
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function create($total_pages = 0, $current_page = 1) {
         return new Configuration($total_pages, $current_page);
