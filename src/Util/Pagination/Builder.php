@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 
 /**
  * Builder
@@ -20,6 +21,24 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
  */
 class Builder
 {
+
+    /**
+     * The number of pages displayed in the navigation
+     *
+     * @var integer
+     */
+    protected $max_navigate = View::DEFAULT_LIST_LENGTH;
+
+    /**
+     * Construct
+     *
+     * @param integer $max_navigate
+     */
+    public function __construct($max_navigate)
+    {
+        $this->max_navigate = $max_navigate;
+    }
+
     /**
      * Create navigation
      *
@@ -29,6 +48,7 @@ class Builder
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
     public function create($total_pages = 0, $current_page = 1) {
-        return new Configuration($total_pages, $current_page);
+        return (new Configuration($total_pages, $current_page))
+            ->setMaxNavigate($this->max_navigate);
     }
 }

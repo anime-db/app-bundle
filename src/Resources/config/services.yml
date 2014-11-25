@@ -1,6 +1,7 @@
 services:
     anime_db.pagination:
         class: AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
+        arguments: [ %anime_db.pagination.max_navigate% ]
     anime_db.filesystem:
         class: AnimeDb\Bundle\AppBundle\Util\Filesystem
     anime_db.cache_clearer:
