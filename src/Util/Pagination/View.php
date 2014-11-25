@@ -10,12 +10,6 @@
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Page;
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev;
 
 /**
  * Pagination view
@@ -38,62 +32,6 @@ class View implements \IteratorAggregate
      * @var integer
      */
     const DEFAULT_PAGE_LINK = '%s';
-
-    /**
-     * Type for first page
-     *
-     * @var string
-     */
-    const TYPE_FIRST = 'first';
-
-    /**
-     * Type for previous page
-     *
-     * @var string
-     */
-    const TYPE_PREV = 'prev';
-
-    /**
-     * Type for other pages
-     *
-     * @var string
-     */
-    const TYPE_PAGE = 'page';
-
-    /**
-     * Type for next page
-     *
-     * @var string
-     */
-    const TYPE_NEXT = 'next';
-
-    /**
-     * Type for last page
-     *
-     * @var string
-     */
-    const TYPE_LAST = 'last';
-
-    /**
-     * Type for current page
-     *
-     * @var string
-     */
-    const TYPE_CURENT = 'current';
-
-    /**
-     * Types list
-     *
-     * @var array
-     */
-    public static $types_list = [
-        self::TYPE_CURENT,
-        self::TYPE_FIRST,
-        self::TYPE_LAST,
-        self::TYPE_NEXT,
-        self::TYPE_PAGE,
-        self::TYPE_PREV,
-    ];
 
     /**
      * Total number of pages
@@ -133,35 +71,35 @@ class View implements \IteratorAggregate
     /**
      * First page node
      *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First|null
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
      */
     protected $first = null;
 
     /**
      * Previous page node
      *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev|null
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
      */
     protected $prev = null;
 
     /**
      * Current page node
      *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
      */
     protected $current;
 
     /**
      * Next page node
      *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next|null
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
      */
     protected $next = null;
 
     /**
      * Last page node
      *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last|null
+     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
      */
     protected $last = null;
 
@@ -211,13 +149,12 @@ class View implements \IteratorAggregate
     /**
      * Get first page node
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\First|null
+     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
      */
     public function getFirst()
     {
         if (!$this->first && $this->current_page > 1) {
-            $this->first = (new First())
-                ->setLink($this->buildLink(1));
+            $this->first = new Node(1, $this->buildLink(1));
         }
         return $this->first;
     }
@@ -230,9 +167,7 @@ class View implements \IteratorAggregate
     public function getPrev()
     {
         if (!$this->prev && $this->current_page > 1) {
-            $this->prev = (new Prev())
-                ->setLink($this->buildLink($this->current_page - 1))
-                ->setPage($this->current_page - 1);
+            $this->prev = new Node($this->current_page - 1, $this->buildLink($this->current_page - 1));
         }
         return $this->prev;
     }
@@ -245,8 +180,7 @@ class View implements \IteratorAggregate
     public function getCurrent()
     {
         if (!$this->current) {
-            $this->current = (new Current())
-                ->setLink($this->buildLink($this->current_page));
+            $this->current = new Node($this->current_page, $this->buildLink($this->current_page), true);
         }
         return $this->current;
     }
@@ -259,9 +193,7 @@ class View implements \IteratorAggregate
     public function getNext()
     {
         if (!$this->next && $this->current_page < $this->total_pages) {
-            $this->next = (new Next())
-                ->setLink($this->buildLink($this->current_page + 1))
-                ->setPage($this->current_page + 1);
+            $this->next = new Node($this->current_page + 1, $this->buildLink($this->current_page + 1));
         }
         return $this->next;
     }
@@ -274,9 +206,7 @@ class View implements \IteratorAggregate
     public function getLast()
     {
         if (!$this->last && $this->current_page < $this->total_pages) {
-            $this->last = (new Last())
-                ->setLink($this->buildLink($this->total_pages))
-                ->setPage($this->total_pages);
+            $this->last = new Node($this->total_pages, $this->buildLink($this->total_pages));
         }
         return $this->last;
     }
@@ -319,12 +249,7 @@ class View implements \IteratorAggregate
                 if ($page == $this->current_page) {
                     $this->list->add($this->getCurrent());
                 } else {
-                    $this->list->add(
-                        (new Page())
-                            ->setLink($this->buildLink($page))
-                            ->setPage($page)
-                            ->setName($page)
-                    );
+                    $this->list->add(new Node($page, $this->buildLink($page)));
                 }
             }
         }
