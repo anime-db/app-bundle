@@ -11,6 +11,8 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
+use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Test view
@@ -289,5 +291,140 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\AnimeDb\Bundle\AppBundle\Util\Pagination\Node', $node);
         $this->assertEquals(10, $node->getPage());
         $this->assertEquals($this->getLink($page_link, 10), $node->getLink());
+    }
+
+    /**
+     * Get list nodes
+     *
+     * @return array
+     */
+    public function getNodes()
+    {
+        return [
+            [
+                1,
+                1,
+                5,
+                '%s',
+                null,
+                new ArrayCollection()
+            ],
+            [
+                2,
+                1,
+                5,
+                '/?page=%s',
+                null,
+                new ArrayCollection([
+                    new Node(1, '/?page=1', true),
+                    new Node(2, '/?page=2'),
+                ])
+            ],
+            [
+                2,
+                2,
+                5,
+                '/?page=%s',
+                null,
+                new ArrayCollection([
+                    new Node(1, '/?page=1'),
+                    new Node(2, '/?page=2', true),
+                ])
+            ],
+            [
+                10,
+                1,
+                5,
+                '/?page=%s',
+                null,
+                new ArrayCollection([
+                    new Node(1, '/?page=1', true),
+                    new Node(2, '/?page=2'),
+                    new Node(3, '/?page=3'),
+                    new Node(4, '/?page=4'),
+                    new Node(5, '/?page=5'),
+                ])
+            ],
+            [
+                10,
+                10,
+                5,
+                '/?page=%s',
+                null,
+                new ArrayCollection([
+                    new Node(6, '/?page=6'),
+                    new Node(7, '/?page=7'),
+                    new Node(8, '/?page=8'),
+                    new Node(9, '/?page=9'),
+                    new Node(10, '/?page=10', true),
+                ])
+            ],
+            [
+                10,
+                5,
+                5,
+                '/?page=%s',
+                null,
+                new ArrayCollection([
+                    new Node(3, '/?page=3'),
+                    new Node(4, '/?page=4'),
+                    new Node(5, '/?page=5', true),
+                    new Node(6, '/?page=6'),
+                    new Node(7, '/?page=7'),
+                ])
+            ],
+            [
+                10,
+                5,
+                4,
+                function ($number) {
+                    return sprintf('/?page=%s', $number);
+                },
+                '/',
+                new ArrayCollection([
+                    new Node(4, '/?page=4'),
+                    new Node(5, '/?page=5', true),
+                    new Node(6, '/?page=6'),
+                    new Node(7, '/?page=7'),
+                ])
+            ]
+        ];
+    }
+
+    /**
+     * Test get iterator
+     *
+     * @dataProvider getNodes
+     *
+     * @param integer $total_pages
+     * @param integer $current_page
+     * @param integer $max_navigate
+     * @param string|\Closure $page_link
+     * @param string $ferst_page_link
+     * @param \Doctrine\Common\Collections\ArrayCollection $list
+     */
+    public function testGetIterator($total_pages, $current_page, $max_navigate, $page_link, $ferst_page_link, $list)
+    {
+        $this->config
+            ->expects($this->any())
+            ->method('getTotalPages')
+            ->willReturn($total_pages);
+        $this->config
+            ->expects($this->any())
+            ->method('getCurrentPage')
+            ->willReturn($current_page);
+        $this->config
+            ->expects($this->any())
+            ->method('getMaxNavigate')
+            ->willReturn($max_navigate);
+        $this->config
+            ->expects($this->any())
+            ->method('getPageLink')
+            ->willReturn($page_link);
+        $this->config
+            ->expects($this->any())
+            ->method('getFerstPageLink')
+            ->willReturn($ferst_page_link);
+        $this->assertEquals($list, $this->view->getIterator());
     }
 }
