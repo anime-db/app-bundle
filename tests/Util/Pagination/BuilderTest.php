@@ -27,10 +27,10 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function getConfigs()
     {
-        return array(
-            array(5, 10, 1),
-            array(10, 150, 33),
-        );
+        return [
+            [5, 10, 1],
+            [10, 150, 33],
+        ];
     }
 
     /**

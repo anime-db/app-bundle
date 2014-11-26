@@ -43,10 +43,10 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function getConfigs()
     {
-        return array(
-            array(10, 1),
-            array(150, 33),
-        );
+        return [
+            [10, 1],
+            [150, 33],
+        ];
     }
 
     /**
@@ -86,46 +86,46 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function getMethods()
     {
-        return array(
-            array(
+        return [
+            [
                 150,
                 10,
                 'getTotalPages',
                 'setTotalPages'
-            ),
-            array(
+            ],
+            [
                 33,
                 1,
                 'getCurrentPages',
                 'setCurrentPages'
-            ),
-            array(
+            ],
+            [
                 Configuration::DEFAULT_LIST_LENGTH,
                 Configuration::DEFAULT_LIST_LENGTH + 5,
                 'getMaxNavigate',
                 'setMaxNavigate'
-            ),
-            array(
+            ],
+            [
                 Configuration::DEFAULT_PAGE_LINK,
                 'page_%s.html',
                 'getPageLink',
                 'setPageLink'
-            ),
-            array(
+            ],
+            [
                 Configuration::DEFAULT_PAGE_LINK,
                 function ($number) {
                     return 'page_'.$number.'.html';
                 },
                 'getPageLink',
                 'setPageLink'
-            ),
-            array(
+            ],
+            [
                 '',
                 '/index.html',
                 'getFerstPageLink',
                 'setFerstPageLink'
-            ),
-        );
+            ],
+        ];
     }
 
     /**

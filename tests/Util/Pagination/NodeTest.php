@@ -27,10 +27,10 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      */
     public function getNodes()
     {
-        return array(
-            array(1, '', false),
-            array(4, 'http://example.com/?p=4', true),
-        );
+        return [
+            [1, '', false],
+            [4, 'http://example.com/?p=4', true],
+        ];
     }
 
     /**
