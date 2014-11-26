@@ -10,8 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-use AnimeDb\Bundle\AppBundle\Util\Pagination;
-
 /**
  * Pagination node
  *
