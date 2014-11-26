@@ -97,7 +97,7 @@ class View implements \IteratorAggregate
      */
     public function getFirst()
     {
-        if (!$this->first && $this->config->getCurrentPages() > 1) {
+        if (!$this->first && $this->config->getCurrentPage() > 1) {
             $this->first = new Node(1, $this->buildLink(1));
         }
         return $this->first;
@@ -110,10 +110,10 @@ class View implements \IteratorAggregate
      */
     public function getPrev()
     {
-        if (!$this->prev && $this->config->getCurrentPages() > 1) {
+        if (!$this->prev && $this->config->getCurrentPage() > 1) {
             $this->prev = new Node(
-                $this->config->getCurrentPages() - 1,
-                $this->buildLink($this->config->getCurrentPages() - 1)
+                $this->config->getCurrentPage() - 1,
+                $this->buildLink($this->config->getCurrentPage() - 1)
             );
         }
         return $this->prev;
@@ -128,8 +128,8 @@ class View implements \IteratorAggregate
     {
         if (!$this->current) {
             $this->current = new Node(
-                $this->config->getCurrentPages(),
-                $this->buildLink($this->config->getCurrentPages()),
+                $this->config->getCurrentPage(),
+                $this->buildLink($this->config->getCurrentPage()),
                 true
             );
         }
@@ -143,10 +143,10 @@ class View implements \IteratorAggregate
      */
     public function getNext()
     {
-        if (!$this->next && $this->config->getCurrentPages() < $this->getTotal()) {
+        if (!$this->next && $this->config->getCurrentPage() < $this->getTotal()) {
             $this->next = new Node(
-                $this->config->getCurrentPages() + 1,
-                $this->buildLink($this->config->getCurrentPages() + 1)
+                $this->config->getCurrentPage() + 1,
+                $this->buildLink($this->config->getCurrentPage() + 1)
             );
         }
         return $this->next;
@@ -159,7 +159,7 @@ class View implements \IteratorAggregate
      */
     public function getLast()
     {
-        if (!$this->last && $this->config->getCurrentPages() < $this->getTotal()) {
+        if (!$this->last && $this->config->getCurrentPage() < $this->getTotal()) {
             $this->last = new Node($this->getTotal(), $this->buildLink($this->getTotal()));
         }
         return $this->last;
@@ -182,25 +182,25 @@ class View implements \IteratorAggregate
             $left_offset = floor(($this->config->getMaxNavigate() - 1) / 2);
             $right_offset = ceil(($this->config->getMaxNavigate() - 1) / 2);
             // adjustment, if the offset is too large left
-            if ($this->config->getCurrentPages() - $left_offset < 1) {
-                $offset = abs($this->config->getCurrentPages() - 1 - $left_offset);
+            if ($this->config->getCurrentPage() - $left_offset < 1) {
+                $offset = abs($this->config->getCurrentPage() - 1 - $left_offset);
                 $left_offset = $left_offset - $offset;
                 $right_offset = $right_offset + $offset;
             }
             // adjustment, if the offset is too large right
-            if ($this->config->getCurrentPages() + $right_offset > $this->getTotal()) {
-                $offset = abs($this->getTotal() - $this->config->getCurrentPages() - $right_offset);
+            if ($this->config->getCurrentPage() + $right_offset > $this->getTotal()) {
+                $offset = abs($this->getTotal() - $this->config->getCurrentPage() - $right_offset);
                 $left_offset = $left_offset + $offset;
                 $right_offset = $right_offset - $offset;
             }
             // determining the first and last pages in paging based on the current page and offset
-            $page_from = $this->config->getCurrentPages() - $left_offset;
-            $page_to = $this->config->getCurrentPages() + $right_offset;
+            $page_from = $this->config->getCurrentPage() - $left_offset;
+            $page_to = $this->config->getCurrentPage() + $right_offset;
             $page_from = $page_from > 1 ? $page_from : 1;
 
             // build list
             for ($page = $page_from; $page <= $page_to; $page++) {
-                if ($page == $this->config->getCurrentPages()) {
+                if ($page == $this->config->getCurrentPage()) {
                     $this->list->add($this->getCurrent());
                 } else {
                     $this->list->add(new Node($page, $this->buildLink($page)));

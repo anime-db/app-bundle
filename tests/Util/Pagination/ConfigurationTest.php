@@ -61,7 +61,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $config = new Configuration($total_pages, $current_page);
         $this->assertEquals($total_pages, $config->getTotalPages());
-        $this->assertEquals($current_page, $config->getCurrentPages());
+        $this->assertEquals($current_page, $config->getCurrentPage());
     }
 
     /**
@@ -76,7 +76,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $config = Configuration::create($total_pages, $current_page);
         $this->assertEquals($total_pages, $config->getTotalPages());
-        $this->assertEquals($current_page, $config->getCurrentPages());
+        $this->assertEquals($current_page, $config->getCurrentPage());
     }
 
     /**
@@ -96,8 +96,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             [
                 33,
                 1,
-                'getCurrentPages',
-                'setCurrentPages'
+                'getCurrentPage',
+                'setCurrentPage'
             ],
             [
                 Configuration::DEFAULT_LIST_LENGTH,

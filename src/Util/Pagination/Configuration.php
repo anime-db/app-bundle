@@ -128,7 +128,7 @@ class Configuration
      *
      * @return integer
      */
-    public function getCurrentPages()
+    public function getCurrentPage()
     {
         return $this->current_page;
     }
@@ -136,13 +136,13 @@ class Configuration
     /**
      * Set current pages
      *
-     * @param integer $current_pages
+     * @param integer $current_page
      *
      * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
      */
-    public function setCurrentPages($current_pages)
+    public function setCurrentPage($current_page)
     {
-        $this->current_page = $current_pages;
+        $this->current_page = $current_page;
         return $this;
     }
 

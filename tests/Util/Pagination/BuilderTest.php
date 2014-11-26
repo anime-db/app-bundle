@@ -48,6 +48,6 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $config = $builder->create($total_pages, $current_page);
         $this->assertEquals($max_navigate, $config->getMaxNavigate());
         $this->assertEquals($total_pages, $config->getTotalPages());
-        $this->assertEquals($current_page, $config->getCurrentPages());
+        $this->assertEquals($current_page, $config->getCurrentPage());
     }
 }
