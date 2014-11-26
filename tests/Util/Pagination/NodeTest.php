@@ -42,7 +42,8 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      * @param string $link
      * @param boolean $is_current
      */
-    public function test($page, $link, $is_current) {
+    public function test($page, $link, $is_current)
+    {
         $node = new Node($page, $link, $is_current);
         $this->assertEquals($page, $node->getPage());
         $this->assertEquals($link, $node->getLink());
