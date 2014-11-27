@@ -130,20 +130,6 @@ class TaskTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test executed bad modify
-     */
-    public function testExecutedBadModify()
-    {
-        $this->task->setModify('--');
-        $this->task->setStatus(Task::STATUS_ENABLED);
-        $next_run = $this->task->getNextRun();
-
-        $this->executed();
-        $this->assertEquals($next_run, $this->task->getNextRun());
-        $this->assertEmpty($this->task->getModify());
-    }
-
-    /**
      * Test executed
      */
     public function testExecuted()
