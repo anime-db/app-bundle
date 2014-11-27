@@ -2,23 +2,23 @@
     <div class="pagination">
         <nav>
             {% if pagination.first %}
-                <a href="{{ pagination.first.link }}" title="{{ trans from 'pagination' }}Go to the first page{{ endtrans }}">‹‹</a>
+                <a href="{{ pagination.first.link }}" title="{% trans from 'pagination' %}Go to the first page{% endtrans %}">‹‹</a>
             {% endfor %}
             {% if pagination.prev %}
-                <a href="{{ pagination.prev.link }}" title="{{ trans from 'pagination' }}Go to the previous page{{ endtrans }}">←</a>
+                <a href="{{ pagination.prev.link }}" title="{% trans from 'pagination' %}Go to the previous page{% endtrans %}">←</a>
             {% endfor %}
             {% for item in pagination %}
                 {% if item.current %}
-                    <span title="{{ trans from 'pagination' }}Current page{{ endtrans }}">{{ item.page }}</span>
+                    <span title="{% trans from 'pagination' %}Current page{% endtrans %}">{{ item.page }}</span>
                 {% else %}
-                    <a href="{{ item.link }}" title="{{ trans with {'%page%': item.page} from 'pagination' }}Go to page number: %page%{{ endtrans }}">{{ item.page }}</a>
+                    <a href="{{ item.link }}" title="{% trans with {'%page%': item.page} from 'pagination' %}Go to page number: %page%{% endtrans %}">{{ item.page }}</a>
                 {% endif %}
             {% endfor %}
             {% if pagination.next %}
-                <a href="{{ pagination.next.link }}" title="{{ trans from 'pagination' }}Go to the next page{{ endtrans }}">→</a>
+                <a href="{{ pagination.next.link }}" title="{% trans from 'pagination' %}Go to the next page{% endtrans %}">→</a>
             {% endfor %}
             {% if pagination.last %}
-                <a href="{{ pagination.last.link }}" title="{{ trans from 'pagination' }}Go to the last page{{ endtrans }}">››</a>
+                <a href="{{ pagination.last.link }}" title="{% trans from 'pagination' %}Go to the last page{% endtrans %}">››</a>
             {% endfor %}
         </nav>
     </div>
