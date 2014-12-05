@@ -196,7 +196,7 @@ class Notice extends EntityRepository
     public function getFilteredQuery($status, $type)
     {
         $query = $this->createQueryBuilder('n');
-        if (in_array($status, NoticeEntity::getStatuses())) {
+        if (is_integer($status) && in_array($status, NoticeEntity::getStatuses())) {
             $query
                 ->where('n.status = :status')
                 ->setParameter('status', $status);
