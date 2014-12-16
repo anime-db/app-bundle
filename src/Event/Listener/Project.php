@@ -10,10 +10,11 @@
 
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
-use Symfony\Component\Yaml\Yaml;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Project listener
@@ -26,7 +27,7 @@ class Project
     /**
      * Entity manager
      *
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $em;
 
@@ -38,24 +39,37 @@ class Project
     protected $cache_clearer;
 
     /**
-     * Root dir
+     * Parameters manipulator
      *
-     * @var string
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
      */
-    protected $root;
+    protected $parameters;
+
+    /**
+     * Composer manipulator
+     *
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer
+     */
+    protected $composer;
 
     /**
      * Construct
      *
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param string $root
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer $composer
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
      */
-    public function __construct(EntityManager $em, CacheClearer $cache_clearer, $root)
-    {
-        $this->em = $em;
+    public function __construct(
+        Registry $doctrine,
+        CacheClearer $cache_clearer,
+        Composer $composer,
+        Parameters $parameters
+    ) {
+        $this->em = $doctrine->getManager();
         $this->cache_clearer = $cache_clearer;
-        $this->root = $root;
+        $this->composer = $composer;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -66,24 +80,25 @@ class Project
         /* @var $task \AnimeDb\Bundle\AppBundle\Entity\Task */
         $task = $this->em
             ->getRepository('AnimeDbAppBundle:Task')
-            ->findOneByCommand('animedb:propose-update');
+            ->findOneBy(['command' => 'animedb:propose-update']);
 
-        $next_run = time()+ProposeUpdateCommand::INERVAL_UPDATE;
-        $next_run = mktime(1, 0, 0, date('m', $next_run), date('d', $next_run), date('y', $next_run));
-        $task->setNextRun(new \DateTime(date('Y-m-d H:i:s', $next_run)));
+        $next_run = new \DateTime();
+        $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');
 
-        $this->em->persist($task);
+        $this->em->persist($task->setNextRun($next_run));
         $this->em->flush();
     }
 
     /**
-     * Update last update date
+     * On installed or updated try add a Shmop package
      */
-    public function onUpdatedSaveLastUpdateDate()
+    public function onInstalledOrUpdatedAddShmop()
     {
-        // update params
-        $parameters = Yaml::parse($this->root.'/config/parameters.yml');
-        $parameters['parameters']['last_update'] = date('r');
-        file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
+        // if the extension shmop is installed, can use the appropriate driver for store the key cache
+        if (extension_loaded('shmop')) {
+            $this->composer->addPackage('anime-db/shmop', '1.0.*');
+        } else {
+            $this->composer->removePackage('anime-db/shmop');
+        }
     }
 }

@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -82,7 +83,7 @@ class Notice
      *
      * @var string
      */
-    protected $message;
+    protected $message = '';
 
     /**
      * Date closed notice
@@ -141,7 +142,7 @@ class Notice
      * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank()
      *
-     * @var integer
+     * @var string
      */
     protected $type = self::DEFAULT_TYPE;
 
@@ -326,7 +327,7 @@ class Notice
     /**
      * Get type
      *
-     * @return integer
+     * @return string
      */
     public function getType()
     {

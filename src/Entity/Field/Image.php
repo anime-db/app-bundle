@@ -10,17 +10,18 @@
 
 namespace AnimeDb\Bundle\AppBundle\Entity\Field;
 
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Item images
+ * Item image
  *
  * @package AnimeDb\Bundle\AppBundle\Entity\Field
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class Image
+class Image extends BaseEntity implements ImageInterface
 {
     /**
      * Image from URL
@@ -29,7 +30,7 @@ class Image
      *
      * @var string
      */
-    protected $remote;
+    protected $remote = '';
 
     /**
      * Local image
@@ -45,13 +46,6 @@ class Image
      * @var \Symfony\Component\HttpFoundation\File\UploadedFile|null
      */
     protected $local;
-
-    /**
-     * Path to image
-     *
-     * @var string
-     */
-    protected $path;
 
     /**
      * Set remote image
@@ -100,138 +94,36 @@ class Image
     }
 
     /**
-     * Get path
-     *
-     * @return string
+     * (non-PHPdoc)
+     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::setFilename()
      */
-    public function getPath()
+    public function setFilename($filename)
     {
-        return $this->path;
+        // it is a filename prefix, not a suffix for the download path
+        if (strpos($filename, 'tmp/') !== 0) {
+            $filename = 'tmp/'.date('Ymd').'/'.$filename;
+        }
+        parent::setFilename($filename);
     }
 
     /**
-     * Upload image
-     *
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param string|null $name
+     * Clear local and remote file
      */
-    public function upload(ValidatorInterface $validator, $name = null) {
-        // upload remote file
-        if ($this->getRemote() && $this->getLocal() === null) {
-            if (!($content = file_get_contents($this->getRemote()))) {
-                throw new \InvalidArgumentException('Unable to read remote file');
-            }
-            // download remote file
-            $tempname = tempnam(sys_get_temp_dir(), 'php');
-            file_put_contents($tempname, $content);
-
-            // create local file from remote
-            if (!($info = getimagesize($tempname))) {
-                throw new \InvalidArgumentException('This is not a image file');
-            }
-            if (!($path = parse_url($this->getRemote(), PHP_URL_PATH))) {
-                throw new \InvalidArgumentException('Invalid image URL');
-            }
-            $originalName = pathinfo($path, PATHINFO_BASENAME);
-            $this->remote = null;
-            $this->setLocal(new UploadedFile(
-                $tempname,
-                $this->getUniqueFileName($this->getUploadRootDir().'/'.$originalName),
-                $info['mime'],
-                filesize($tempname),
-                UPLOAD_ERR_OK,
-                true
-            ));
-
-            // revalidate entity
-            $errors = $validator->validate($this);
-            if (count($errors)) {
-                throw new \InvalidArgumentException($errors[0]->getMessage());
-            }
-        }
-
-        // upload local file
-        if ($this->getLocal() !== null) {
-            if (!$name) {
-                // upload from original name
-                $name = $this->getUniqueFileName(
-                    $this->getUploadRootDir().'/'.$this->getLocal()->getClientOriginalName()
-                );
-                $this->getLocal()->move($this->getUploadRootDir(), $name);
-            } else {
-                // upload to another name
-                $info = pathinfo($name);
-                $this->getLocal()->move($this->getUploadRootDir().'/'.$info['dirname'], $info['basename']);
-            }
-            $this->path = 'tmp/'.date('Ymd/').$name;
-        }
+    public function clear()
+    {
+        $this->remote = '';
+        $this->local = null;
     }
 
     /**
-     * Is set image remote or local
+     * Has remote or local image
      *
      * @Assert\True(message = "No selected image")
      * 
      * @return boolean
      */
-    public function isSetImage()
+    public function hasImage()
     {
         return $this->remote || !is_null($this->local);
-    }
-
-    /**
-     * Get absolute path
-     *
-     * @return string
-     */
-    public function getAbsolutePath()
-    {
-        return $this->path !== null ? $this->getUploadRootDir().'/../../'.$this->path : null;
-    }
-
-    /**
-     * Get web path
-     *
-     * @return string
-     */
-    public function getWebPath()
-    {
-        return $this->path ? '/media/'.$this->path : null;
-    }
-
-    /**
-     * Get upload root dir
-     *
-     * @return string
-     */
-    protected function getUploadRootDir()
-    {
-        return __DIR__.'/../../../../../web/'.$this->getUploadDir();
-    }
-
-    /**
-     * Get upload dir
-     *
-     * @return string
-     */
-    protected function getUploadDir()
-    {
-        return 'media/tmp/'.date('Ymd');
-    }
-
-    /**
-     * Get unique file name
-     *
-     * @param string $file Absolute path to file
-     *
-     * @return string
-     */
-    protected function getUniqueFileName($file) {
-        $info = pathinfo($file);
-        $name = $info['basename'];
-        for ($i = 1; file_exists($info['dirname'].'/'.$name); $i++) {
-            $name = $info['filename'].'['.$i.'].'.$info['extension'];
-        }
-        return $name;
     }
 }

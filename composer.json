@@ -1,41 +1,43 @@
 {
-    "name": "anime-db/app-bundle",
-    "license": "GPL-3.0",
-    "type": "library",
-    "description": "The application for making home collection anime",
-    "homepage": "http://anime-db.org",
-    "version": "0.3.18",
-    "authors": [
-        {
-            "name": "Anime DB",
-            "homepage": "http://anime-db.org"
-        },
-        {
-            "name": "Peter Gribanov",
-            "email": "info@peter-gribanov.ru"
-        },
-        {
-            "name": "Anime DB Community",
-            "homepage": "https://github.com/anime-db/app-bundle/graphs/contributors"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "AnimeDb\\Bundle\\AppBundle\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "AnimeDb\\Bundle\\AppBundle\\Tests\\": "tests/"
-        }
-    },
-    "require": {
-        "php": ">=5.4.0",
-        "anime-db/anime-db": ">=0.3.8",
-        "patchwork/utf8": "1.2.*"
-    },
-    "suggest": {
-        "ext-com_dotnet": "Allows to switch between drives in Windows"
-    },
-    "minimum-stability": "dev"
+	"name" : "anime-db/app-bundle",
+	"license" : "GPL-3.0",
+	"type" : "library",
+	"description" : "The application for making home collection anime",
+	"homepage" : "http://anime-db.org",
+	"version" : "0.4.0",
+	"authors" : [
+		{
+			"name" : "Anime DB",
+			"homepage" : "http://anime-db.org"
+		},
+		{
+			"name" : "Peter Gribanov",
+			"email" : "info@peter-gribanov.ru"
+		},
+		{
+			"name" : "Anime DB Community",
+			"homepage" : "https://github.com/anime-db/app-bundle/graphs/contributors"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"AnimeDb\\Bundle\\AppBundle\\" : "src/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"AnimeDb\\Bundle\\AppBundle\\Tests\\" : "tests/"
+		}
+	},
+	"require" : {
+		"php" : ">=5.4.0",
+		"anime-db/anime-db" : ">=0.3.15",
+		"patchwork/utf8" : "1.2.*",
+		"anime-db/api-client-bundle" : "0.1.*",
+		"anime-db/cache-time-keeper-bundle" : "1.0.*"
+	},
+	"suggest" : {
+		"ext-com_dotnet" : "Allows to switch between drives in Windows"
+	},
+	"minimum-stability" : "dev"
 }

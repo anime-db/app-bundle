@@ -70,7 +70,7 @@ class TaskSchedulerCommand extends ContainerAwareCommand
                 // update information on starting
                 $task->executed();
                 $em->persist($task);
-                $em->flush();
+                $em->flush($task);
             }
 
             // standby for the next task

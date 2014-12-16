@@ -24,7 +24,7 @@ class Version20140609125319_AddTypeForNotices extends AbstractMigration
         $this->addSql('CREATE TABLE "_new" (
             id INTEGER NOT NULL,
             message TEXT NOT NULL,
-            type VARCHAR(64) DEFAULT "no_type",
+            type VARCHAR(64) NOT NULL DEFAULT "no_type",
             date_closed DATETIME DEFAULT NULL,
             date_created DATETIME NOT NULL,
             date_start DATETIME NOT NULL,
@@ -37,7 +37,7 @@ class Version20140609125319_AddTypeForNotices extends AbstractMigration
             INSERT INTO
                 "_new"
             SELECT
-                id, message, NULL, date_closed, date_created, date_start, lifetime, status
+                id, message, "no_type", date_closed, date_created, date_start, lifetime, status
             FROM
                 "notice"
         ');

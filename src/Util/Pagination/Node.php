@@ -10,8 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-use AnimeDb\Bundle\AppBundle\Util\Pagination;
-
 /**
  * Pagination node
  *
@@ -21,18 +19,18 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination;
 class Node
 {
     /**
+     * Page number
+     *
+     * @var integer
+     */
+    protected $page = 1;
+
+    /**
      * Link
      *
      * @var string
      */
     protected $link = '';
-
-    /**
-     * Name
-     *
-     * @var string
-     */
-    protected $name = '';
 
     /**
      * Is current page
@@ -42,84 +40,27 @@ class Node
     protected $is_current = false;
 
     /**
-     * Node title
-     *
-     * @var string
-     */
-    protected $title = '';
-
-    /**
-     * Page number
-     *
-     * @var integer
-     */
-    protected $page = 1;
-
-    /**
-     * Page type
-     *
-     * @var string
-     */
-    protected $type = Pagination::TYPE_PAGE;
-
-    /**
-     * Set is current page
-     *
-     * @param boolean $is_current
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
-     */
-    public function setIsCurrent($is_current) {
-        $this->is_current = $is_current;
-        return $this;
-    }
-
-    /**
-     * Set link
-     *
-     * @param string $link
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
-     */
-    public function setLink($link) {
-        $this->link = $link;
-        return $this;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
-     */
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * Set page number
+     * Construct
      *
      * @param integer $page
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
+     * @param integer $link
+     * @param boolean $is_current
      */
-    public function setPage($page) {
+    public function __construct($page = 1, $link = '', $is_current = false)
+    {
         $this->page = $page;
-        return $this;
+        $this->link = $link;
+        $this->is_current = $is_current;
     }
 
     /**
-     * Set title
+     * Is current page
      *
-     * @param string $title
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
+     * @return boolean
      */
-    public function setTitle($title) {
-        $this->title = $title;
-        return $this;
+    public function isCurrent()
+    {
+        return $this->is_current;
     }
 
     /**
@@ -133,36 +74,6 @@ class Node
     }
 
     /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get is current page
-     *
-     * @return boolean
-     */
-    public function getIsCurrent()
-    {
-        return $this->is_current;
-    }
-
-    /**
-     * Get node title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
      * Get page number
      *
      * @return integer
@@ -170,15 +81,5 @@ class Node
     public function getPage()
     {
         return $this->page;
-    }
-
-    /**
-     * Get page type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

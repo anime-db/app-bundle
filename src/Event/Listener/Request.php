@@ -16,10 +16,9 @@ use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Request listener
@@ -41,14 +40,7 @@ class Request
      *
      * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
-    private $validator;
-
-    /**
-     * Container
-     *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
+    protected $validator;
 
     /**
      * Cache clearer
@@ -58,33 +50,40 @@ class Request
     protected $cache_clearer;
 
     /**
-     * Root dir
+     * Locale
      *
      * @var string
      */
-    protected $root;
+    protected $locale;
+
+    /**
+     * Parameters manipulator
+     *
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
+     */
+    protected $parameters;
 
     /**
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param string $root
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
+     * @param string $locale
      */
     public function __construct(
         TranslatableListener $translatable,
         ValidatorInterface $validator,
-        ContainerInterface $container,
         CacheClearer $cache_clearer,
-        $root
+        Parameters $parameters,
+        $locale
     ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
-        $this->container = $container;
         $this->cache_clearer = $cache_clearer;
-        $this->root = $root;
+        $this->parameters = $parameters;
+        $this->locale = $locale;
     }
 
     /**
@@ -123,11 +122,8 @@ class Request
 
         $locale = substr($locale, 0, 2);
         // update parameters
-        if ($this->container->getParameter('locale') != $locale) {
-            $parameters = Yaml::parse($this->root.'/config/parameters.yml');
-            $parameters['parameters']['locale'] = $locale;
-            $parameters['parameters']['last_update'] = gmdate('r');
-            file_put_contents($this->root.'/config/parameters.yml', Yaml::dump($parameters));
+        if ($this->locale != $locale) {
+            $this->parameters->set('locale', $locale);
             // clear cache
             $this->cache_clearer->clear();
         }
@@ -143,14 +139,14 @@ class Request
      */
     public function getLocale(HttpRequest $request)
     {
-        if ($this->container->getParameter('locale')) {
-            return $this->container->getParameter('locale');
+        if ($this->locale) {
+            return $this->locale;
         }
 
         // get locale from language list
-        $locale_constraint = new Locale();
+        $constraint = new Locale();
         foreach ($request->getLanguages() as $language) {
-            if (!count($this->validator->validateValue($language, $locale_constraint))) {
+            if (!$this->validator->validate($language, $constraint)->has(0)) {
                 return $language;
             }
         }
@@ -166,12 +162,12 @@ class Request
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        // cache response
-        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST &&
-            $event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()
-        ) {
+        if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
             $event->getResponse()->setPublic();
-            $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+            // cache must revalidate
+            if ($event->getResponse()->getLastModified() && !$event->getResponse()->getMaxAge()) {
+                $event->getResponse()->headers->addCacheControlDirective('must-revalidate', true);
+            }
         }
     }
 }

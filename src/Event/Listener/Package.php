@@ -10,13 +10,15 @@
 
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Filesystem\Filesystem;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use AnimeDb\Bundle\ApiClientBundle\Service\Client;
+use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed as RemovedEvent;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
-use Guzzle\Http\Client;
+use Composer\Package\Package as ComposerPackage;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Package listener
@@ -34,30 +36,16 @@ class Package
     const PLUGIN_TYPE = 'anime-db-plugin';
 
     /**
-     * API server host
+     * Package shmop
      *
      * @var string
      */
-    const API_HOST = 'http://anime-db.org/';
-
-    /**
-     * API version
-     *
-     * @var string
-     */
-    const API_VERSION = 1;
-
-    /**
-     * API default locale
-     *
-     * @var string
-     */
-    const API_DEFAULT_LOCALE = 'en';
+    const PACKAGE_SHMOP = 'anime-db/shmop';
 
     /**
      * Entity manager
      *
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $em;
 
@@ -69,40 +57,45 @@ class Package
     protected $rep;
 
     /**
-     * Filesystem
+     * API client
      *
-     * @var \Symfony\Component\Filesystem\Filesystem
+     * @var \AnimeDb\Bundle\ApiClientBundle\Service\Client
      */
-    protected $fs;
+    protected $client;
 
     /**
-     * Locale
+     * Parameters manipulator
      *
-     * @var string
+     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
      */
-    protected $locale;
+    protected $parameters;
 
     /**
-     * List of available locales
+     * Downloader
      *
-     * @var array
+     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
      */
-    protected $locales = ['ru', 'en'];
+    protected $downloader;
 
     /**
      * Construct
      *
-     * @param \Doctrine\ORM\EntityManager $em
-     * @param \Symfony\Component\Filesystem\Filesystem $em
-     * @param string $locale
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
      */
-    public function __construct(EntityManager $em, Filesystem $fs, $locale)
-    {
-        $this->em = $em;
-        $this->fs = $fs;
+    public function __construct(
+        Registry $doctrine,
+        Client $client,
+        Downloader $downloader,
+        Parameters $parameters
+    ) {
+        $this->client = $client;
+        $this->downloader = $downloader;
+        $this->em = $doctrine->getManager();
+        $this->parameters = $parameters;
         $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
-        $this->locale = substr($locale, 0, 2);
-        $this->locale = in_array($this->locale, $this->locales) ? $locale : self::API_DEFAULT_LOCALE;
     }
 
     /**
@@ -113,16 +106,7 @@ class Package
     public function onUpdated(UpdatedEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->rep->find($event->getPackage()->getName());
-
-            // create new plugin if not exists
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setName($event->getPackage()->getName());
-            }
-
-            $this->em->persist($this->fillPluginData($plugin));
-            $this->em->flush();
+            $this->addPackage($event->getPackage());
         }
     }
 
@@ -134,17 +118,37 @@ class Package
     public function onInstalled(InstalledEvent $event)
     {
         if ($event->getPackage()->getType() == self::PLUGIN_TYPE) {
-            $plugin = $this->rep->find($event->getPackage()->getName());
-
-            // create new plugin if not exists #55
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setName($event->getPackage()->getName());
-            }
-
-            $this->em->persist($this->fillPluginData($plugin));
-            $this->em->flush();
+            $this->addPackage($event->getPackage());
         }
+    }
+
+    /**
+     * Add plugin from package
+     *
+     * @param \Composer\Package\Package $package
+     */
+    protected function addPackage(ComposerPackage $package)
+    {
+        $plugin = $this->rep->find($package->getName());
+
+        // create new plugin if not exists
+        if (!$plugin) {
+            $plugin = new Plugin();
+            $plugin->setName($package->getName());
+        }
+
+        list($vendor, $package) = explode('/', $plugin->getName());
+
+        try {
+            $data = $this->client->getPlugin($vendor, $package);
+            $plugin->setTitle($data['title'])->setDescription($data['description']);
+            if ($data['logo']) {
+                $this->downloader->entity($data['logo'], $plugin, true);
+            }
+        } catch (\Exception $e) {} // is not a critical error
+
+        $this->em->persist($plugin);
+        $this->em->flush();
     }
 
     /**
@@ -165,32 +169,28 @@ class Package
     }
 
     /**
-     * Fill plugin data from server API
+     * Configure shmop
      *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Plugin $plugin
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed $event
      */
-    protected function fillPluginData(Plugin $plugin)
+    public function onInstalledConfigureShmop(InstalledEvent $event)
     {
-        $path = 'api/v'.self::API_VERSION.'/'.$this->locale.'/plugin/'.$plugin->getName().'/';
-        $client = new Client(self::API_HOST);
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = $client->get($path)->send();
-
-        if ($response->isSuccessful()) {
-            $data = json_decode($response->getBody(true), true);
-            $plugin->setTitle($data['title'])->setDescription($data['description']);
-
-            if ($data['logo']) {
-                if (!file_exists($plugin->getUploadRootDir())) {
-                    $this->fs->mkdir($plugin->getUploadRootDir());
-                }
-                $plugin->setLogo(pathinfo($data['logo'], PATHINFO_BASENAME));
-                copy($data['logo'], $plugin->getAbsolutePath());
-            }
+        // use Shmop as driver for Cache Time Keeper
+        if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
+            $this->parameters->set('cache_time_keeper.driver', 'cache_time_keeper.driver.multi');
+            $this->parameters->set('cache_time_keeper.driver.multi.fast', 'cache_time_keeper.driver.shmop');
         }
+    }
 
-        return $plugin;
+    /**
+     * Restore config on removed shmop
+     *
+     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed $event
+     */
+    public function onRemovedShmop(RemovedEvent $event)
+    {
+        if ($event->getPackage()->getName() == self::PACKAGE_SHMOP) {
+            $this->parameters->set('cache_time_keeper.driver', 'cache_time_keeper.driver.file');
+        }
     }
 }

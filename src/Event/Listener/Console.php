@@ -22,6 +22,13 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 class Console
 {
     /**
+     * Default locale
+     *
+     * @var string
+     */
+    const DEFAULT_LOCALE = 'en';
+
+    /**
      * Translatable listener
      *
      * @var \Gedmo\Translatable\TranslatableListener
@@ -49,11 +56,11 @@ class Console
      * @param \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator
      * @param string $locale
      */
-    public function __construct(TranslatableListener $translatable, Translator $translator, $locale)
+    public function __construct(TranslatableListener $translatable, Translator $translator, $locale = '')
     {
         $this->translatable = $translatable;
         $this->translator = $translator;
-        $this->locale = $locale ?: 'en';
+        $this->locale = $locale ?: self::DEFAULT_LOCALE;
     }
 
     /**

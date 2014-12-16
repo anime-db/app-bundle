@@ -12,14 +12,11 @@ namespace AnimeDb\Bundle\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
-use AnimeDb\Bundle\AppBundle\Form\Field\Image\Upload as UploadImage;
-use AnimeDb\Bundle\AppBundle\Form\Field\LocalPath\Choice as ChoiceLocalPath;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AnimeDb\Bundle\AppBundle\Form\Type\Field\Image\Upload as UploadImage;
+use AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath\Choice as ChoiceLocalPath;
 use AnimeDb\Bundle\AppBundle\Util\Filesystem;
-use Patchwork\Utf8;
 
 /**
  * Form
@@ -38,15 +35,10 @@ class FormController extends Controller
      */
     public function localPathAction(Request $request)
     {
-        $response = new Response();
-        // caching
-        if ($last_update = $this->container->getParameter('last_update')) {
-            $response->setLastModified(new \DateTime($last_update));
-
-            // response was not modified for this request
-            if ($response->isNotModified($request)) {
-                return $response;
-            }
+        $response = $this->get('cache_time_keeper')->getResponse();
+        // response was not modified for this request
+        if ($response->isNotModified($request)) {
+            return $response;
         }
 
         $form = $this->createForm(
@@ -76,62 +68,16 @@ class FormController extends Controller
             $path = $root;
         }
 
-        // add slash if need
-        $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
-        $path .= $path[strlen($path)-1] != DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
-        $origin_path = $path;
-        $path = Utf8::wrapPath($path); // wrap path for current fs
-
-
-        if (!is_dir($path) || !is_readable($path)) {
-            throw new NotFoundHttpException('Cen\'t read directory: '.$origin_path);
-        }
-
-        // caching
-        $response = new JsonResponse();
-        $response->setLastModified((new \DateTime)->setTimestamp(filemtime($path)));
-        if ( // project update date
-            ($last_update = $this->container->getParameter('last_update')) &&
-            ($last_update = new \DateTime($last_update)) > $response->getLastModified()
-        ) {
-            $response->setLastModified($last_update);
-        }
-
+        $response = $this->get('cache_time_keeper')
+            ->getResponse([(new \DateTime)->setTimestamp(filemtime($path))], -1, new JsonResponse());
         // response was not modified for this request
         if ($response->isNotModified($request)) {
             return $response;
         }
 
-        // scan directory
-        $folders = [];
-        /* @var $file \SplFileInfo */
-        foreach (new \DirectoryIterator($path) as $file) {
-            if (
-                $file->getFilename()[0] != '.' &&
-                substr($file->getFilename(), -1) != '~' &&
-                $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
-                $file->isDir() && $file->isReadable()
-            ) {
-                $folders[$file->getFilename()] = [
-                    'name' => $file->getFilename(),
-                    'path' => $origin_path.$file->getFilename().DIRECTORY_SEPARATOR
-                ];
-            }
-        }
-        ksort($folders);
-
-        // add link on parent folder
-        if (substr_count($origin_path, DIRECTORY_SEPARATOR) > 1) {
-            $pos = strrpos(substr($origin_path, 0, -1), DIRECTORY_SEPARATOR) + 1;
-            array_unshift($folders, [
-                'name' => '..',
-                'path' => substr($origin_path, 0, $pos)
-            ]);
-        }
-
         return $response->setData([
-            'path' => $origin_path,
-            'folders' => array_values($folders)
+            'path' => $path,
+            'folders' => Filesystem::scandir($path, Filesystem::DIRECTORY)
         ]);
     }
 
@@ -143,15 +89,10 @@ class FormController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function imageAction(Request $request) {
-        $response = new Response();
-        // caching
-        if ($last_update = $this->container->getParameter('last_update')) {
-            $response->setLastModified(new \DateTime($last_update));
-
-            // response was not modified for this request
-            if ($response->isNotModified($request)) {
-                return $response;
-            }
+        $response = $this->get('cache_time_keeper')->getResponse();
+        // response was not modified for this request
+        if ($response->isNotModified($request)) {
+            return $response;
         }
 
         return $this->render('AnimeDbAppBundle:Form:image.html.twig', [
@@ -180,9 +121,9 @@ class FormController extends Controller
 
         // try upload file
         try {
-            $image->upload($this->get('validator'));
+            $this->get('anime_db.downloader')->imageField($image);
             return new JsonResponse([
-                'path'  => $image->getPath(),
+                'path'  => $image->getFilename(),
                 'image' => $image->getWebPath(),
             ]);
         } catch (\InvalidArgumentException $e) {
