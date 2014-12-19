@@ -151,8 +151,9 @@ class Downloader
             return false;
         }
 
-        // check file
-        if (getimagesize($target) === false) {
+        // check file type
+        $fi = new \finfo(FILEINFO_MIME_TYPE);
+        if (strpos($fi->file($target), 'image/') !== 0) {
             unlink($target); // remove dangerous file
             return false;
         }
