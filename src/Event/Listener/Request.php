@@ -16,9 +16,7 @@ use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
-use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Request listener
@@ -43,13 +41,6 @@ class Request
     protected $validator;
 
     /**
-     * Cache clearer
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\CacheClearer
-     */
-    protected $cache_clearer;
-
-    /**
      * Locale
      *
      * @var string
@@ -57,32 +48,19 @@ class Request
     protected $locale;
 
     /**
-     * Parameters manipulator
-     *
-     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
-     */
-    protected $parameters;
-
-    /**
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
      * @param string $locale
      */
     public function __construct(
         TranslatableListener $translatable,
         ValidatorInterface $validator,
-        CacheClearer $cache_clearer,
-        Parameters $parameters,
         $locale
     ) {
         $this->translatable = $translatable;
         $this->validator = $validator;
-        $this->cache_clearer = $cache_clearer;
-        $this->parameters = $parameters;
         $this->locale = $locale;
     }
 
@@ -120,14 +98,7 @@ class Request
         $request->setLocale($locale);
         setlocale(LC_ALL, $locale);
 
-        $locale = substr($locale, 0, 2);
-        // update parameters
-        if ($this->locale != $locale) {
-            $this->parameters->set('locale', $locale);
-            // clear cache
-            $this->cache_clearer->clear();
-        }
-        $this->translatable->setTranslatableLocale($locale);
+        $this->translatable->setTranslatableLocale(substr($locale, 0, 2));
     }
 
     /**
