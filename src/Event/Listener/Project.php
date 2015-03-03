@@ -14,7 +14,6 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
-use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 
 /**
  * Project listener
@@ -39,13 +38,6 @@ class Project
     protected $cache_clearer;
 
     /**
-     * Parameters manipulator
-     *
-     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
-     */
-    protected $parameters;
-
-    /**
      * Composer manipulator
      *
      * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer
@@ -58,18 +50,15 @@ class Project
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
      * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer $composer
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
      */
     public function __construct(
         Registry $doctrine,
         CacheClearer $cache_clearer,
-        Composer $composer,
-        Parameters $parameters
+        Composer $composer
     ) {
         $this->em = $doctrine->getManager();
         $this->cache_clearer = $cache_clearer;
         $this->composer = $composer;
-        $this->parameters = $parameters;
     }
 
     /**
