@@ -49,11 +49,7 @@ services:
 
     anime_db.app.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments:
-            - @doctrine
-            - @anime_db.cache_clearer
-            - @anime_db.manipulator.composer
-            - @anime_db.manipulator.parameters
+        arguments: [ @doctrine, @anime_db.cache_clearer, @anime_db.manipulator.composer ]
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onInstalledOrUpdatedAddShmop }
