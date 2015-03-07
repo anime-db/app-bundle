@@ -9,9 +9,7 @@ services:
         arguments: [ @anime_db.command, %kernel.environment% ]
     anime_db.command:
         class: AnimeDb\Bundle\AppBundle\Service\CommandExecutor
-        arguments: [ @anime_db.php_finder, @router, %kernel.root_dir% ]
-        calls:
-            - [setRequest, ['@?request=']]
+        arguments: [ @anime_db.php_finder, @router, @request_stack, %kernel.root_dir% ]
 
     anime_db.widgets:
         class: AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
