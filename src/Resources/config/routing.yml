@@ -5,38 +5,40 @@ _imagine:
 notice_show:
     pattern:  /notice/show.json
     defaults: { _controller: AnimeDbAppBundle:Notice:show, _format: json }
+    methods:  [GET]
 
 notice_close:
     pattern:  /notice/{id}/close.json
     defaults: { _controller: AnimeDbAppBundle:Notice:close, _format: json }
+    methods:  [POST]
     requirements:
-        _method:  POST
         id:  \d+
 
 notice_see_later:
     pattern:  /notice/see_later.json
     defaults: { _controller: AnimeDbAppBundle:Notice:seeLater, _format: json }
-    requirements:
-        _method:  POST
+    methods:  [POST]
 
 
 form_local_path:
     pattern:  /form/local_path.html
     defaults: { _controller: AnimeDbAppBundle:Form:localPath }
+    methods:  [GET]
 
 form_local_path_folders:
     pattern:  /form/local_path/folders.json
     defaults: { _controller: AnimeDbAppBundle:Form:localPathFolders, _format: json }
+    methods:  [GET]
 
 form_image:
     pattern:  /form/image.html
     defaults: { _controller: AnimeDbAppBundle:Form:image }
+    methods:  [GET]
 
 form_image_upload:
     pattern:  /form/imageUpload.json
     defaults: { _controller: AnimeDbAppBundle:Form:imageUpload, _format: json }
-    requirements:
-        _method:  POST
+    methods:  [POST]
 
 
 media_favicon:
@@ -44,6 +46,7 @@ media_favicon:
     requirements:
         host: .+
     defaults: { _controller: AnimeDbAppBundle:Media:favicon }
+    methods:  [GET]
 
 
 command_exec:
