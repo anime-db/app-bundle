@@ -11,7 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use Gedmo\Translatable\TranslatableListener;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Console listener
@@ -38,7 +38,7 @@ class Console
     /**
      * Translator
      *
-     * @var \Symfony\Bundle\FrameworkBundle\Translation\Translator
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
 
@@ -53,10 +53,10 @@ class Console
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
-     * @param \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
      * @param string $locale
      */
-    public function __construct(TranslatableListener $translatable, Translator $translator, $locale = '')
+    public function __construct(TranslatableListener $translatable, TranslatorInterface $translator, $locale = '')
     {
         $this->translatable = $translatable;
         $this->translator = $translator;
