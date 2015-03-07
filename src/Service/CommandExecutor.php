@@ -11,7 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Process\Process;
 
@@ -77,24 +77,16 @@ class CommandExecutor
      *
      * @param \AnimeDb\Bundle\AppBundle\Service\PhpFinder $finder
      * @param \Symfony\Component\Routing\RouterInterface $router
+     * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
      * @param string $root_dir
      */
-    public function __construct(PhpFinder $finder, RouterInterface $router, $root_dir)
+    public function __construct(PhpFinder $finder, RouterInterface $router, RequestStack $request_stack, $root_dir)
     {
         $this->finder = $finder;
         $this->cwd = $root_dir.'/../';
         $this->console = escapeshellarg($root_dir.DIRECTORY_SEPARATOR.'console');
         $this->path = $router->generate('command_exec');
-    }
-
-    /**
-     * Set request
-     *
-     * @param \Symfony\Component\HttpFoundation\Request|null $request
-     */
-    public function setRequest(Request $request = null)
-    {
-        if ($request) {
+        if ($request = $request_stack->getCurrentRequest()) {
             $this->host = $request->getHost().':'.$request->getPort();
         }
     }
