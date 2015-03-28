@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fa1fd4d0ea077d6c01e8dece7a99ea74",
+    "hash": "ed4915753bdd9c8c86a369abc1d04bc3",
     "packages": [
         {
             "name": "anime-db/ani-db-browser-bundle",
@@ -1620,12 +1620,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "0c16b51b9ca92c14428a797a5ce37daa16bb151d"
+                "reference": "34e298213d2e9c0aa107de000159b88cdb996bac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/0c16b51b9ca92c14428a797a5ce37daa16bb151d",
-                "reference": "0c16b51b9ca92c14428a797a5ce37daa16bb151d",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/34e298213d2e9c0aa107de000159b88cdb996bac",
+                "reference": "34e298213d2e9c0aa107de000159b88cdb996bac",
                 "shasum": ""
             },
             "require": {
@@ -1678,7 +1678,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2015-03-27 22:00:19"
+            "time": "2015-03-28 17:07:22"
         },
         {
             "name": "knplabs/knp-menu",
