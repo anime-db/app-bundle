@@ -82,6 +82,7 @@
 
 {% block form_row %}
 {% spaceless %}
+{% if form.vars.choices is not defined or form.vars.choices is not empty %}
     <div class="f-row">
         {{ form_errors(form) }}
         <div class="f-col f-col-label">
@@ -95,6 +96,7 @@
         </div>
         <div class="f-col-clear"></div>
     </div>
+{% endif %}
 {% endspaceless %}
 {% endblock form_row %}
 

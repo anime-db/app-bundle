@@ -20,7 +20,6 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
  */
 class Builder
 {
-
     /**
      * The number of pages displayed in the navigation
      *

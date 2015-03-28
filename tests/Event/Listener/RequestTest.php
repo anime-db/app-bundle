@@ -36,25 +36,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     protected $validator;
 
     /**
-     * Cache clearer
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $cache_clearer;
-
-    /**
      * Request listener
      *
      * @var \AnimeDb\Bundle\AppBundle\Event\Listener\Request
      */
     protected $listener;
-
-    /**
-     * Parameters manipulator
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $parameters;
 
     /**
      * Locale
@@ -69,22 +55,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->parameters = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
-            ->disableOriginalConstructor()
-            ->getMock();
         $this->translatable = $this->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
             ->disableOriginalConstructor()
             ->getMock();
         $this->validator = $this->getMock('\Symfony\Component\Validator\Validator\ValidatorInterface');
-        $this->cache_clearer = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CacheClearer')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->listener = new Request(
             $this->translatable,
             $this->validator,
-            $this->cache_clearer,
-            $this->parameters,
             $this->locale
         );
     }
@@ -203,17 +181,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ->method('setTranslatableLocale')
             ->with($locale);
 
-        // change origin locale
-        if ($locale != $this->locale) {
-            $this->parameters
-                ->expects($this->at(0)) // TODO use $this->once()
-                ->method('set')
-                ->with('locale', $locale);
-            $this->cache_clearer
-                ->expects($this->once())
-                ->method('clear');
-        }
-
         $this->listener->setLocale($request, $locale);
     }
 
@@ -302,8 +269,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $listener = new Request(
             $this->translatable,
             $this->validator,
-            $this->cache_clearer,
-            $this->parameters,
             ''
         );
         $this->assertEquals($expected, $listener->getLocale($request));

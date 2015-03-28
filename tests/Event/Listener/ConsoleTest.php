@@ -53,8 +53,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('setTranslatableLocale')
             ->with(substr($expected, 0, 2));
-        
-        $translator = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Translation\Translator')
+
+        $translator = $this->getMockBuilder('\Symfony\Component\Translation\TranslatorInterface')
             ->disableOriginalConstructor()
             ->getMock();
         $translator
