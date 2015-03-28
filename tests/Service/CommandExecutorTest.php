@@ -58,14 +58,47 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
         $this->finder = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\PhpFinder')
             ->disableOriginalConstructor()
             ->getMock();
+
+    }
+
+    /**
+     * Get command executor
+     *
+     * @param boolean $have_request
+     *
+     * @return \AnimeDb\Bundle\AppBundle\Service\CommandExecutor
+     */
+    protected function getCommandExecutor($have_request = true)
+    {
         $router = $this->getMock('\Symfony\Component\Routing\RouterInterface');
         $router
             ->expects($this->once())
             ->method('generate')
             ->with('command_exec')
             ->willReturn($this->path);
-
-        $this->executor = new CommandExecutor($this->finder, $router, $this->root_dir);
+        if ($have_request) {
+            $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+                ->disableOriginalConstructor()
+                ->getMock();
+            $request
+                ->expects($this->once())
+                ->method('getHost')
+                ->willReturn('localhost');
+            $request
+                ->expects($this->once())
+                ->method('getPort')
+                ->willReturn(56780);
+        } else {
+            $request = null;
+        }
+        $request_stack = $this->getMockBuilder('\Symfony\Component\HttpFoundation\RequestStack')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $request_stack
+            ->expects($this->once())
+            ->method('getCurrentRequest')
+            ->willReturn($request);
+        return new CommandExecutor($this->finder, $router, $request_stack, $this->root_dir);
     }
 
     /**
@@ -75,7 +108,7 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecFail()
     {
-        $this->executor->exec('');
+        $this->getCommandExecutor()->exec('');
     }
 
     /**
@@ -85,7 +118,7 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
      */
     public function testSendFail()
     {
-        $this->executor->send('command', '');
+        $this->getCommandExecutor(false)->send('command', '');
     }
 
     /**
@@ -126,6 +159,6 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
             ->method('getPath')
             ->willReturn('/path/to/php');
 
-        $this->assertEquals($expected, $this->executor->prepare($command));
+        $this->assertEquals($expected, $this->getCommandExecutor()->prepare($command));
     }
 }
