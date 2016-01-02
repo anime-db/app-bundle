@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c472e77bfbf693df150772525ca673b1",
-    "content-hash": "40abce34f4aac5ade00c634273ee4bb0",
+    "hash": "53d7ca6be6fd79234a72f624c37cce1a",
+    "content-hash": "5b2fb952a8f258a29fe5b8ac4e4cd098",
     "packages": [
         {
             "name": "anime-db/ani-db-browser-bundle",
@@ -270,12 +270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/catalog-bundle.git",
-                "reference": "26fb5818e9b9f88fd69f398e2aba69b28ed5da1c"
+                "reference": "c37d1763b8e003ad06409697bd8ad4482b40b386"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/26fb5818e9b9f88fd69f398e2aba69b28ed5da1c",
-                "reference": "26fb5818e9b9f88fd69f398e2aba69b28ed5da1c",
+                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/c37d1763b8e003ad06409697bd8ad4482b40b386",
+                "reference": "c37d1763b8e003ad06409697bd8ad4482b40b386",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
             ],
             "description": "The application for making home collection anime",
             "homepage": "http://anime-db.org",
-            "time": "2016-01-02 21:08:00"
+            "time": "2016-01-02 21:27:35"
         },
         {
             "name": "anime-db/shikimori-browser-bundle",
