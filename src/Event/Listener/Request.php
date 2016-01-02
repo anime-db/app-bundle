@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Gedmo\Translatable\TranslatableListener;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
@@ -26,6 +27,13 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
  */
 class Request
 {
+    /**
+     * Translator
+     *
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    protected $translator;
+
     /**
      * Translatable listener
      *
@@ -51,15 +59,18 @@ class Request
      * Construct
      *
      * @param \Gedmo\Translatable\TranslatableListener $translatable
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param string $locale
      */
     public function __construct(
         TranslatableListener $translatable,
+        TranslatorInterface $translator,
         ValidatorInterface $validator,
         $locale
     ) {
         $this->translatable = $translatable;
+        $this->translator = $translator;
         $this->validator = $validator;
         $this->locale = $locale;
     }
@@ -95,10 +106,11 @@ class Request
      */
     public function setLocale(HttpRequest $request, $locale)
     {
-        $request->setLocale($locale);
         setlocale(LC_ALL, $locale);
-
-        $this->translatable->setTranslatableLocale(substr($locale, 0, 2));
+        $locale = substr($locale, 0, 2);
+        $request->setLocale($locale);
+        $this->translator->setLocale($locale);
+        $this->translatable->setTranslatableLocale($locale);
     }
 
     /**
