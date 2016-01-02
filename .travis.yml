@@ -11,7 +11,7 @@ notifications:
 install:
     - composer self-update
     - composer --version
-    - composer install --prefer-dist --lock
+    - composer install --prefer-dist --dev
 
 script:
     - phpunit --verbose --coverage-clover=coverage.clover
