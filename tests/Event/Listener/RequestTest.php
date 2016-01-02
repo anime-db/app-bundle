@@ -22,6 +22,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Translator
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $translator;
+
+    /**
      * Translatable
      *
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -55,6 +62,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $this->translator = $this->getMock('\Symfony\Component\Translation\TranslatorInterface');
         $this->translatable = $this->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
             ->disableOriginalConstructor()
             ->getMock();
@@ -62,6 +70,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->listener = new Request(
             $this->translatable,
+            $this->translator,
             $this->validator,
             $this->locale
         );
@@ -154,6 +163,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['ru'],
+            ['en_US'],
             [$this->locale]
         ];
     }
@@ -164,22 +174,25 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getLocales
      *
      * @param string $locale
-     * @param string $actual
-     * @param string $expected
      */
     public function testSetLocale($locale)
     {
+        $expected = substr($locale, 0, 2);
         $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
         $request
             ->expects($this->once())
             ->method('setLocale')
-            ->with($locale);
+            ->with($expected);
+        $this->translator
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with($expected);
         $this->translatable
             ->expects($this->once())
             ->method('setTranslatableLocale')
-            ->with($locale);
+            ->with($expected);
 
         $this->listener->setLocale($request, $locale);
     }
@@ -268,6 +281,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $listener = new Request(
             $this->translatable,
+            $this->translator,
             $this->validator,
             ''
         );
