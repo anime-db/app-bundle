@@ -119,20 +119,24 @@ class Filesystem
         $folders = [];
         foreach (new \DirectoryIterator($wrap) as $file) {
             /* @var $file \SplFileInfo */
-            if (
-                $file->getFilename()[0] != '.' &&
-                substr($file->getFilename(), -1) != '~' &&
-                $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
-                $file->isReadable() &&
-                (
-                    (($filter & self::FILE) == self::FILE && $file->isFile()) ||
-                    (($filter & self::DIRECTORY) == self::DIRECTORY && $file->isDir())
-                )
-            ) {
-                $folders[$file->getFilename()] = [
-                    'name' => $file->getFilename(),
-                    'path' => $path.$file->getFilename().DIRECTORY_SEPARATOR
-                ];
+            try {
+                if (
+                    $file->getFilename()[0] != '.' &&
+                    substr($file->getFilename(), -1) != '~' &&
+                    $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
+                    $file->isReadable() &&
+                    (
+                        (($filter & self::FILE) == self::FILE && $file->isFile()) ||
+                        (($filter & self::DIRECTORY) == self::DIRECTORY && $file->isDir())
+                    )
+                ) {
+                    $folders[$file->getFilename()] = [
+                        'name' => $file->getFilename(),
+                        'path' => $path . $file->getFilename() . DIRECTORY_SEPARATOR
+                    ];
+                }
+            } catch (\Exception $e) {
+                // ignore all errors
             }
         }
 
