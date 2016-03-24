@@ -32,12 +32,14 @@ class Version20131014155050_AddClearMediaTempTask extends AbstractMigration
                     "status"
                 )
             VALUES
-                (
-                    "animedb:clear-media-temp",
-                    "'.date('Y-m-d 01:00:00', time()+86400).'",
-                    "+1 day",
-                    '.Task::STATUS_ENABLED.'
-                )');
+                (?, ?, ?, ?)',
+            [
+                'animedb:clear-media-temp',
+                date('Y-m-d 01:00:00', time()+86400),
+                '+1 day',
+                Task::STATUS_ENABLED
+            ]
+        );
     }
 
     public function down(Schema $schema)

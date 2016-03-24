@@ -33,12 +33,14 @@ class Version20131128101508_AddProposeUpdateTask extends AbstractMigration
                     "status"
                 )
             VALUES
-                (
-                    "animedb:propose-update",
-                    "'.date('Y-m-d 01:00:00', time()+ProposeUpdateCommand::INERVAL_UPDATE).'",
-                    "+'.ProposeUpdateCommand::INERVAL_UPDATE.' second",
-                    '.Task::STATUS_ENABLED.'
-                )');
+                (?, ?, ?, ?)',
+            [
+                'animedb:propose-update',
+                date('Y-m-d 01:00:00', time()+ProposeUpdateCommand::INERVAL_UPDATE),
+                sprintf('+%s second', ProposeUpdateCommand::INERVAL_UPDATE),
+                Task::STATUS_ENABLED
+            ]
+        );
     }
 
     public function down(Schema $schema)
