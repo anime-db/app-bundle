@@ -1,53 +1,57 @@
 services:
     anime_db.pagination:
         class: AnimeDb\Bundle\AppBundle\Util\Pagination\Builder
-        arguments: [ %anime_db.pagination.max_navigate% ]
+        arguments: [ '%anime_db.pagination.max_navigate%' ]
+
     anime_db.filesystem:
         class: AnimeDb\Bundle\AppBundle\Util\Filesystem
+
     anime_db.cache_clearer:
         class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
-        arguments: [ @anime_db.command, %kernel.environment% ]
+        arguments: [ '@anime_db.command', '%kernel.environment%' ]
+
     anime_db.command:
         class: AnimeDb\Bundle\AppBundle\Service\CommandExecutor
-        arguments: [ @anime_db.php_finder, @router, @request_stack, %kernel.root_dir% ]
+        arguments: [ '@anime_db.php_finder', '@router', '@request_stack', '%kernel.root_dir%' ]
 
     anime_db.widgets:
         class: AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
-        arguments: [ @event_dispatcher ]
+        arguments: [ '@event_dispatcher' ]
 
     # Twig extension
     anime_db.app.twig_extension:
         class: AnimeDb\Bundle\AppBundle\Service\TwigExtension
-        arguments: [ @router, @fragment.handler, @anime_db.widgets ]
+        arguments: [ '@router', '@fragment.handler', '@anime_db.widgets' ]
         tags:
             - { name: twig.extension }
 
     # Kernel request listener
     anime_db.app.listener.request:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Request
+        arguments: [ '@gedmo.listener.translatable', '@translator', '@validator', '%locale%' ]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255 }
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-        arguments: [ @gedmo.listener.translatable, @translator, @validator, %locale% ]
 
     # Console listener
     anime_db.app.listener.console:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Console
-        tags: [{ name: kernel.event_listener, event: console.command, method: onConsoleCommand }]
-        arguments: [ @gedmo.listener.translatable, @translator, %locale% ]
+        arguments: [ '@gedmo.listener.translatable', '@translator', '%locale%' ]
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
     gedmo.listener.translatable:
         class: Gedmo\Translatable\TranslatableListener
         tags:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
-            - [ setAnnotationReader, [ @annotation_reader ] ]
-            - [ setDefaultLocale, [ "en" ] ]
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+            - [ setDefaultLocale, [ 'en' ] ]
             - [ setTranslationFallback, [ true ] ]
 
     anime_db.app.listener.project:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Project
-        arguments: [ @doctrine, @anime_db.cache_clearer, @anime_db.manipulator.composer ]
+        arguments: [ '@doctrine.orm.entity_manager', '@anime_db.cache_clearer', '@anime_db.manipulator.composer' ]
         tags: 
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onUpdatedProposeUpdateTask }
             - { name: kernel.event_listener, event: anime_db.project.updated, method: onInstalledOrUpdatedAddShmop }
@@ -56,10 +60,10 @@ services:
     anime_db.app.listener.package:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Package
         arguments:
-            - @doctrine
-            - @anime_db.api.client
-            - @anime_db.downloader
-            - @anime_db.manipulator.parameters
+            - '@doctrine.orm.entity_manager'
+            - '@anime_db.api.client'
+            - '@anime_db.downloader'
+            - '@anime_db.manipulator.parameters'
         tags:
             - { name: kernel.event_listener, event: anime_db.package.updated, method: onUpdated }
             - { name: kernel.event_listener, event: anime_db.package.installed, method: onInstalled }
@@ -70,12 +74,12 @@ services:
     anime_db.form.type_extension.help:
         class: AnimeDb\Bundle\AppBundle\Form\Type\Help
         tags:
-          - { name: "form.type_extension", alias: "form" }
+          - { name: 'form.type_extension', alias: 'form' }
 
     # PHP finder
     anime_db.php_finder:
         class: AnimeDb\Bundle\AppBundle\Service\PhpFinder
-        arguments: [ @anime_db.php_finder.finder ]
+        arguments: [ '@anime_db.php_finder.finder' ]
 
     anime_db.php_finder.finder:
         class: Symfony\Component\Process\PhpExecutableFinder
@@ -85,16 +89,16 @@ services:
     anime_db.downloader:
         class: AnimeDb\Bundle\AppBundle\Service\Downloader
         arguments:
-            - @filesystem
-            - @anime_db.client
-            - @validator
-            - %anime_db.downloader.root%
-            - %anime_db.downloader.favicon.root%
-            - %anime_db.downloader.favicon.proxy%
+            - '@filesystem'
+            - '@anime_db.client'
+            - '@validator'
+            - '%anime_db.downloader.root%'
+            - '%anime_db.downloader.favicon.root%'
+            - '%anime_db.downloader.favicon.proxy%'
 
     anime_db.app.listener.entity:
         class: AnimeDb\Bundle\AppBundle\Event\Listener\Entity
-        arguments: [ @filesystem, %anime_db.downloader.root% ]
+        arguments: [ '@filesystem', '%anime_db.downloader.root%' ]
         tags:
             - { name: doctrine.event_listener, event: postRemove }
             - { name: doctrine.event_listener, event: postUpdate }
