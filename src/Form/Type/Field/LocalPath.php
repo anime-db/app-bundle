@@ -21,8 +21,7 @@ use Symfony\Component\Form\AbstractType;
 class LocalPath extends AbstractType
 {
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::getParent()
+     * @return string
      */
     public function getParent()
     {
@@ -30,8 +29,7 @@ class LocalPath extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * @return string
      */
     public function getName()
     {

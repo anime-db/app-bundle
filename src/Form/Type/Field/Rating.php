@@ -22,8 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class Rating extends AbstractType
 {
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::getParent()
+     * @return string
      */
     public function getParent()
     {
@@ -31,8 +30,7 @@ class Rating extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -45,8 +43,7 @@ class Rating extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * @return string
      */
     public function getName()
     {

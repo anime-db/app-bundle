@@ -24,10 +24,6 @@ use Symfony\Component\Process\PhpExecutableFinder;
  */
 class TaskSchedulerCommand extends ContainerAwareCommand
 {
-    /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Console\Command.Command::configure()
-     */
     protected function configure()
     {
         $this->setName('animedb:task-scheduler')
@@ -35,13 +31,15 @@ class TaskSchedulerCommand extends ContainerAwareCommand
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Console\Command.Command::execute()
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         // exit if disabled
         if (!$this->getContainer()->getParameter('task_scheduler.enabled')) {
-            return null;
+            return true;
         }
 
         // path to php executable

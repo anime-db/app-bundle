@@ -62,8 +62,7 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_Extension::getFilters()
+     * @return array
      */
     public function getFilters()
     {
@@ -73,8 +72,7 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_Extension::getFunctions()
+     * @return array
      */
     public function getFunctions()
     {
@@ -118,8 +116,7 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_ExtensionInterface::getName()
+     * @return string
      */
     public function getName()
     {

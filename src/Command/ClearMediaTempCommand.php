@@ -24,10 +24,6 @@ use Symfony\Component\Finder\Finder;
  */
 class ClearMediaTempCommand extends ContainerAwareCommand
 {
-    /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Console\Command.Command::configure()
-     */
     protected function configure()
     {
         $this->setName('animedb:clear-media-temp')
@@ -35,8 +31,10 @@ class ClearMediaTempCommand extends ContainerAwareCommand
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Console\Command.Command::execute()
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $start = microtime(true);

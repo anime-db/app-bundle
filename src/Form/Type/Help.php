@@ -25,8 +25,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class Help extends AbstractTypeExtension
 {
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractTypeExtension::buildForm()
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -34,8 +34,9 @@ class Help extends AbstractTypeExtension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractTypeExtension::buildView()
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -43,8 +44,7 @@ class Help extends AbstractTypeExtension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\AbstractTypeExtension::setDefaultOptions()
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -54,8 +54,7 @@ class Help extends AbstractTypeExtension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.FormTypeExtensionInterface::getExtendedType()
+     * @return string
      */
     public function getExtendedType()
     {

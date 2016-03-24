@@ -40,8 +40,7 @@ class Datetime extends FunctionNode
     private $secondDateExpression = null;
 
     /**
-     * (non-PHPdoc)
-     * @see \Doctrine\ORM\Query\AST\Functions\FunctionNode::parse()
+     * @param Parser $parser
      */
     public function parse(Parser $parser)
     {
@@ -54,8 +53,9 @@ class Datetime extends FunctionNode
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Doctrine\ORM\Query\AST\Functions\FunctionNode::getSql()
+     * @param SqlWalker $sqlWalker
+     *
+     * @return string
      */
     public function getSql(SqlWalker $sqlWalker)
     {

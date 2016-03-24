@@ -94,8 +94,7 @@ class Image extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::setFilename()
+     * @param string $filename
      */
     public function setFilename($filename)
     {

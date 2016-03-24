@@ -178,8 +178,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::getFilename()
+     * @return string
      */
     public function getFilename()
     {
@@ -187,8 +186,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::setFilename()
+     * @param string $filename
      */
     public function setFilename($filename)
     {
@@ -220,8 +218,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::getDownloadPath()
+     * @return string
      */
     public function getDownloadPath()
     {

@@ -166,8 +166,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * (non-PHPdoc)
-     * @see IteratorAggregate::getIterator()
+     * @return ArrayCollection|null
      */
     public function getIterator()
     {
