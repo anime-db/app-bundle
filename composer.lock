@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "53d7ca6be6fd79234a72f624c37cce1a",
-    "content-hash": "5b2fb952a8f258a29fe5b8ac4e4cd098",
+    "hash": "3071aeb3b801194456374519af346e3d",
+    "content-hash": "dd18bdc3ddb18d023a4477e70dd1cc9c",
     "packages": [
         {
             "name": "anime-db/ani-db-browser-bundle",
@@ -534,12 +534,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "a8e9df55dc62d8806360be2f79ad112b8678d397"
+                "reference": "0a8528c5c7de43eca15237add666b4f8219aedc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/a8e9df55dc62d8806360be2f79ad112b8678d397",
-                "reference": "a8e9df55dc62d8806360be2f79ad112b8678d397",
+                "url": "https://api.github.com/repos/composer/composer/zipball/0a8528c5c7de43eca15237add666b4f8219aedc4",
+                "reference": "0a8528c5c7de43eca15237add666b4f8219aedc4",
                 "shasum": ""
             },
             "require": {
@@ -601,7 +601,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-03-17 11:42:19"
+            "time": "2016-03-24 16:41:06"
         },
         {
             "name": "composer/semver",
@@ -870,12 +870,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "e0721034158c1a0b73f984888af833fe1682311e"
+                "reference": "382cc2c8e1bae7453e8598b5c52c951a9c97d53d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/e0721034158c1a0b73f984888af833fe1682311e",
-                "reference": "e0721034158c1a0b73f984888af833fe1682311e",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/382cc2c8e1bae7453e8598b5c52c951a9c97d53d",
+                "reference": "382cc2c8e1bae7453e8598b5c52c951a9c97d53d",
                 "shasum": ""
             },
             "require": {
@@ -928,7 +928,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2016-03-24 07:07:41"
+            "time": "2016-03-25 08:33:42"
         },
         {
             "name": "doctrine/common",

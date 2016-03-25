@@ -38,10 +38,5 @@
 	"suggest" : {
 		"ext-com_dotnet" : "Allows to switch between drives in Windows"
 	},
-	"minimum-stability" : "dev",
-	"extra": {
-		"branch-alias": {
-			"dev-master": "0.4.x-dev"
-		}
-	}
+	"minimum-stability" : "dev"
 }
