@@ -124,7 +124,7 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
         } else {
             $this->composer
                 ->expects($this->once())
-                ->method('addPackage')
+                ->method('removePackage')
                 ->with('anime-db/shmop');
         }
 

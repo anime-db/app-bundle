@@ -117,10 +117,18 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
      */
     public function getCommands()
     {
+        $console = escapeshellarg($this->root_dir . DIRECTORY_SEPARATOR . 'console');
+
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $expected = "/path/to/php {$console} cache:clear > nul 2>&1";
+        } else {
+            $expected = "/path/to/php {$console} cache:clear > /dev/null 2>&1";
+        }
+
         return [
             [
                 'php app/console cache:clear > /dev/null 2>&1',
-                "/path/to/php '{$this->root_dir}/console' cache:clear > /dev/null 2>&1",
+                $expected,
             ],
             [
                 'php composer.phar update',

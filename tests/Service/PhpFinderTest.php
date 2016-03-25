@@ -46,12 +46,13 @@ class PhpFinderTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('find')
             ->will($this->returnValue(null));
+
         $this->finder->getPath();
     }
 
     public function testGetPath()
     {
-        $expected = "'foo'";
+        $expected = escapeshellarg('foo');
         $this->driver
             ->expects($this->once())
             ->method('find')
