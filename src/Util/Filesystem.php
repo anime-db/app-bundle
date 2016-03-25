@@ -21,12 +21,12 @@ use Patchwork\Utf8;
 class Filesystem
 {
     /**
-     * @var integer
+     * @var int
      */
     const FILE = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     const DIRECTORY = 2;
 
@@ -91,8 +91,8 @@ class Filesystem
      * List files and directories inside the specified path
      *
      * @param string $path
-     * @param integer $filter
-     * @param integer $order
+     * @param int $filter
+     * @param int $order
      *
      * @return array
      */

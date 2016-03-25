@@ -30,7 +30,7 @@ class Task extends EntityRepository
      * For example the scheduler can expect a few days before the execution of the tasks
      * that must be performed every hour.
      * 
-     * @var integer
+     * @var int
      */
     const MAX_STANDBY_TIME = 3600;
 
@@ -56,7 +56,7 @@ class Task extends EntityRepository
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getWaitingTime()
     {

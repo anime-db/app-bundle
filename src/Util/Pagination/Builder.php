@@ -21,12 +21,12 @@ class Builder
     /**
      * The number of pages displayed in the navigation
      *
-     * @var integer
+     * @var int
      */
     protected $max_navigate = Configuration::DEFAULT_LIST_LENGTH;
 
     /**
-     * @param integer $max_navigate
+     * @param int $max_navigate
      */
     public function __construct($max_navigate)
     {
@@ -34,8 +34,8 @@ class Builder
     }
 
     /**
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $total_pages
+     * @param int $current_page
      *
      * @return Configuration
      */

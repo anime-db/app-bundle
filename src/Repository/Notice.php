@@ -23,7 +23,7 @@ use Doctrine\ORM\QueryBuilder;
 class Notice extends EntityRepository
 {
     /**
-     * @var integer
+     * @var int
      */
     const SEE_LATER_INTERVAL = 3600;
 
@@ -51,8 +51,8 @@ class Notice extends EntityRepository
     }
 
     /**
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return NoticeEntity[]
      */
@@ -72,7 +72,7 @@ class Notice extends EntityRepository
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function count()
     {
@@ -174,7 +174,7 @@ class Notice extends EntityRepository
     }
 
     /**
-     * @param integer $status
+     * @param int $status
      * @param string $type
      *
      * @return QueryBuilder

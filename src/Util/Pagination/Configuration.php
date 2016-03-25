@@ -20,22 +20,22 @@ class Configuration
     /**
      * Length of the list of pagination defaults
      *
-     * @var integer
+     * @var int
      */
     const DEFAULT_LIST_LENGTH = 5;
 
     /**
-     * @var integer
+     * @var int
      */
     const DEFAULT_PAGE_LINK = '%s';
 
     /**
-     * @var integer
+     * @var int
      */
     protected $total_pages = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $current_page = 1;
 
@@ -47,7 +47,7 @@ class Configuration
     /**
      * The number of pages displayed in the navigation
      *
-     * @var integer
+     * @var int
      */
     protected $max_navigate = self::DEFAULT_LIST_LENGTH;
 
@@ -62,8 +62,8 @@ class Configuration
     protected $ferst_page_link = '';
 
     /**
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $total_pages
+     * @param int $current_page
      */
     public function __construct($total_pages = 0, $current_page = 1)
     {
@@ -72,8 +72,8 @@ class Configuration
     }
 
     /**
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $total_pages
+     * @param int $current_page
      *
      * @return Configuration
      */
@@ -83,7 +83,7 @@ class Configuration
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getTotalPages()
     {
@@ -91,7 +91,7 @@ class Configuration
     }
 
     /**
-     * @param integer $total_pages
+     * @param int $total_pages
      *
      * @return Configuration
      */
@@ -102,7 +102,7 @@ class Configuration
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getCurrentPage()
     {
@@ -110,7 +110,7 @@ class Configuration
     }
 
     /**
-     * @param integer $current_page
+     * @param int $current_page
      *
      * @return Configuration
      */
@@ -121,7 +121,7 @@ class Configuration
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getMaxNavigate()
     {
@@ -129,7 +129,7 @@ class Configuration
     }
 
     /**
-     * @param integer $max_navigate
+     * @param int $max_navigate
      *
      * @return Configuration
      */

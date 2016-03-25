@@ -30,12 +30,12 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class Task
 {
     /**
-     * @var integer
+     * @var int
      */
     const STATUS_ENABLED = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     const STATUS_DISABLED = 0;
 
@@ -44,7 +44,7 @@ class Task
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -87,7 +87,7 @@ class Task
      * @ORM\Column(type="integer")
      * @Assert\Choice(callback = "getStatuses")
      *
-     * @var integer
+     * @var int
      */
     protected $status = self::STATUS_DISABLED;
 
@@ -116,7 +116,7 @@ class Task
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -162,7 +162,7 @@ class Task
     }
 
     /**
-     * @param integer $interval
+     * @param int $interval
      *
      * @return Task
      */
@@ -194,7 +194,7 @@ class Task
     }
 
     /**
-     * @param integer $status
+     * @param int $status
      *
      * @return Task
      */
@@ -205,7 +205,7 @@ class Task
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -213,7 +213,7 @@ class Task
     }
 
     /**
-     * @return integer[]
+     * @return int[]
      */
     public static function getStatuses()
     {

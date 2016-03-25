@@ -19,7 +19,7 @@ namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 class Node
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $page = 1;
 
@@ -34,7 +34,7 @@ class Node
     protected $is_current = false;
 
     /**
-     * @param integer $page
+     * @param int $page
      * @param string $link
      * @param bool $is_current
      */
@@ -62,7 +62,7 @@ class Node
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getPage()
     {

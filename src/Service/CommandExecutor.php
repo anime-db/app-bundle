@@ -55,7 +55,7 @@ class CommandExecutor
     protected $finder;
 
     /**
-     * @var integer
+     * @var int
      */
     const TIMEOUT = 2;
 
@@ -97,7 +97,7 @@ class CommandExecutor
      * If timeout <= 0 and callback is null then command will be executed in background
      *
      * @param string $command
-     * @param integer $timeout
+     * @param int $timeout
      * @param callable|null $callback
      */
     public function execute($command, $timeout = 300, $callback = null)
@@ -111,7 +111,7 @@ class CommandExecutor
 
     /**
      * @param string $command
-     * @param integer $timeout
+     * @param int $timeout
      * @param callable|null $callback
      */
     public function console($command, $timeout = 300, $callback = null)
@@ -123,7 +123,7 @@ class CommandExecutor
      * @throws \RuntimeException
      *
      * @param string $command
-     * @param integer $timeout
+     * @param int $timeout
      * @param callable|null $callback
      */
     protected function executeCommand($command, $timeout = 300, $callback = null)

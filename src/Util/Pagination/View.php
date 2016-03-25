@@ -62,7 +62,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getTotal()
     {
@@ -180,7 +180,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * @param integer $page
+     * @param int $page
      *
      * @return string
      */

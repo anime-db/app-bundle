@@ -28,22 +28,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Notice
 {
     /**
-     * @var integer
+     * @var int
      */
     const STATUS_CREATED = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     const STATUS_SHOWN = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     const STATUS_CLOSED = 2;
 
     /**
-     * @var integer
+     * @var int
      */
     const DEFAULT_LIFETIME = 300;
 
@@ -57,7 +57,7 @@ class Notice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -100,7 +100,7 @@ class Notice
      * @Assert\NotBlank()
      * @Assert\Type(type="integer", message="The value {{ value }} is not a valid {{ type }}.")
      *
-     * @var integer
+     * @var int
      */
     protected $lifetime = self::DEFAULT_LIFETIME;
 
@@ -108,7 +108,7 @@ class Notice
      * @ORM\Column(type="integer")
      * @Assert\Choice(callback = "getStatuses")
      *
-     * @var integer
+     * @var int
      */
     protected $status = self::STATUS_CREATED;
 
@@ -138,7 +138,7 @@ class Notice
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -211,7 +211,7 @@ class Notice
     }
 
     /**
-     * @param integer $lifetime
+     * @param int $lifetime
      *
      * @return Notice
      */
@@ -222,7 +222,7 @@ class Notice
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLifetime()
     {
@@ -230,7 +230,7 @@ class Notice
     }
 
     /**
-     * @param integer $status
+     * @param int $status
      *
      * @return Notice
      */
@@ -241,7 +241,7 @@ class Notice
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -249,7 +249,7 @@ class Notice
     }
 
     /**
-     * @return integer[]
+     * @return int[]
      */
     public static function getStatuses()
     {
