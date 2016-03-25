@@ -10,7 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use AnimeDb\Bundle\ApiClientBundle\Service\Client;
 use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed as InstalledEvent;
@@ -19,6 +18,8 @@ use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated as UpdatedEvent;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 use Composer\Package\Package as ComposerPackage;
 use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Package listener
@@ -29,79 +30,65 @@ use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 class Package
 {
     /**
-     * Type of plugin package
-     *
      * @var string
      */
     const PLUGIN_TYPE = 'anime-db-plugin';
 
     /**
-     * Package shmop
-     *
      * @var string
      */
     const PACKAGE_SHMOP = 'anime-db/shmop';
 
     /**
-     * Entity manager
-     *
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var EntityManagerInterface
      */
     protected $em;
 
     /**
-     * Entity repository
-     *
-     * @var \Doctrine\ORM\EntityRepository
+     * @var EntityRepository
      */
     protected $rep;
 
     /**
      * API client
      *
-     * @var \AnimeDb\Bundle\ApiClientBundle\Service\Client
+     * @var Client
      */
     protected $client;
 
     /**
-     * Parameters manipulator
-     *
-     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters
+     * @var Parameters
      */
     protected $parameters;
 
     /**
-     * Downloader
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
+     * @var Downloader
      */
     protected $downloader;
 
     /**
-     * Construct
-     *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \AnimeDb\Bundle\ApiClientBundle\Service\Client $client
-     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters $parameters
+     * @param EntityManagerInterface $em
+     * @param Client $client
+     * @param Downloader $downloader
+     * @param Parameters $parameters
      */
     public function __construct(
-        Registry $doctrine,
+        EntityManagerInterface $em,
         Client $client,
         Downloader $downloader,
         Parameters $parameters
     ) {
         $this->client = $client;
         $this->downloader = $downloader;
-        $this->em = $doctrine->getManager();
+        $this->em = $em;
         $this->parameters = $parameters;
-        $this->rep = $this->em->getRepository('AnimeDbAppBundle:Plugin');
+        $this->rep = $em->getRepository('AnimeDbAppBundle:Plugin');
     }
 
     /**
      * Update plugin data
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated $event
+     * @param UpdatedEvent $event
      */
     public function onUpdated(UpdatedEvent $event)
     {
@@ -113,7 +100,7 @@ class Package
     /**
      * Registr plugin
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed $event
+     * @param InstalledEvent $event
      */
     public function onInstalled(InstalledEvent $event)
     {
@@ -125,7 +112,7 @@ class Package
     /**
      * Add plugin from package
      *
-     * @param \Composer\Package\Package $package
+     * @param ComposerPackage $package
      */
     protected function addPackage(ComposerPackage $package)
     {
@@ -154,7 +141,7 @@ class Package
     /**
      * Unregistr plugin
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed $event
+     * @param RemovedEvent $event
      */
     public function onRemoved(RemovedEvent $event)
     {
@@ -171,7 +158,7 @@ class Package
     /**
      * Configure shmop
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed $event
+     * @param InstalledEvent $event
      */
     public function onInstalledConfigureShmop(InstalledEvent $event)
     {
@@ -185,7 +172,7 @@ class Package
     /**
      * Restore config on removed shmop
      *
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed $event
+     * @param RemovedEvent $event
      */
     public function onRemovedShmop(RemovedEvent $event)
     {

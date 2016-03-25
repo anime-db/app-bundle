@@ -10,10 +10,11 @@
 
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
+use AnimeDb\Bundle\AppBundle\Entity\Task;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Project listener
@@ -24,39 +25,31 @@ use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 class Project
 {
     /**
-     * Entity manager
-     *
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var EntityManagerInterface
      */
     protected $em;
 
     /**
-     * Cache clearer
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\CacheClearer
+     * @var CacheClearer
      */
     protected $cache_clearer;
 
     /**
-     * Composer manipulator
-     *
-     * @var \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer
+     * @var Composer
      */
     protected $composer;
 
     /**
-     * Construct
-     *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \AnimeDb\Bundle\AppBundle\Service\CacheClearer $cache_clearer
-     * @param \AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer $composer
+     * @param EntityManagerInterface $em
+     * @param CacheClearer $cache_clearer
+     * @param Composer $composer
      */
     public function __construct(
-        Registry $doctrine,
+        EntityManagerInterface $em,
         CacheClearer $cache_clearer,
         Composer $composer
     ) {
-        $this->em = $doctrine->getManager();
+        $this->em = $em;
         $this->cache_clearer = $cache_clearer;
         $this->composer = $composer;
     }
@@ -66,13 +59,13 @@ class Project
      */
     public function onUpdatedProposeUpdateTask()
     {
-        /* @var $task \AnimeDb\Bundle\AppBundle\Entity\Task */
+        /* @var $task Task */
         $task = $this->em
             ->getRepository('AnimeDbAppBundle:Task')
             ->findOneBy(['command' => 'animedb:propose-update']);
 
         $next_run = new \DateTime();
-        $next_run->modify('+'.ProposeUpdateCommand::INERVAL_UPDATE.' seconds  01:00:00');
+        $next_run->modify(sprintf('+%s seconds  01:00:00', ProposeUpdateCommand::INERVAL_UPDATE));
 
         $this->em->persist($task->setNextRun($next_run));
         $this->em->flush();
