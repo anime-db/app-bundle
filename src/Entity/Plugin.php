@@ -11,7 +11,6 @@
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
@@ -21,7 +20,6 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
  *
  * @ORM\Entity
  * @ORM\Table(name="plugin")
- * @IgnoreAnnotation("ORM")
  *
  * @package AnimeDb\Bundle\AppBundle\Entity
  * @author  Peter Gribanov <info@peter-gribanov.ru>
@@ -29,8 +27,6 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 class Plugin extends BaseEntity implements ImageInterface
 {
     /**
-     * Name
-     *
      * @ORM\Id
      * @ORM\Column(type="string")
      *
@@ -39,8 +35,6 @@ class Plugin extends BaseEntity implements ImageInterface
     protected $name = '';
 
     /**
-     * Title
-     *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      *
@@ -49,8 +43,6 @@ class Plugin extends BaseEntity implements ImageInterface
     protected $title = '';
 
     /**
-     * Description
-     *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      *
@@ -59,8 +51,6 @@ class Plugin extends BaseEntity implements ImageInterface
     protected $description = '';
 
     /**
-     * Logo
-     *
      * @ORM\Column(type="string", length=256, nullable=true)
      *
      * @var string
@@ -68,8 +58,6 @@ class Plugin extends BaseEntity implements ImageInterface
     protected $logo = '';
 
     /**
-     * Date install
-     *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      *
@@ -77,20 +65,15 @@ class Plugin extends BaseEntity implements ImageInterface
      */
     protected $date_install;
 
-    /**
-     * Construct
-     */
     public function __construct()
     {
         $this->date_install = new \DateTime();
     }
 
     /**
-     * Set name
-     *
      * @param string $name
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @return Plugin
      */
     public function setName($name)
     {
@@ -99,8 +82,6 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -109,11 +90,9 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Set title
-     *
      * @param string $title
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @return Plugin
      */
     public function setTitle($title)
     {
@@ -122,8 +101,6 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
     public function getTitle()
@@ -132,11 +109,9 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Set description
-     *
      * @param string $description
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @return Plugin
      */
     public function setDescription($description)
     {
@@ -145,8 +120,6 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get description
-     *
      * @return string
      */
     public function getDescription()
@@ -155,11 +128,9 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Set logo
-     *
      * @param string $logo
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @return Plugin
      */
     public function setLogo($logo)
     {
@@ -168,8 +139,6 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get logo
-     *
      * @return string
      */
     public function getLogo()
@@ -178,8 +147,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::getFilename()
+     * @return string
      */
     public function getFilename()
     {
@@ -187,8 +155,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::setFilename()
+     * @param string $filename
      */
     public function setFilename($filename)
     {
@@ -197,11 +164,9 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Set date install
-     *
      * @param \DateTime $date_install
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @return Plugin
      */
     public function setDateInstall(\DateTime $date_install)
     {
@@ -210,8 +175,6 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get date install
-     *
      * @return \DateTime
      */
     public function getDateInstall()
@@ -220,8 +183,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity::getDownloadPath()
+     * @return string
      */
     public function getDownloadPath()
     {

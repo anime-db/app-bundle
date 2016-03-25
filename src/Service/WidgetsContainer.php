@@ -23,23 +23,17 @@ use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
 class WidgetsContainer
 {
     /**
-     * Widgets
-     *
      * @var array
      */
     private $widgets = [];
 
     /**
-     * Dispatcher
-     *
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
     /**
-     * Construct
-     *
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(EventDispatcherInterface $dispatcher)
     {
@@ -47,8 +41,6 @@ class WidgetsContainer
     }
 
     /**
-     * Get list of widgets for place
-     *
      * @param string $place
      *
      * @return array
@@ -70,7 +62,7 @@ class WidgetsContainer
      * @param string $place
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function registr($place, $controller)
     {
@@ -86,12 +78,10 @@ class WidgetsContainer
     }
 
     /**
-     * Unregist widget
-     *
      * @param string $place
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function unregistr($place, $controller)
     {

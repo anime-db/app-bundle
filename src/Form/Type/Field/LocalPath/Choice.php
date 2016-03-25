@@ -23,20 +23,20 @@ use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 class Choice extends AbstractType
 {
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\AbstractType::buildForm()
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->setMethod('GET')
             ->add('path', 'text', [
                 'label' => 'Path',
                 'required' => true,
                 'attr' => [
                     'placeholder' => Filesystem::getUserHomeDir()
                 ]
-            ]);
+            ])
+            ->setMethod('GET');
 
         // choice the disc letter in Windows
         if (defined('PHP_WINDOWS_VERSION_BUILD') &&
@@ -61,8 +61,7 @@ class Choice extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\FormTypeInterface::getName()
+     * @return string
      */
     public function getName()
     {

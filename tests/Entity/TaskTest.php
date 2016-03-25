@@ -11,6 +11,8 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Entity;
 
 use AnimeDb\Bundle\AppBundle\Entity\Task;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * Test task for Task Scheduler
@@ -21,41 +23,26 @@ use AnimeDb\Bundle\AppBundle\Entity\Task;
 class TaskTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Task
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @var Task
      */
     protected $task;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->task = new Task();
     }
 
-    /**
-     * Test get id
-     */
     public function testGetId()
     {
         $this->assertNull($this->task->getId());
     }
 
-    /**
-     * Test get statuses
-     */
     public function testGetStatuses()
     {
         $this->assertEquals([Task::STATUS_DISABLED, Task::STATUS_ENABLED], Task::getStatuses());
     }
 
     /**
-     * Get intervals
-     *
      * @return array
      */
     public function getIntervals()
@@ -68,8 +55,6 @@ class TaskTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test set interval
-     *
      * @dataProvider getIntervals
      *
      * @param integer $interval
@@ -81,15 +66,13 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($modify, $this->task->getModify());
     }
 
-    /**
-     * Test is modify valid
-     */
     public function testIsModifyValid()
     {
-        $context = $this->getMock('\Symfony\Component\Validator\ExecutionContextInterface');
+        /* @var $context \PHPUnit_Framework_MockObject_MockObject|ExecutionContextInterface */
+        $context = $this->getMock('\Symfony\Component\Validator\Context\ExecutionContextInterface');
         $context
             ->expects($this->never())
-            ->method('addViolationAt');
+            ->method('buildViolation');
         // no modify
         $this->task->isModifyValid($context);
         // correct modify
@@ -97,41 +80,42 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         $this->task->isModifyValid($context);
     }
 
-    /**
-     * Test is modify valid fail
-     */
     public function testIsModifyValidFail()
     {
-        $context = $this->getMock('\Symfony\Component\Validator\ExecutionContextInterface');
+        /* @var $violation \PHPUnit_Framework_MockObject_MockObject|ConstraintViolationBuilderInterface */
+        $violation = $this->getMock('\Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
+        $violation
+            ->expects($this->once())
+            ->method('atPath')
+            ->with('modify')
+            ->will($this->returnSelf());
+        $violation
+            ->expects($this->once())
+            ->method('addViolation');
+
+        /* @var $context \PHPUnit_Framework_MockObject_MockObject|ExecutionContextInterface */
+        $context = $this->getMock('\Symfony\Component\Validator\Context\ExecutionContextInterface');
         $context
             ->expects($this->once())
-            ->method('addViolationAt')
-            ->with('modify', 'Wrong date/time format');
+            ->method('buildViolation')
+            ->with('Wrong date/time format')
+            ->will($this->returnValue($violation));
 
         $this->task->setModify('--');
         $this->task->isModifyValid($context);
     }
 
-    /**
-     * Test executed not modify
-     */
     public function testExecutedNotModify()
     {
         $this->task->setStatus(Task::STATUS_ENABLED);
         $this->executed();
     }
 
-    /**
-     * Test executed task is disabled
-     */
     public function testExecutedDisabled()
     {
         $this->executed();
     }
 
-    /**
-     * Test executed
-     */
     public function testExecuted()
     {
         $modify = '+10 second';
@@ -151,9 +135,7 @@ class TaskTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Executed task
-     *
-     * @param string $status
+     * @param int $status
      */
     protected function executed($status = Task::STATUS_DISABLED)
     {

@@ -11,6 +11,8 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Console;
+use Gedmo\Translatable\TranslatableListener;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Test listener console
@@ -21,8 +23,6 @@ use AnimeDb\Bundle\AppBundle\Event\Listener\Console;
 class ConsoleTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Get locales
-     *
      * @return array
      */
     public function getLocales()
@@ -35,8 +35,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test on console command
-     *
      * @dataProvider getLocales
      *
      * @param string $locale
@@ -46,7 +44,9 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $expected ?: $locale;
 
-        $translatable = $this->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
+        /* @var $translatable \PHPUnit_Framework_MockObject_MockObject|TranslatableListener */
+        $translatable = $this
+            ->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
             ->disableOriginalConstructor()
             ->getMock();
         $translatable
@@ -54,6 +54,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
             ->method('setTranslatableLocale')
             ->with(substr($expected, 0, 2));
 
+        /* @var $translator \PHPUnit_Framework_MockObject_MockObject|TranslatorInterface */
         $translator = $this->getMockBuilder('\Symfony\Component\Translation\TranslatorInterface')
             ->disableOriginalConstructor()
             ->getMock();

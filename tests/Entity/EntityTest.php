@@ -24,40 +24,27 @@ use AnimeDb\Bundle\AppBundle\Entity\Task;
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Image
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Field\Image
+     * @var Image
      */
     public $image;
 
     /**
-     * Notice
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @var Notice
      */
     public $notice;
 
     /**
-     * Plugin
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @var Plugin
      */
     public $plugin;
 
     /**
-     * Task
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @var Task
      */
     public $task;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->image = new Image();
         $this->notice = new Notice();
         $this->plugin = new Plugin();
@@ -65,8 +52,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods
-     *
      * @return array
      */
     public function getMethods()
@@ -91,8 +76,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getters and setters
-     *
      * @dataProvider getMethods
      * 
      * @param string $entity
@@ -109,8 +92,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods DateTime
-     *
      * @return array
      */
     public function getMethodsTime()
@@ -129,15 +110,12 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getters and setters DateTime
-     *
      * @dataProvider getMethodsTime
      * 
      * @param string $entity
      * @param string $getter
      * @param string $setter
      * @param mixed $default
-     * @param mixed $new
      */
     public function testGetSetTime($entity, $getter, $setter, $default = null)
     {

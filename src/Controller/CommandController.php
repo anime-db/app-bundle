@@ -25,9 +25,9 @@ class CommandController extends Controller
     /**
      * Execute command in background
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function execAction(Request $request)
     {

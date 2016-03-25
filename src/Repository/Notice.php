@@ -12,6 +12,7 @@ namespace AnimeDb\Bundle\AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use AnimeDb\Bundle\AppBundle\Entity\Notice as NoticeEntity;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Notice repository
@@ -22,16 +23,12 @@ use AnimeDb\Bundle\AppBundle\Entity\Notice as NoticeEntity;
 class Notice extends EntityRepository
 {
     /**
-     * See notices later interval
-     *
-     * @var integer
+     * @var int
      */
     const SEE_LATER_INTERVAL = 3600;
 
     /**
-     * Get first show notice
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice|null
+     * @return NoticeEntity|null
      */
     public function getFirstShow()
     {
@@ -54,12 +51,10 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Get notice list
+     * @param int $limit
+     * @param int $offset
      *
-     * @param integer $limit
-     * @param integer $offset
-     *
-     * @return array [\AnimeDb\Bundle\AppBundle\Entity\Notice]
+     * @return NoticeEntity[]
      */
     public function getList($limit, $offset = 0)
     {
@@ -77,9 +72,7 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Get count notices
-     *
-     * @return integer
+     * @return int
      */
     public function count()
     {
@@ -91,9 +84,6 @@ class Notice extends EntityRepository
         ')->getSingleScalarResult();
     }
 
-    /**
-     * See later
-     */
     public function seeLater()
     {
         $time = time();
@@ -136,17 +126,16 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Remove notices
-     *
      * @param array $notices
      */
     public function remove(array $notices)
     {
         $ids = [];
-        /* @var $notice \AnimeDb\Bundle\AppBundle\Entity\Notice */
+        /* @var $notice NoticeEntity */
         foreach ($notices as $notice) {
             $ids[] = $notice->getId();
         }
+
         $this->_em
             ->createQuery('
                 DELETE FROM
@@ -159,18 +148,17 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Set status for notices
-     *
      * @param array $notices
      * @param string $status
      */
     public function setStatus(array $notices, $status)
     {
         $ids = [];
-        /* @var $notice \AnimeDb\Bundle\AppBundle\Entity\Notice */
+        /* @var $notice NoticeEntity */
         foreach ($notices as $notice) {
             $ids[] = $notice->getId();
         }
+
         $this->getEntityManager()
             ->createQuery('
                 UPDATE
@@ -186,26 +174,27 @@ class Notice extends EntityRepository
     }
 
     /**
-     * Get filtered query
-     *
-     * @param integer $status
+     * @param int $status
      * @param string $type
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     public function getFilteredQuery($status, $type)
     {
         $query = $this->createQueryBuilder('n');
+
         if (is_integer($status) && in_array($status, NoticeEntity::getStatuses())) {
             $query
                 ->where('n.status = :status')
                 ->setParameter('status', $status);
         }
+
         if ($type) {
             $query
                 ->andWhere('n.type = :type')
                 ->setParameter('type', $type);
         }
+
         return $query;
     }
 }

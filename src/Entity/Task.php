@@ -11,9 +11,8 @@
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Task for Task Scheduler
@@ -24,7 +23,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * })
  * @Assert\Callback(methods={"isModifyValid"})
  * @ORM\Entity(repositoryClass="AnimeDb\Bundle\AppBundle\Repository\Task")
- * @IgnoreAnnotation("ORM")
  *
  * @package AnimeDb\Bundle\AppBundle\Entity
  * @author  Peter Gribanov <info@peter-gribanov.ru>
@@ -32,33 +30,25 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Task
 {
     /**
-     * Status enabled
-     *
-     * @var integer
+     * @var int
      */
     const STATUS_ENABLED = 1;
 
     /**
-     * Status interval
-     *
-     * @var integer
+     * @var int
      */
     const STATUS_DISABLED = 0;
 
     /**
-     * Id
-     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     * Command
-     *
      * @ORM\Column(type="string", length=128)
      *
      * @var string
@@ -66,8 +56,6 @@ class Task
     protected $command = '';
 
     /**
-     * Last run
-     *
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\DateTime()
      *
@@ -76,8 +64,6 @@ class Task
     protected $last_run;
 
     /**
-     * Next run
-     *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      *
@@ -98,39 +84,22 @@ class Task
     protected $modify = '';
 
     /**
-     * Task status
-     *
      * @ORM\Column(type="integer")
      * @Assert\Choice(callback = "getStatuses")
      *
-     * @var integer
+     * @var int
      */
     protected $status = self::STATUS_DISABLED;
 
-    /**
-     * Construct
-     */
     public function __construct()
     {
         $this->next_run = new \DateTime();
     }
 
     /**
-     * Get supported statuses
-     *
-     * @return integer[]
-     */
-    public static function getStatuses()
-    {
-        return [self::STATUS_DISABLED, self::STATUS_ENABLED];
-    }
-
-    /**
-     * Set command
-     *
      * @param string $command
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @return Task
      */
     public function setCommand($command)
     {
@@ -139,8 +108,6 @@ class Task
     }
 
     /**
-     * Get command
-     *
      * @return string
      */
     public function getCommand()
@@ -149,9 +116,7 @@ class Task
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -159,11 +124,9 @@ class Task
     }
 
     /**
-     * Set last_run
-     *
      * @param \DateTime $last_run
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @return Task
      */
     public function setLastRun(\DateTime $last_run)
     {
@@ -172,8 +135,6 @@ class Task
     }
 
     /**
-     * Get last_run
-     *
      * @return \DateTime|null
      */
     public function getLastRun()
@@ -182,11 +143,9 @@ class Task
     }
 
     /**
-     * Set next_run
-     *
      * @param \DateTime $next_run
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @return Task
      */
     public function setNextRun(\DateTime $next_run)
     {
@@ -195,8 +154,6 @@ class Task
     }
 
     /**
-     * Get next_run
-     *
      * @return \DateTime
      */
     public function getNextRun()
@@ -205,26 +162,22 @@ class Task
     }
 
     /**
-     * Set interval of seconds
+     * @param int $interval
      *
-     * @param integer $interval
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @return Task
      */
     public function setInterval($interval)
     {
         if ($interval > 0) {
-            $this->setModify('+'.(int)$interval.' second');
+            $this->setModify(sprintf('+%s second', (int)$interval));
         }
         return $this;
     }
 
     /**
-     * Set modify
-     *
      * @param string $modify
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @return Task
      */
     public function setModify($modify)
     {
@@ -233,8 +186,6 @@ class Task
     }
 
     /**
-     * Get modify
-     *
      * @return string
      */
     public function getModify()
@@ -243,11 +194,9 @@ class Task
     }
 
     /**
-     * Set status
+     * @param int $status
      *
-     * @param integer $status
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task
+     * @return Task
      */
     public function setStatus($status)
     {
@@ -256,9 +205,7 @@ class Task
     }
 
     /**
-     * Get status
-     *
-     * @return integer 
+     * @return int
      */
     public function getStatus()
     {
@@ -266,14 +213,26 @@ class Task
     }
 
     /**
-     * Is valid modify date/time format
-     *
-     * @param \Symfony\Component\Validator\ExecutionContextInterface $context
+     * @return int[]
+     */
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_DISABLED,
+            self::STATUS_ENABLED
+        ];
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
      */
     public function isModifyValid(ExecutionContextInterface $context)
     {
         if ($this->getModify() && strtotime($this->getModify()) === false) {
-            $context->addViolationAt('modify', 'Wrong date/time format');
+            $context
+                ->buildViolation('Wrong date/time format')
+                ->atPath('modify')
+                ->addViolation();
         }
     }
 

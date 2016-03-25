@@ -13,7 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Service;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use AnimeDb\Bundle\AppBundle\Service\WidgetsContainer;
 
 /**
  * Twig extension
@@ -24,46 +23,34 @@ use AnimeDb\Bundle\AppBundle\Service\WidgetsContainer;
 class TwigExtension extends \Twig_Extension
 {
     /**
-     * Router
-     *
-     * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
+     * @var Router
      */
     private $router;
 
     /**
-     * Handler
-     *
-     * @var \Symfony\Component\HttpKernel\Fragment\FragmentHandler
+     * @var FragmentHandler
      */
     private $handler;
 
     /**
-     * Widget container
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
+     * @var WidgetsContainer
      */
     private $widgets;
 
     /**
-     * Construct
-     *
-     * @param \Symfony\Bundle\FrameworkBundle\Routing\Router $router
-     * @param \Symfony\Component\HttpKernel\Fragment\FragmentHandler $handler
-     * @param \AnimeDb\Bundle\AppBundle\Service\WidgetsContainer $widgets
+     * @param Router $router
+     * @param FragmentHandler $handler
+     * @param WidgetsContainer $widgets
      */
-    public function __construct(
-        Router $router,
-        FragmentHandler $handler,
-        WidgetsContainer $widgets
-    ) {
+    public function __construct(Router $router, FragmentHandler $handler, WidgetsContainer $widgets)
+    {
         $this->router = $router;
         $this->handler = $handler;
         $this->widgets = $widgets;
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_Extension::getFilters()
+     * @return array
      */
     public function getFilters()
     {
@@ -73,8 +60,7 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_Extension::getFunctions()
+     * @return array
      */
     public function getFunctions()
     {
@@ -84,8 +70,6 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * Favicon
-     *
      * @param string $url
      *
      * @return string|false
@@ -96,8 +80,6 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * Render widgets
-     *
      * @param string $place
      * @param array $attributes
      * @param array $options
@@ -118,8 +100,7 @@ class TwigExtension extends \Twig_Extension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_ExtensionInterface::getName()
+     * @return string
      */
     public function getName()
     {

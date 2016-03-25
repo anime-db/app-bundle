@@ -30,14 +30,12 @@ class Task extends EntityRepository
      * For example the scheduler can expect a few days before the execution of the tasks
      * that must be performed every hour.
      * 
-     * @var integer
+     * @var int
      */
     const MAX_STANDBY_TIME = 3600;
 
     /**
-     * Get next task
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task|null
+     * @return TaskEntity|null
      */
     public function getNextTask()
     {
@@ -58,9 +56,7 @@ class Task extends EntityRepository
     }
 
     /**
-     * Get waiting time for the next task
-     *
-     * @return integer
+     * @return int
      */
     public function getWaitingTime()
     {

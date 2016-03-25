@@ -21,24 +21,16 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Configuration
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @var Configuration
      */
     protected $config;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
         $this->config = new Configuration(150, 33);
     }
 
     /**
-     * Get configs
-     *
      * @return array
      */
     public function getConfigs()
@@ -50,8 +42,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test create
-     *
      * @dataProvider getConfigs
      *
      * @param integer $total_pages
@@ -65,8 +55,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test create
-     *
      * @dataProvider getConfigs
      *
      * @param integer $total_pages
@@ -80,8 +68,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods
-     *
      * @return array
      */
     public function getMethods()
@@ -129,8 +115,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getters and setters
-     *
      * @dataProvider getMethods
      *
      * @param mixed $default
@@ -145,9 +129,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($new, call_user_func([$this->config, $getter]));
     }
 
-    /**
-     * Test get view
-     */
     public function testGetView()
     {
         $view = $this->config->getView();

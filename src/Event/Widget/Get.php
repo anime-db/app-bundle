@@ -22,23 +22,17 @@ use AnimeDb\Bundle\AppBundle\Service\WidgetsContainer;
 class Get extends Event
 {
     /**
-     * Widgets container
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
+     * @var WidgetsContainer
      */
     protected $container;
 
     /**
-     * Place for widgets
-     *
      * @var string
      */
     protected $place;
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Service\WidgetsContainer $container
+     * @param WidgetsContainer $container
      * @param string $place
      */
     public function __construct(WidgetsContainer $container, $place)
@@ -48,9 +42,7 @@ class Get extends Event
     }
 
     /**
-     * Get widgets container
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Service\WidgetsContainer
+     * @return WidgetsContainer
      */
     public function getWidgetsContainer()
     {
@@ -58,8 +50,6 @@ class Get extends Event
     }
 
     /**
-     * Get place for widgets
-     *
      * @return string
      */
     public function getPlace()
@@ -76,7 +66,7 @@ class Get extends Event
      *
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function registr($controller)
     {
@@ -84,11 +74,9 @@ class Get extends Event
     }
 
     /**
-     * Unregist widget
-     *
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function unregistr($controller)
     {

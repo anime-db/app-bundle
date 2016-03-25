@@ -11,6 +11,8 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Entity;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Test entity listener
@@ -21,40 +23,27 @@ use AnimeDb\Bundle\AppBundle\Event\Listener\Entity;
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Filesystem
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Filesystem
      */
     protected $fs;
 
     /**
-     * Download root dir
-     *
      * @var string
      */
     protected $root = '/foo/';
 
     /**
-     * Entity listener
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Event\Listener\Entity
+     * @var Entity
      */
     protected $listener;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->fs = $this->getMock('\Symfony\Component\Filesystem\Filesystem');
         $this->listener = new Entity($this->fs, $this->root);
     }
 
     /**
-     * Get methods
-     *
      * @return array
      */
     public function getMethods()
@@ -66,21 +55,20 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test ignore entity
-     *
      * @dataProvider getMethods
      *
      * @param string $method
      */
     public function testIgnoreEntity($method)
     {
-        $args = $this->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
+        $args = $this
+            ->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
             ->disableOriginalConstructor()
             ->getMock();
         $args
             ->expects($this->once())
             ->method('getEntity')
-            ->willReturn(new \stdClass());
+            ->will($this->returnValue(new \stdClass()));
         $this->fs
             ->expects($this->never())
             ->method('remove');
@@ -89,8 +77,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods and old files
-     *
      * @return array
      */
     public function getMethodsAndOldFiles()
@@ -104,8 +90,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test remove old files
-     *
      * @dataProvider getMethodsAndOldFiles
      *
      * @param string $method
@@ -119,15 +103,15 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->any())
             ->method('getFilename')
-            ->willReturn('');
+            ->will($this->returnValue(''));
         $entity
             ->expects($this->once())
             ->method('getDownloadPath')
-            ->willReturn('bar');
+            ->will($this->returnValue('bar'));
         $entity
             ->expects($this->once())
             ->method('getOldFilenames')
-            ->willReturn($files);
+            ->will($this->returnValue($files));
 
         $args = $this->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
             ->disableOriginalConstructor()
@@ -135,22 +119,21 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $args
             ->expects($this->atLeastOnce())
             ->method('getEntity')
-            ->willReturn($entity);
+            ->will($this->returnValue($entity));
         $this->fs
             ->expects($files ? $this->atLeastOnce() : $this->never())
             ->method('remove')
-            ->willReturnCallback(function ($file) use ($files, $root, $that) {
+            ->will($this->returnCallback(function ($file) use ($files, $root, $that) {
                 $filename = pathinfo($file, PATHINFO_BASENAME);
                 $that->assertContains($filename, $files);
                 $that->assertEquals($root.$filename, $file);
-            });
+            }));
+
         // test
         call_user_func([$this->listener, $method], $args);
     }
 
     /**
-     * Get old files
-     *
      * @return array
      */
     public function getOldFiles()
@@ -162,8 +145,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test post remove
-     *
      * @dataProvider getOldFiles
      *
      * @param array $files
@@ -176,27 +157,28 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->atLeastOnce())
             ->method('getFilename')
-            ->willReturn('baz');
+            ->will($this->returnValue('baz'));
         $entity
             ->expects($this->atLeastOnce())
             ->method('getDownloadPath')
-            ->willReturn('bar');
+            ->will($this->returnValue('bar'));
         $entity
             ->expects($this->once())
             ->method('getOldFilenames')
-            ->willReturn($files);
+            ->will($this->returnValue($files));
 
+        /* @var $args \PHPUnit_Framework_MockObject_MockObject|LifecycleEventArgs */
         $args = $this->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
             ->disableOriginalConstructor()
             ->getMock();
         $args
             ->expects($this->atLeastOnce())
             ->method('getEntity')
-            ->willReturn($entity);
+            ->will($this->returnValue($entity));
         $this->fs
             ->expects($this->atLeastOnce())
             ->method('remove')
-            ->willReturnCallback(function ($file) use ($files, $root, $that) {
+            ->will($this->returnCallback(function ($file) use ($files, $root, $that) {
                 $filename = pathinfo($file, PATHINFO_BASENAME);
                 if ($filename == 'baz') { // origin file
                     $that->assertEquals($root.'baz', $file);
@@ -204,7 +186,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase
                     $that->assertContains($filename, $files);
                     $that->assertEquals($root.$filename, $file);
                 }
-            });
+            }));
+
         // test
         $this->listener->postRemove($args);
     }

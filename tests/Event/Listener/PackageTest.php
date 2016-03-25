@@ -10,8 +10,14 @@
 
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
+use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
+use AnimeDb\Bundle\ApiClientBundle\Service\Client;
+use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 use AnimeDb\Bundle\AppBundle\Event\Listener\Package;
-use Symfony\Component\Filesystem\Exception\IOException;
+use AnimeDb\Bundle\AppBundle\Service\Downloader;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Test listener package
@@ -22,87 +28,67 @@ use Symfony\Component\Filesystem\Exception\IOException;
 class PackageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * API client
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     protected $client;
 
     /**
-     * Downloader
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Downloader
      */
     protected $downloader;
 
     /**
-     * Entity manager
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|EntityManagerInterface
      */
     protected $em;
 
     /**
-     * Entity repository
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|ObjectRepository
      */
     protected $rep;
 
     /**
-     * Package listener
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Event\Listener\Package
+     * @var Package
      */
     protected $listener;
 
     /**
-     * Parameters manipulator
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Parameters
      */
     protected $parameters;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        $this->parameters = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
+        $this->parameters = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->client = $this->getMockBuilder('\AnimeDb\Bundle\ApiClientBundle\Service\Client')
+        $this->client = $this
+            ->getMockBuilder('\AnimeDb\Bundle\ApiClientBundle\Service\Client')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->downloader = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\Downloader')
+        $this->downloader = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\Downloader')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->em = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
+        $this->em = $this
+            ->getMockBuilder('\Doctrine\ORM\EntityManagerInterface')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->rep = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
+        $this->rep = $this
+            ->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
             ->disableOriginalConstructor()
             ->getMock();
-        $doctrine = $this->getMockBuilder('\Doctrine\Bundle\DoctrineBundle\Registry')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $doctrine
-            ->expects($this->once())
-            ->method('getManager')
-            ->willReturn($this->em);
         $this->em
             ->expects($this->once())
             ->method('getRepository')
             ->with('AnimeDbAppBundle:Plugin')
-            ->willReturn($this->rep);
+            ->will($this->returnValue($this->rep));
 
-        $this->listener = new Package($doctrine, $this->client, $this->downloader, $this->parameters);
+        $this->listener = new Package($this->em, $this->client, $this->downloader, $this->parameters);
     }
 
     /**
-     * Get events
-     *
      * @return array
      */
     public function getEvents()
@@ -114,8 +100,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test ignore package
-     *
      * @dataProvider getEvents
      *
      * @param string $method
@@ -129,7 +113,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $package
             ->expects($this->once())
             ->method('getType')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $this->em
             ->expects($this->never())
             ->method('persist');
@@ -139,8 +123,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get plugins
-     *
      * @return array
      */
     public function getPlugins()
@@ -159,12 +141,11 @@ class PackageTest extends \PHPUnit_Framework_TestCase
                 'description' => 'plugin description'
             ]]);
         }
+
         return $plugins;
     }
 
     /**
-     * Test update plugin
-     *
      * @dataProvider getPlugins
      *
      * @param string $method
@@ -176,7 +157,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $this->rep
             ->expects($this->once())
             ->method('find')
-            ->willReturn($plugin)
+            ->will($this->returnValue($plugin))
             ->with('foo/bar');
         $this->em
             ->expects($this->once())
@@ -189,15 +170,13 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getPlugin')
             ->with('foo', 'bar')
-            ->willReturn($data);
+            ->will($this->returnValue($data));
 
         // test
         call_user_func([$this->listener, $method], $this->getEvent($this->getPackage(), $event));
     }
 
     /**
-     * Test add new plugin
-     *
      * @dataProvider getPlugins
      *
      * @param string $method
@@ -211,23 +190,23 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             $this->downloader
                 ->expects($this->once())
                 ->method('entity')
-                ->willReturnCallback(function ($logo, $plugin, $override) use ($that, $data) {
+                ->will($this->returnCallback(function ($logo, $plugin, $override) use ($that, $data) {
                     $that->assertEquals($data['logo'], $logo);
                     $that->assertTrue($override);
                     $that->checkNewPlugin($plugin, $data);
-                });
+                }));
         }
         $this->rep
             ->expects($this->once())
             ->method('find')
-            ->willReturn(null)
+            ->will($this->returnValue(null))
             ->with('foo/bar');
         $this->em
             ->expects($this->once())
             ->method('persist')
-            ->willReturnCallback(function ($plugin) use ($that, $data) {
+            ->will($this->returnCallback(function ($plugin) use ($that, $data) {
                 $that->checkNewPlugin($plugin, $data);
-            });
+            }));
         $this->em
             ->expects($this->once())
             ->method('flush');
@@ -235,16 +214,14 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getPlugin')
             ->with('foo', 'bar')
-            ->willReturn($data);
+            ->will($this->returnValue($data));
 
         // test
         call_user_func([$this->listener, $method], $this->getEvent($this->getPackage($this->exactly(2)), $event));
     }
 
     /**
-     * Check new plugin
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Plugin $plugin
+     * @param Plugin $plugin
      * @param array $data
      */
     public function checkNewPlugin($plugin, array $data)
@@ -256,8 +233,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get package
-     *
      * @param \PHPUnit_Framework_MockObject_Matcher_Invocation|null $matcher
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
@@ -270,17 +245,15 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $package
             ->expects($this->once())
             ->method('getType')
-            ->willReturn(Package::PLUGIN_TYPE);
+            ->will($this->returnValue(Package::PLUGIN_TYPE));
         $package
             ->expects($matcher ?: $this->once())
             ->method('getName')
-            ->willReturn('foo/bar');
+            ->will($this->returnValue('foo/bar'));
         return $package;
     }
 
     /**
-     * Get plugin
-     *
      * @param array $data
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
@@ -291,7 +264,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $plugin
             ->expects($this->once())
             ->method('getName')
-            ->willReturn('foo/bar');
+            ->will($this->returnValue('foo/bar'));
 
         $setters = [
             'title' => 'setTitle',
@@ -307,7 +280,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
                     ->expects($this->once())
                     ->method($method)
                     ->with($data[$key])
-                    ->willReturnSelf();
+                    ->will($this->returnSelf());
             }
         }
         $this->downloader
@@ -319,12 +292,10 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get event
-     *
      * @param \PHPUnit_Framework_MockObject_MockObject $package
      * @param string $event
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject|Removed
      */
     protected function getEvent(\PHPUnit_Framework_MockObject_MockObject $package, $event)
     {
@@ -334,13 +305,11 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $event
             ->expects($this->atLeastOnce())
             ->method('getPackage')
-            ->willReturn($package);
+            ->will($this->returnValue($package));
+
         return $event;
     }
 
-    /**
-     * Test ignore package on removed
-     */
     public function testOnRemovedIgnorePackage()
     {
         $package = $this->getMockBuilder('\Composer\Package\Package')
@@ -349,7 +318,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $package
             ->expects($this->once())
             ->method('getType')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $this->em
             ->expects($this->never())
             ->method('find');
@@ -358,15 +327,12 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $this->listener->onRemoved($this->getEvent($package, '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed'));
     }
 
-    /**
-     * Test on removed no found plugin
-     */
     public function testOnRemovedNoFoundPlugin()
     {
         $this->rep
             ->expects($this->once())
             ->method('find')
-            ->willReturn(null)
+            ->will($this->returnValue(null))
             ->with('foo/bar');
 
         // test
@@ -374,16 +340,13 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $this->listener->onRemoved($this->getEvent($this->getPackage(), $event));
     }
 
-    /**
-     * Test on removed remove plugin
-     */
     public function testOnRemovedRemovePlugin()
     {
         $plugin = $this->getMock('\AnimeDb\Bundle\AppBundle\Entity\Plugin');
         $this->rep
             ->expects($this->once())
             ->method('find')
-            ->willReturn($plugin)
+            ->will($this->returnValue($plugin))
             ->with('foo/bar');
         $this->em
             ->expects($this->once())
@@ -399,8 +362,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get shmop events
-     *
      * @return array
      */
     public function getShmopEvents()
@@ -412,8 +373,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test on installed ignore configure shmop
-     *
      * @dataProvider getShmopEvents
      *
      * @param string $method
@@ -427,14 +386,14 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $package
             ->expects($this->once())
             ->method('getName')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $event = $this->getMockBuilder($event)
             ->disableOriginalConstructor()
             ->getMock();
         $event
             ->expects($this->once())
             ->method('getPackage')
-            ->willReturn($package);
+            ->will($this->returnValue($package));
         $this->parameters
             ->expects($this->never())
             ->method('save');
@@ -444,8 +403,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get parameters
-     *
      * @return array
      */
     public function getParameters()
@@ -470,8 +427,6 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test on installed configure shmop
-     *
      * @dataProvider getParameters
      *
      * @param string $method
@@ -486,14 +441,14 @@ class PackageTest extends \PHPUnit_Framework_TestCase
         $package
             ->expects($this->once())
             ->method('getName')
-            ->willReturn(Package::PACKAGE_SHMOP);
+            ->will($this->returnValue(Package::PACKAGE_SHMOP));
         $event = $this->getMockBuilder($event)
             ->disableOriginalConstructor()
             ->getMock();
         $event
             ->expects($this->once())
             ->method('getPackage')
-            ->willReturn($package);
+            ->will($this->returnValue($package));
         $index = 0;
         foreach ($expected as $key => $value) {
             $this->parameters

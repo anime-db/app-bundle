@@ -23,23 +23,17 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 class Entity
 {
     /**
-     * Filesystem
-     *
-     * @var \Symfony\Component\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $fs;
 
     /**
-     * Download root dir
-     *
      * @var string
      */
     protected $root = '';
 
     /**
-     * Construct
-     *
-     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     * @param Filesystem $fs
      * @param string $root
      */
     public function __construct(Filesystem $fs, $root)
@@ -49,14 +43,12 @@ class Entity
     }
 
     /**
-     * Post remove
-     *
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @param LifecycleEventArgs $args
      */
     public function postRemove(LifecycleEventArgs $args)
     {
-        if ($args->getEntity() instanceof EntityInterface) {
-            $entity = $args->getEntity();
+        $entity = $args->getEntity();
+        if ($entity instanceof EntityInterface) {
             if ($entity->getFilename()) {
                 $this->fs->remove($this->root.$entity->getDownloadPath().'/'.$entity->getFilename());
             }
@@ -65,21 +57,18 @@ class Entity
     }
 
     /**
-     * Post update
-     *
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @param LifecycleEventArgs $args
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
-        if ($args->getEntity() instanceof EntityInterface) {
-            $this->removeOldFiles($args->getEntity());
+        $entity = $args->getEntity();
+        if ($entity instanceof EntityInterface) {
+            $this->removeOldFiles($entity);
         }
     }
 
     /**
-     * Remove old files
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
+     * @param EntityInterface $entity
      */
     protected function removeOldFiles(EntityInterface $entity)
     {

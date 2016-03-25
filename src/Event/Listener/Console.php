@@ -22,38 +22,28 @@ use Symfony\Component\Translation\TranslatorInterface;
 class Console
 {
     /**
-     * Default locale
-     *
      * @var string
      */
     const DEFAULT_LOCALE = 'en';
 
     /**
-     * Translatable listener
-     *
-     * @var \Gedmo\Translatable\TranslatableListener
+     * @var TranslatableListener
      */
     protected $translatable;
 
     /**
-     * Translator
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     * Construct
-     *
-     * @param \Gedmo\Translatable\TranslatableListener $translatable
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param TranslatableListener $translatable
+     * @param TranslatorInterface $translator
      * @param string $locale
      */
     public function __construct(TranslatableListener $translatable, TranslatorInterface $translator, $locale = '')
@@ -63,9 +53,6 @@ class Console
         $this->locale = $locale ?: self::DEFAULT_LOCALE;
     }
 
-    /**
-     * Kernel request handler
-     */
     public function onConsoleCommand()
     {
         setlocale(LC_ALL, $this->locale);

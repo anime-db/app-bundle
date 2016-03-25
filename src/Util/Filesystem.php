@@ -21,16 +21,12 @@ use Patchwork\Utf8;
 class Filesystem
 {
     /**
-     * File
-     *
-     * @var integer
+     * @var int
      */
     const FILE = 1;
 
     /**
-     * Directory
-     *
-     * @var integer
+     * @var int
      */
     const DIRECTORY = 2;
 
@@ -50,15 +46,13 @@ class Filesystem
      * @return string
      */
     public static function getUserHomeDir() {
-        return self::getRealPath(self::doUserHomeDir());
+        return self::getRealPath(self::doGetUserHomeDir());
     }
 
     /**
-     * Do user home directory
-     *
      * @return string
      */
-    private static function doUserHomeDir()
+    private static function doGetUserHomeDir()
     {
         // have home env var
         if ($home = getenv('HOME')) {
@@ -97,8 +91,8 @@ class Filesystem
      * List files and directories inside the specified path
      *
      * @param string $path
-     * @param integer $filter
-     * @param integer $order
+     * @param int $filter
+     * @param int $order
      *
      * @return array
      */
@@ -119,20 +113,24 @@ class Filesystem
         $folders = [];
         foreach (new \DirectoryIterator($wrap) as $file) {
             /* @var $file \SplFileInfo */
-            if (
-                $file->getFilename()[0] != '.' &&
-                substr($file->getFilename(), -1) != '~' &&
-                $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
-                $file->isReadable() &&
-                (
-                    (($filter & self::FILE) == self::FILE && $file->isFile()) ||
-                    (($filter & self::DIRECTORY) == self::DIRECTORY && $file->isDir())
-                )
-            ) {
-                $folders[$file->getFilename()] = [
-                    'name' => $file->getFilename(),
-                    'path' => $path.$file->getFilename().DIRECTORY_SEPARATOR
-                ];
+            try {
+                if (
+                    $file->getFilename()[0] != '.' &&
+                    substr($file->getFilename(), -1) != '~' &&
+                    $file->getFilename() != 'pagefile.sys' && // failed read C:\pagefile.sys
+                    $file->isReadable() &&
+                    (
+                        (($filter & self::FILE) == self::FILE && $file->isFile()) ||
+                        (($filter & self::DIRECTORY) == self::DIRECTORY && $file->isDir())
+                    )
+                ) {
+                    $folders[$file->getFilename()] = [
+                        'name' => $file->getFilename(),
+                        'path' => $path . $file->getFilename() . DIRECTORY_SEPARATOR
+                    ];
+                }
+            } catch (\Exception $e) {
+                // ignore all errors
             }
         }
 
@@ -157,8 +155,6 @@ class Filesystem
     }
 
     /**
-     * Get real path
-     *
      * @param string $path
      *
      * @return string

@@ -21,25 +21,15 @@ use AnimeDb\Bundle\AppBundle\Entity\Notice;
 class NoticeTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Notice
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @var Notice
      */
     protected $notice;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->notice = new Notice();
     }
 
-    /**
-     * Test get statuses
-     */
     public function testGetStatuses()
     {
         $this->assertEquals(
@@ -52,9 +42,6 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Test shown
-     */
     public function testShown()
     {
         $date = new \DateTime();
@@ -66,9 +53,6 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Notice::STATUS_SHOWN, $this->notice->getStatus());
     }
 
-    /**
-     * Test shown modify date closed
-     */
     public function testShownModify()
     {
         $date = (new \DateTime())->modify('+'.$this->notice->getLifetime().' seconds');
@@ -79,17 +63,11 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Notice::STATUS_SHOWN, $this->notice->getStatus());
     }
 
-    /**
-     * Test get id
-     */
     public function testGetId()
     {
         $this->assertNull($this->notice->getId());
     }
 
-    /**
-     * Test get date created
-     */
     public function testGetDateCreated()
     {
         $this->assertInstanceOf('\DateTime', $this->notice->getDateCreated());
@@ -97,8 +75,6 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get statuses
-     *
      * @return array
      */
     public function getStatuses()
@@ -111,8 +87,6 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get and set status
-     *
      * @dataProvider getStatuses
      *
      * @param integer $status

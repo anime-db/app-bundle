@@ -10,8 +10,8 @@
 
 namespace AnimeDb\Bundle\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AnimeDb\Bundle\AppBundle\Entity\Notice;
+use AnimeDb\Bundle\AppBundle\Repository\Notice as NoticeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,24 +21,25 @@ use Symfony\Component\HttpFoundation\Request;
  * @package AnimeDb\Bundle\AppBundle\Controller
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class NoticeController extends Controller
+class NoticeController extends BaseController
 {
     /**
      * Show last notice
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function showAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        /* @var $repository \AnimeDb\Bundle\AppBundle\Repository\Notice */
-        $repository = $em->getRepository('AnimeDbAppBundle:Notice');
+        /* @var $rep NoticeRepository */
+        $rep = $em->getRepository('AnimeDbAppBundle:Notice');
 
-        $notice = $repository->getFirstShow();
+        $notice = $rep->getFirstShow();
         // caching
-        $response = $this->get('cache_time_keeper')->getResponse([], -1, new JsonResponse());
+        /* @var $response JsonResponse */
+        $response = $this->getCacheTimeKeeper()->getResponse([], -1, new JsonResponse());
         $response->setEtag(md5($notice ? $notice->getId() : 0));
         // response was not modified for this request
         if ($response->isNotModified($request)) {
@@ -66,11 +67,9 @@ class NoticeController extends Controller
     }
 
     /**
-     * Close notice
+     * @param Notice $notice
      *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Notice $notice
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function closeAction(Notice $notice)
     {
@@ -84,13 +83,14 @@ class NoticeController extends Controller
     }
 
     /**
-     * See notices later
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function seeLaterAction()
     {
-        $this->getDoctrine()->getRepository('AnimeDbAppBundle:Notice')->seeLater();
+        /* @var $rep NoticeRepository */
+        $rep =  $this->getDoctrine()->getRepository('AnimeDbAppBundle:Notice');
+        $rep->seeLater();
+
         return new JsonResponse([]);
     }
 }

@@ -23,11 +23,9 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader;
 class MediaController extends Controller
 {
     /**
-     * Show favicon
-     *
      * @param string $host
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function faviconAction($host)
     {

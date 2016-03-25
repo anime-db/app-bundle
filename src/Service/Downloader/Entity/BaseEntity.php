@@ -19,22 +19,16 @@ namespace AnimeDb\Bundle\AppBundle\Service\Downloader\Entity;
 abstract class BaseEntity implements EntityInterface
 {
     /**
-     * Filename
-     *
      * @var string
      */
     private $filename = '';
 
     /**
-     * Old filenames
-     *
      * @var array
      */
     private $old_filenames = [];
 
     /**
-     * Get filename
-     *
      * @return string
      */
     public function getFilename()
@@ -43,8 +37,6 @@ abstract class BaseEntity implements EntityInterface
     }
 
     /**
-     * Set filename
-     *
      * @param string $filename
      */
     public function setFilename($filename)
@@ -57,8 +49,6 @@ abstract class BaseEntity implements EntityInterface
     }
 
     /**
-     * Get old filenames
-     *
      * @return array
      */
     public function getOldFilenames()
@@ -67,8 +57,6 @@ abstract class BaseEntity implements EntityInterface
     }
 
     /**
-     * Get download path
-     *
      * @return string
      */
     public function getDownloadPath()
@@ -77,12 +65,10 @@ abstract class BaseEntity implements EntityInterface
     }
 
     /**
-     * Get web path
-     *
      * @return string
      */
     public function getWebPath()
     {
-        return $this->getFilename() ? '/'.$this->getDownloadPath().'/'.$this->getFilename() : '';
+        return $this->getFilename() ? sprintf('/%s/%s', $this->getDownloadPath(), $this->getFilename()) : '';
     }
 }

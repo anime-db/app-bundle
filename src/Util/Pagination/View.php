@@ -9,7 +9,6 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -21,69 +20,49 @@ use Doctrine\Common\Collections\ArrayCollection;
 class View implements \IteratorAggregate
 {
     /**
-     * Configuration
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @var Configuration
      */
     protected $config;
 
     /**
-     * First page node
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
+     * @var Node|null
      */
     protected $first = null;
 
     /**
-     * Previous page node
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
+     * @var Node|null
      */
     protected $prev = null;
 
     /**
-     * Current page node
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node
+     * @var Node
      */
     protected $current;
 
     /**
-     * Next page node
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
+     * @var Node|null
      */
     protected $next = null;
 
     /**
-     * Last page node
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
+     * @var Node|null
      */
     protected $last = null;
 
     /**
-     * List page nodes
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection|null
+     * @var ArrayCollection|null
      */
     protected $list = null;
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration $config
-     *
-     * @return array
+     * @param Configuration $config
      */
     public function __construct(Configuration $config) {
         $this->config = $config;
     }
 
     /**
-     * Get total pages
-     *
-     * @return integer
+     * @return int
      */
     public function getTotal()
     {
@@ -91,9 +70,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * Get first page node
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node|null
+     * @return Node|null
      */
     public function getFirst()
     {
@@ -104,9 +81,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * Get previous page node
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Prev|null
+     * @return Node|null
      */
     public function getPrev()
     {
@@ -120,9 +95,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * Get current page node
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Current
+     * @return Node
      */
     public function getCurrent()
     {
@@ -137,9 +110,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * Get next page node
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Next|null
+     * @return Node|null
      */
     public function getNext()
     {
@@ -153,9 +124,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * Get last page node
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Node\Last|null
+     * @return Node|null
      */
     public function getLast()
     {
@@ -166,8 +135,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * (non-PHPdoc)
-     * @see IteratorAggregate::getIterator()
+     * @return ArrayCollection|null
      */
     public function getIterator()
     {
@@ -212,9 +180,7 @@ class View implements \IteratorAggregate
     }
 
     /**
-     * Build link
-     *
-     * @param integer $page
+     * @param int $page
      *
      * @return string
      */

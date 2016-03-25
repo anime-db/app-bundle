@@ -28,7 +28,7 @@ class ProposeUpdateCommand extends ContainerAwareCommand
      *
      * 30 days
      *
-     * @var integer
+     * @var int
      */
     const INERVAL_UPDATE = 2592000;
 
@@ -37,14 +37,10 @@ class ProposeUpdateCommand extends ContainerAwareCommand
      *
      * 5 days
      *
-     * @var integer
+     * @var int
      */
     const INERVAL_NOTIFICATION = 432000;
 
-    /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Console\Command.Command::configure()
-     */
     protected function configure()
     {
         $this->setName('animedb:propose-update')
@@ -52,8 +48,10 @@ class ProposeUpdateCommand extends ContainerAwareCommand
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Console\Command.Command::execute()
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $root = $this->getContainer()->getParameter('kernel.root_dir').'/../';

@@ -11,7 +11,13 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Request;
+use Gedmo\Translatable\TranslatableListener;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * Test listener request
@@ -22,48 +28,35 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Translator
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TranslatorInterface
      */
     protected $translator;
 
     /**
-     * Translatable
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TranslatableListener
      */
     protected $translatable;
 
     /**
-     * Validator
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|ValidatorInterface
      */
     protected $validator;
 
     /**
-     * Request listener
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Event\Listener\Request
+     * @var Request
      */
     protected $listener;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale = 'en';
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
         $this->translator = $this->getMock('\Symfony\Component\Translation\TranslatorInterface');
-        $this->translatable = $this->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
+        $this->translatable = $this
+            ->getMockBuilder('\Gedmo\Translatable\TranslatableListener')
             ->disableOriginalConstructor()
             ->getMock();
         $this->validator = $this->getMock('\Symfony\Component\Validator\Validator\ValidatorInterface');
@@ -76,18 +69,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Test on kernel request ignore
-     */
     public function testOnKernelRequestIgnore()
     {
+        /* @var $event \PHPUnit_Framework_MockObject_MockObject|GetResponseEvent */
         $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
         $event
             ->expects($this->once())
             ->method('getRequestType')
-            ->willReturn(HttpKernelInterface::SUB_REQUEST);
+            ->will($this->returnValue(HttpKernelInterface::SUB_REQUEST));
         $event
             ->expects($this->never())
             ->method('getRequest');
@@ -96,8 +87,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get preferred languages
-     *
      * @return array
      */
     public function getPreferredLanguages()
@@ -110,26 +99,25 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test on kernel request
-     *
      * @dataProvider getPreferredLanguages
      *
      * @param string $language
      */
     public function testOnKernelRequest($language)
     {
-        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+        $request = $this
+            ->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
         $request
             ->expects($this->once())
             ->method('getPreferredLanguage')
-            ->willReturn($language);
+            ->will($this->returnValue($language));
         if ($language) {
             $request
                 ->expects($this->once())
                 ->method('setDefaultLocale')
-                ->willReturn($language);
+                ->will($this->returnValue($language));
         } else {
             $request
                 ->expects($this->never())
@@ -139,24 +127,25 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('setLocale')
             ->with($this->locale);
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')
+
+        /* @var $event \PHPUnit_Framework_MockObject_MockObject|GetResponseEvent */
+        $event = $this
+            ->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
         $event
             ->expects($this->once())
             ->method('getRequestType')
-            ->willReturn(HttpKernelInterface::MASTER_REQUEST);
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->will($this->returnValue($request));
 
         $this->listener->onKernelRequest($event);
     }
 
     /**
-     * Get locales
-     *
      * @return array
      */
     public function getLocales()
@@ -169,8 +158,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test set locale
-     *
      * @dataProvider getLocales
      *
      * @param string $locale
@@ -178,7 +165,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testSetLocale($locale)
     {
         $expected = substr($locale, 0, 2);
-        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+        /* @var $request \PHPUnit_Framework_MockObject_MockObject|HttpRequest */
+        $request = $this
+            ->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
         $request
@@ -197,20 +186,18 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->listener->setLocale($request, $locale);
     }
 
-    /**
-     * Test get default locale
-     */
     public function testGetLocaleDefault()
     {
-        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+        /* @var $request \PHPUnit_Framework_MockObject_MockObject|HttpRequest */
+        $request = $this
+            ->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
+
         $this->assertEquals($this->locale, $this->listener->getLocale($request));
     }
 
     /**
-     * Get languages
-     *
      * @return array
      */
     public function getLanguages()
@@ -237,8 +224,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get locale from request
-     *
      * @dataProvider getLanguages
      *
      * @param array $languages
@@ -247,17 +232,19 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLocaleFromRequest(array $languages, $expected, $locale = '')
     {
-        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+        /* @var $request \PHPUnit_Framework_MockObject_MockObject|HttpRequest */
+        $request = $this
+            ->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
         $request
             ->expects($this->once())
             ->method('getLanguages')
-            ->willReturn($languages);
+            ->will($this->returnValue($languages));
         $request
             ->expects($locale ? $this->once() : $this->never())
             ->method('getLocale')
-            ->willReturn($locale);
+            ->will($this->returnValue($locale));
 
         // validate languages
         $that = $this;
@@ -265,7 +252,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->validator
                 ->expects($this->at($i))
                 ->method('validate')
-                ->willReturnCallback(function ($language, $constraint) use ($that, $i, $languages, $locale) {
+                ->will($this->returnCallback(function ($language, $constraint) use ($that, $i, $languages, $locale) {
                     $that->assertEquals($languages[$i], $language);
                     $that->assertInstanceOf('\Symfony\Component\Validator\Constraints\Locale', $constraint);
 
@@ -273,10 +260,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                     $list
                         ->expects($that->once())
                         ->method('has')
-                        ->willReturn($i+1 < count($languages) || $locale)
+                        ->will($this->returnValue($i+1 < count($languages) || $locale))
                         ->with(0);
                     return $list;
-                });
+                }));
         }
 
         $listener = new Request(
@@ -288,18 +275,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $listener->getLocale($request));
     }
 
-    /**
-     * Test on kernel response ignore
-     */
     public function testOnKernelResponseIgnore()
     {
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterResponseEvent')
+        /* @var $event \PHPUnit_Framework_MockObject_MockObject|FilterResponseEvent */
+        $event = $this
+            ->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
         $event
             ->expects($this->once())
             ->method('getRequestType')
-            ->willReturn(HttpKernelInterface::SUB_REQUEST);
+            ->will($this->returnValue(HttpKernelInterface::SUB_REQUEST));
         $event
             ->expects($this->never())
             ->method('getResponse');
@@ -308,8 +294,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get responses
-     *
      * @return array
      */
     public function getResponses()
@@ -322,8 +306,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test on kernel response
-     *
      * @dataProvider getResponses
      *
      * @param \DateTime $last_modified
@@ -341,23 +323,25 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $response
             ->expects($this->once())
             ->method('getLastModified')
-            ->willReturn($last_modified);
+            ->will($this->returnValue($last_modified));
         $response
             ->expects($last_modified ? $this->once() : $this->never())
             ->method('getMaxAge')
-            ->willReturn($max_age);
+            ->will($this->returnValue($max_age));
 
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterResponseEvent')
+        /* @var $event \PHPUnit_Framework_MockObject_MockObject|FilterResponseEvent */
+        $event = $this
+            ->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
         $event
             ->expects($this->once())
             ->method('getRequestType')
-            ->willReturn(HttpKernelInterface::MASTER_REQUEST);
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
         $event
             ->expects($this->atLeastOnce())
             ->method('getResponse')
-            ->willReturn($response);
+            ->will($this->returnValue($response));
 
         $response->headers = $this->getMock('\Symfony\Component\HttpFoundation\ResponseHeaderBag');
         $response->headers

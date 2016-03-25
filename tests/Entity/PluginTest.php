@@ -21,25 +21,16 @@ use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Plugin
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Plugin
+     * @var Plugin
      */
     protected $plugin;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->plugin = new Plugin();
     }
 
     /**
-     * Get logo setters
-     *
      * @return array
      */
     public function getLogoSetters()
@@ -51,8 +42,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test logo
-     *
      * @dataProvider getLogoSetters
      *
      * @param string $method
@@ -74,9 +63,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo'], $this->plugin->getOldFilenames());
     }
 
-    /**
-     * Test get download path
-     */
     public function testGetDownloadPath()
     {
         $this->assertEquals('media/plugin/', $this->plugin->getDownloadPath());
@@ -85,9 +71,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('media/plugin/foo/bar', $this->plugin->getDownloadPath());
     }
 
-    /**
-     * Test get web path
-     */
     public function testGetWebPath()
     {
         $this->assertEmpty($this->plugin->getWebPath());

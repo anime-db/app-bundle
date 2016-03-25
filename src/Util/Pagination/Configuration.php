@@ -9,8 +9,6 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
-
 /**
  * Pagination configuration
  *
@@ -22,64 +20,50 @@ class Configuration
     /**
      * Length of the list of pagination defaults
      *
-     * @var integer
+     * @var int
      */
     const DEFAULT_LIST_LENGTH = 5;
 
     /**
-     * Default page link
-     *
-     * @var integer
+     * @var int
      */
     const DEFAULT_PAGE_LINK = '%s';
 
     /**
-     * Total number of pages
-     *
-     * @var integer
+     * @var int
      */
     protected $total_pages = 0;
 
     /**
-     * Current page
-     *
-     * @var integer
+     * @var int
      */
     protected $current_page = 1;
 
     /**
-     * View
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Util\Pagination\View
+     * @var View
      */
     protected $view;
 
     /**
      * The number of pages displayed in the navigation
      *
-     * @var integer
+     * @var int
      */
     protected $max_navigate = self::DEFAULT_LIST_LENGTH;
 
     /**
-     * Page link
-     *
      * @var string|callback
      */
     protected $page_link = self::DEFAULT_PAGE_LINK;
 
     /**
-     * Link to the first page
-     *
      * @var string
      */
     protected $ferst_page_link = '';
 
     /**
-     * Construct
-     *
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $total_pages
+     * @param int $current_page
      */
     public function __construct($total_pages = 0, $current_page = 1)
     {
@@ -88,12 +72,10 @@ class Configuration
     }
 
     /**
-     * Create configuration instance
+     * @param int $total_pages
+     * @param int $current_page
      *
-     * @param integer $total_pages
-     * @param integer $current_page
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @return Configuration
      */
     public static function create($total_pages = 0, $current_page = 1)
     {
@@ -101,9 +83,7 @@ class Configuration
     }
 
     /**
-     * Get total pages
-     *
-     * @return integer
+     * @return int
      */
     public function getTotalPages()
     {
@@ -111,11 +91,9 @@ class Configuration
     }
 
     /**
-     * Set total pages
+     * @param int $total_pages
      *
-     * @param integer $total_pages
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @return Configuration
      */
     public function setTotalPages($total_pages)
     {
@@ -124,9 +102,7 @@ class Configuration
     }
 
     /**
-     * Get current pages
-     *
-     * @return integer
+     * @return int
      */
     public function getCurrentPage()
     {
@@ -134,11 +110,9 @@ class Configuration
     }
 
     /**
-     * Set current pages
+     * @param int $current_page
      *
-     * @param integer $current_page
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @return Configuration
      */
     public function setCurrentPage($current_page)
     {
@@ -147,9 +121,7 @@ class Configuration
     }
 
     /**
-     * Get number of pages displayed in the navigation
-     *
-     * @return integer
+     * @return int
      */
     public function getMaxNavigate()
     {
@@ -157,11 +129,9 @@ class Configuration
     }
 
     /**
-     * Set number of pages displayed in the navigation
+     * @param int $max_navigate
      *
-     * @param integer $max_navigate
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @return Configuration
      */
     public function setMaxNavigate($max_navigate)
     {
@@ -170,8 +140,6 @@ class Configuration
     }
 
     /**
-     * Get page link
-     *
      * @return string|callback
      */
     public function getPageLink()
@@ -193,7 +161,7 @@ class Configuration
      *
      * @param string|callback $page_link
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @return Configuration
      */
     public function setPageLink($page_link)
     {
@@ -202,8 +170,6 @@ class Configuration
     }
 
     /**
-     * Get ferst page link
-     *
      * @return string
      */
     public function getFerstPageLink()
@@ -212,11 +178,9 @@ class Configuration
     }
 
     /**
-     * Set ferst page link
-     *
      * @param string $ferst_page_link
      *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration
+     * @return Configuration
      */
     public function setFerstPageLink($ferst_page_link)
     {
@@ -225,9 +189,7 @@ class Configuration
     }
 
     /**
-     * Get view
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Util\Pagination\View
+     * @return View
      */
     public function getView()
     {
