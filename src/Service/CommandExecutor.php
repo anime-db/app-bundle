@@ -10,7 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service;
 
-use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Process\Process;
@@ -31,53 +30,39 @@ use Symfony\Component\Process\Process;
 class CommandExecutor
 {
     /**
-     * Host
-     *
      * @var string
      */
     protected $host;
 
     /**
-     * Path
-     *
      * @var string
      */
     protected $path;
 
     /**
-     * Working directory
-     *
      * @var string
      */
     protected $cwd;
 
     /**
-     * Console
-     *
      * @var string
      */
     protected $console;
 
     /**
-     * Php finder
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\PhpFinder
+     * @var PhpFinder
      */
     protected $finder;
 
     /**
-     * Connect timeout
-     *
      * @var integer
      */
     const TIMEOUT = 2;
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Service\PhpFinder $finder
-     * @param \Symfony\Component\Routing\RouterInterface $router
-     * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+     * @param PhpFinder $finder
+     * @param RouterInterface $router
+     * @param RequestStack $request_stack
      * @param string $root_dir
      */
     public function __construct(PhpFinder $finder, RouterInterface $router, RequestStack $request_stack, $root_dir)
@@ -92,8 +77,6 @@ class CommandExecutor
     }
 
     /**
-     * Execute command
-     * 
      * @deprecated see self::send()
      *
      * @throws \InvalidArgumentException
@@ -127,8 +110,6 @@ class CommandExecutor
     }
 
     /**
-     * Execute console command
-     *
      * @param string $command
      * @param integer $timeout
      * @param callable|null $callback
@@ -139,8 +120,6 @@ class CommandExecutor
     }
 
     /**
-     * Execute command
-     *
      * @throws \RuntimeException
      *
      * @param string $command
@@ -157,8 +136,6 @@ class CommandExecutor
     }
 
     /**
-     * Execute command in background
-     *
      * @param string $command
      */
     protected function executeCommandInBackground($command)
@@ -202,8 +179,6 @@ class CommandExecutor
     }
 
     /**
-     * Prepare command
-     *
      * @param string $command
      *
      * @return string

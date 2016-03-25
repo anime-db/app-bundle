@@ -11,7 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Form\Type\Field;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Rating form field
@@ -30,15 +30,21 @@ class Rating extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'expanded' => true,
             'required' => false,
             'empty_value' => false,
-            'choices' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]
+            'choices' => [
+                1 => 1,
+                2 => 2,
+                3 => 3,
+                4 => 4,
+                5 => 5
+            ]
         ]);
     }
 

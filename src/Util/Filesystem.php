@@ -21,15 +21,11 @@ use Patchwork\Utf8;
 class Filesystem
 {
     /**
-     * File
-     *
      * @var integer
      */
     const FILE = 1;
 
     /**
-     * Directory
-     *
      * @var integer
      */
     const DIRECTORY = 2;
@@ -50,15 +46,13 @@ class Filesystem
      * @return string
      */
     public static function getUserHomeDir() {
-        return self::getRealPath(self::doUserHomeDir());
+        return self::getRealPath(self::doGetUserHomeDir());
     }
 
     /**
-     * Do user home directory
-     *
      * @return string
      */
-    private static function doUserHomeDir()
+    private static function doGetUserHomeDir()
     {
         // have home env var
         if ($home = getenv('HOME')) {
@@ -161,8 +155,6 @@ class Filesystem
     }
 
     /**
-     * Get real path
-     *
      * @param string $path
      *
      * @return string

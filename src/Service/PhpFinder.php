@@ -21,23 +21,17 @@ use Symfony\Component\Process\PhpExecutableFinder;
 class PhpFinder
 {
     /**
-     * Path to php executable
-     *
      * @var string
      */
     private $php_path;
 
     /**
-     * Finder
-     *
-     * @var \Symfony\Component\Process\PhpExecutableFinder
+     * @var PhpExecutableFinder
      */
     private $finder;
 
     /**
-     * Construct
-     *
-     * @param \Symfony\Component\Process\PhpExecutableFinder $finder
+     * @param PhpExecutableFinder $finder
      */
     public function __construct(PhpExecutableFinder $finder)
     {
@@ -45,8 +39,6 @@ class PhpFinder
     }
 
     /**
-     * Get path to php executable
-     *
      * @throws \RuntimeException
      *
      * @return string

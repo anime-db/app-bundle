@@ -10,10 +10,12 @@
 
 namespace AnimeDb\Bundle\AppBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AnimeDb\Bundle\AppBundle\Entity\Task;
+use AnimeDb\Bundle\AppBundle\Repository\Task as TaskRepository;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
@@ -46,8 +48,9 @@ class TaskSchedulerCommand extends ContainerAwareCommand
         $finder = new PhpExecutableFinder();
         $console = $finder->find().' '.$this->getContainer()->getParameter('kernel.root_dir').'/console';
 
+        /* @var $em EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
-        /* @var $repository \AnimeDb\Bundle\AppBundle\Repository\Task */
+        /* @var $repository TaskRepository */
         $repository = $em->getRepository('AnimeDbAppBundle:Task');
 
         $output->writeln('Task Scheduler');
@@ -57,7 +60,7 @@ class TaskSchedulerCommand extends ContainerAwareCommand
 
             // task is exists
             if ($task instanceof Task) {
-                $output->writeln('Run <info>'.$task->getCommand().'</info>');
+                $output->writeln(sprintf('Run <info>%s</info>', $task->getCommand()));
 
                 if (defined('PHP_WINDOWS_VERSION_BUILD')) {
                     pclose(popen('start /b '.$console.' '.$task->getCommand().' >nul 2>&1', 'r'));
@@ -74,12 +77,14 @@ class TaskSchedulerCommand extends ContainerAwareCommand
             // standby for the next task
             $time = $repository->getWaitingTime();
             if ($time) {
-                $output->writeln('Wait <comment>'.$time.'</comment> s.');
+                $output->writeln(sprintf('Wait <comment>%s</comment> s.', $time));
                 sleep($time);
             }
 
             unset($task);
             gc_collect_cycles();
         }
+
+        return true;
     }
 }

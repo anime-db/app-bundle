@@ -10,8 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service;
 
-use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
-
 /**
  * Cache clearer
  *
@@ -21,23 +19,17 @@ use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 class CacheClearer
 {
     /**
-     * Environment
-     *
      * @var string
      */
     protected $env;
 
     /**
-     * Command executor
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\CommandExecutor
+     * @var CommandExecutor
      */
     protected $executor;
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Service\CommandExecutor $executor
+     * @param CommandExecutor $executor
      * @param string $env
      */
     public function __construct(CommandExecutor $executor, $env)
@@ -47,8 +39,6 @@ class CacheClearer
     }
 
     /**
-     * Clear cache
-     *
      * @param string $env
      */
     public function clear($env = '')

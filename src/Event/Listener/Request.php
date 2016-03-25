@@ -28,39 +28,29 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class Request
 {
     /**
-     * Translator
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
-     * Translatable listener
-     *
-     * @var \Gedmo\Translatable\TranslatableListener
+     * @var TranslatableListener
      */
     protected $translatable;
 
     /**
-     * Validator
-     *
-     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @var ValidatorInterface
      */
     protected $validator;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     * Construct
-     *
-     * @param \Gedmo\Translatable\TranslatableListener $translatable
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * @param TranslatableListener $translatable
+     * @param TranslatorInterface $translator
+     * @param ValidatorInterface $validator
      * @param string $locale
      */
     public function __construct(
@@ -76,9 +66,7 @@ class Request
     }
 
     /**
-     * Kernel request handler
-     *
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -86,7 +74,7 @@ class Request
             return;
         }
 
-        /* @var $request \Symfony\Component\HttpFoundation\Request */
+        /* @var $request HttpRequest */
         $request = $event->getRequest();
 
         // set default locale from request
@@ -99,9 +87,7 @@ class Request
     }
 
     /**
-     * Set current locale
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param HttpRequest $request
      * @param string $locale
      */
     public function setLocale(HttpRequest $request, $locale)
@@ -114,9 +100,7 @@ class Request
     }
 
     /**
-     * Get current locale
-     * 
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param HttpRequest $request
      *
      * @return string
      */
@@ -139,9 +123,7 @@ class Request
     }
 
     /**
-     * Kernel response handler
-     *
-     * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {

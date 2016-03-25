@@ -28,60 +28,44 @@ use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
 class Downloader
 {
     /**
-     * Favicon MIME type
-     *
      * @var string
      */
     const FAVICON_MIME = 'image/x-icon';
 
     /**
-     * Filesystem
-     *
-     * @var \Symfony\Component\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $fs;
 
     /**
-     * HTTP client
-     *
-     * @var \Guzzle\Http\Client
+     * @var Client
      */
     protected $client;
 
     /**
-     * Validator
-     *
-     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @var ValidatorInterface
      */
     protected $validator;
 
     /**
-     * Download root dir
-     *
      * @var string
      */
     protected $root = '';
 
     /**
-     * Download favicon root dir
-     *
      * @var string
      */
     protected $favicon_root = '';
 
     /**
-     * Favicon proxy downloader
-     *
      * @var string
      */
     protected $favicon_proxy = '';
 
     /**
-     * Construct
-     *
-     * @param \Symfony\Component\Filesystem\Filesystem $fs
-     * @param \Guzzle\Http\Client $client
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * @param Filesystem $fs
+     * @param Client $client
+     * @param ValidatorInterface $validator
      * @param string $root
      * @param string $favicon_root
      * @param string $favicon_proxy
@@ -103,8 +87,6 @@ class Downloader
     }
 
     /**
-     * Get root dir
-     *
      * @return string
      */
     public function getRoot()
@@ -113,8 +95,6 @@ class Downloader
     }
 
     /**
-     * Download file
-     *
      * @param string $url
      * @param string $target
      * @param boolean $override
@@ -137,8 +117,6 @@ class Downloader
     }
 
     /**
-     * Download image
-     *
      * @param string $url
      * @param string $target
      * @param boolean $override
@@ -162,8 +140,6 @@ class Downloader
     }
 
     /**
-     * Remote file is exists
-     *
      * @param string $url
      *
      * @return boolean
@@ -181,8 +157,6 @@ class Downloader
     }
 
     /**
-     * Download favicon
-     *
      * @param string $host
      * @param boolean $override
      * 
@@ -200,10 +174,8 @@ class Downloader
     }
 
     /**
-     * Download entity
-     *
      * @param string $url
-     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
+     * @param EntityInterface $entity
      * @param boolean $override
      *
      * @return boolean
@@ -224,9 +196,7 @@ class Downloader
     }
 
     /**
-     * Download image field
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Field\Image $entity
+     * @param Image $entity
      * @param string $url
      * @param boolean $override
      */
@@ -277,10 +247,8 @@ class Downloader
     }
 
     /**
-     * Get target download dir for image field
-     *
-     * @param \AnimeDb\Bundle\AppBundle\Entity\Field\Image $entity
-     * @param string $override
+     * @param Image $entity
+     * @param bool $override
      *
      * @return string
      */
@@ -295,8 +263,6 @@ class Downloader
     }
 
     /**
-     * Get unique filename
-     *
      * @param string $filename
      *
      * @return string

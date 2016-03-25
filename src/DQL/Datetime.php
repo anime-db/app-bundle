@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\DQL;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\SimpleArithmeticExpression;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\Parser;
@@ -28,14 +29,14 @@ class Datetime extends FunctionNode
     /**
      * First date expression
      *
-     * @var \Doctrine\ORM\Query\AST\SimpleArithmeticExpression
+     * @var SimpleArithmeticExpression
      */
     private $firstDateExpression = null;
 
     /**
      * Second date expression
      *
-     * @var \Doctrine\ORM\Query\AST\SimpleArithmeticExpression
+     * @var SimpleArithmeticExpression
      */
     private $secondDateExpression = null;
 

@@ -11,7 +11,6 @@
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,7 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *   @ORM\Index(name="notice_show_idx", columns={"date_closed", "date_created"})
  * })
  * @ORM\Entity(repositoryClass="AnimeDb\Bundle\AppBundle\Repository\Notice")
- * @IgnoreAnnotation("ORM")
  *
  * @package AnimeDb\Bundle\AppBundle\Entity
  * @author  Peter Gribanov <info@peter-gribanov.ru>
@@ -30,43 +28,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Notice
 {
     /**
-     * Status notice created
-     *
      * @var integer
      */
     const STATUS_CREATED = 0;
 
     /**
-     * Status notice shown
-     *
      * @var integer
      */
     const STATUS_SHOWN = 1;
 
     /**
-     * Status notice closed
-     *
      * @var integer
      */
     const STATUS_CLOSED = 2;
 
     /**
-     * Default lifetime
-     *
      * @var integer
      */
     const DEFAULT_LIFETIME = 300;
 
     /**
-     * Default type
-     *
      * @var string
      */
     const DEFAULT_TYPE = 'no_type';
 
     /**
-     * Id
-     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -76,8 +62,6 @@ class Notice
     protected $id;
 
     /**
-     * Message
-     *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      *
@@ -86,8 +70,6 @@ class Notice
     protected $message = '';
 
     /**
-     * Date closed notice
-     *
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\DateTime()
      *
@@ -96,8 +78,6 @@ class Notice
     protected $date_closed = null;
 
     /**
-     * Date created notice
-     *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      *
@@ -116,8 +96,6 @@ class Notice
     protected $date_start;
 
     /**
-     * Lifetime notice
-     *
      * @ORM\Column(type="integer")
      * @Assert\NotBlank()
      * @Assert\Type(type="integer", message="The value {{ value }} is not a valid {{ type }}.")
@@ -127,8 +105,6 @@ class Notice
     protected $lifetime = self::DEFAULT_LIFETIME;
 
     /**
-     * Status
-     *
      * @ORM\Column(type="integer")
      * @Assert\Choice(callback = "getStatuses")
      *
@@ -137,8 +113,6 @@ class Notice
     protected $status = self::STATUS_CREATED;
 
     /**
-     * Type
-     *
      * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank()
      *
@@ -146,22 +120,9 @@ class Notice
      */
     protected $type = self::DEFAULT_TYPE;
 
-    /**
-     * Construct
-     */
     public function __construct()
     {
         $this->date_created = $this->date_start = new \DateTime();
-    }
-
-    /**
-     * Get supported statuses
-     *
-     * @return integer[]
-     */
-    public static function getStatuses()
-    {
-        return [self::STATUS_CREATED, self::STATUS_SHOWN, self::STATUS_CLOSED];
     }
 
     /**
@@ -171,14 +132,12 @@ class Notice
     {
         if (is_null($this->date_closed)) {
             $this->date_closed = new \DateTime();
-            $this->date_closed->modify('+'.$this->lifetime.' seconds');
+            $this->date_closed->modify(sprintf('+%s seconds', $this->lifetime));
         }
         $this->status = self::STATUS_SHOWN;
     }
 
     /**
-     * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -187,11 +146,9 @@ class Notice
     }
 
     /**
-     * Set message
-     *
      * @param string $message
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @return Notice
      */
     public function setMessage($message)
     {
@@ -200,8 +157,6 @@ class Notice
     }
 
     /**
-     * Get message
-     *
      * @return string
      */
     public function getMessage()
@@ -210,11 +165,9 @@ class Notice
     }
 
     /**
-     * Set date closed
-     *
      * @param \DateTime $date_closed
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @return Notice
      */
     public function setDateClosed(\DateTime $date_closed)
     {
@@ -223,8 +176,6 @@ class Notice
     }
 
     /**
-     * Get date closed
-     *
      * @return \DateTime|null
      */
     public function getDateClosed()
@@ -233,8 +184,6 @@ class Notice
     }
 
     /**
-     * Get date created
-     *
      * @return \DateTime
      */
     public function getDateCreated()
@@ -243,11 +192,9 @@ class Notice
     }
 
     /**
-     * Set date start show
-     *
      * @param \DateTime $date_start
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @return Notice
      */
     public function setDateStart(\DateTime $date_start)
     {
@@ -256,8 +203,6 @@ class Notice
     }
 
     /**
-     * Get date start show
-     *
      * @return \DateTime
      */
     public function getDateStart()
@@ -266,11 +211,9 @@ class Notice
     }
 
     /**
-     * Set lifetime
-     *
      * @param integer $lifetime
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @return Notice
      */
     public function setLifetime($lifetime)
     {
@@ -279,8 +222,6 @@ class Notice
     }
 
     /**
-     * Get lifetime
-     *
      * @return integer
      */
     public function getLifetime()
@@ -289,11 +230,9 @@ class Notice
     }
 
     /**
-     * Set status
-     *
      * @param integer $status
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @return Notice
      */
     public function setStatus($status)
     {
@@ -302,8 +241,6 @@ class Notice
     }
 
     /**
-     * Get status
-     *
      * @return integer
      */
     public function getStatus()
@@ -312,11 +249,21 @@ class Notice
     }
 
     /**
-     * Set type
-     *
+     * @return integer[]
+     */
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_CREATED,
+            self::STATUS_SHOWN,
+            self::STATUS_CLOSED
+        ];
+    }
+
+    /**
      * @param string $type
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Notice
+     * @return Notice
      */
     public function setType($type)
     {
@@ -325,8 +272,6 @@ class Notice
     }
 
     /**
-     * Get type
-     *
      * @return string
      */
     public function getType()

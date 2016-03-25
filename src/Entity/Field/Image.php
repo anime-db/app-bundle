@@ -43,16 +43,14 @@ class Image extends BaseEntity implements ImageInterface
      *     mimeTypesMessage = "Please upload a valid image file"
      * )
      *
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile|null
+     * @var UploadedFile|null
      */
     protected $local;
 
     /**
-     * Set remote image
-     *
      * @param string $remote
      *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Field\Image
+     * @return Image
      */
     public function setRemote($remote)
     {
@@ -61,8 +59,6 @@ class Image extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get remote image
-     *
      * @return string
      */
     public function getRemote()
@@ -71,11 +67,9 @@ class Image extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Set local image
+     * @param UploadedFile $local
      *
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $local
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Field\Image
+     * @return Image
      */
     public function setLocal(UploadedFile $local)
     {
@@ -84,9 +78,7 @@ class Image extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get local image
-     *
-     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @return UploadedFile
      */
     public function getLocal()
     {
@@ -119,7 +111,7 @@ class Image extends BaseEntity implements ImageInterface
      *
      * @Assert\True(message = "No selected image")
      * 
-     * @return boolean
+     * @return bool
      */
     public function hasImage()
     {

@@ -35,9 +35,7 @@ class Task extends EntityRepository
     const MAX_STANDBY_TIME = 3600;
 
     /**
-     * Get next task
-     *
-     * @return \AnimeDb\Bundle\AppBundle\Entity\Task|null
+     * @return TaskEntity|null
      */
     public function getNextTask()
     {
@@ -58,8 +56,6 @@ class Task extends EntityRepository
     }
 
     /**
-     * Get waiting time for the next task
-     *
      * @return integer
      */
     public function getWaitingTime()
