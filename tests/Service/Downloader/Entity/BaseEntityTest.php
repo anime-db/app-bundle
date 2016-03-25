@@ -9,6 +9,7 @@
  */
 
 namespace AnimeDb\Bundle\AppBundle\Tests\Service\Downloader\Entity;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
 
 /**
  * Test base entity
@@ -19,25 +20,17 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Service\Downloader\Entity;
 class BaseEntityTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Base entity
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|BaseEntity
      */
     protected $entity;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        $this->entity = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity')
+        $this->entity = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity')
             ->getMockForAbstractClass();
     }
 
-    /**
-     * Test filename
-     */
     public function testFilename()
     {
         // empty
@@ -52,19 +45,11 @@ class BaseEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo'], $this->entity->getOldFilenames());
     }
 
-    /**
-     * Test get download path
-     */
     public function testGetDownloadPath()
     {
-        $entity = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity')
-            ->getMockForAbstractClass();
         $this->assertEquals('media', $this->entity->getDownloadPath());
     }
 
-    /**
-     * Test get web path
-     */
     public function testGetWebPath()
     {
         $this->assertEmpty($this->entity->getWebPath());

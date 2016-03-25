@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
+use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 
 /**
  * Test cache clearer
@@ -21,8 +22,6 @@ use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 class CacheClearerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Get env
-     *
      * @return array
      */
     public function getEnv()
@@ -36,15 +35,15 @@ class CacheClearerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test clear
-     *
      * @dataProvider getEnv
      *
      * @param string $env
      */
     public function testClear($env)
     {
-        $executor = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CommandExecutor')
+        /* @var $executor \PHPUnit_Framework_MockObject_MockObject|CommandExecutor */
+        $executor = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CommandExecutor')
             ->disableOriginalConstructor()
             ->getMock();
         $executor

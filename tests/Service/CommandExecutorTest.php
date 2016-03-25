@@ -11,6 +11,9 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
+use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Test command executor
@@ -21,89 +24,79 @@ use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 class CommandExecutorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Php finder
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|PhpFinder
      */
     protected $finder;
 
     /**
-     * Command executor
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\CommandExecutor
+     * @var CommandExecutor
      */
     protected $executor;
 
     /**
-     * Command send path
-     *
      * @var string
      */
     protected $path = 'foo';
 
     /**
-     * Root dir
-     *
      * @var string
      */
     protected $root_dir = '/tmp';
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
-        $this->finder = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\PhpFinder')
+        $this->finder = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\PhpFinder')
             ->disableOriginalConstructor()
             ->getMock();
 
     }
 
     /**
-     * Get command executor
-     *
      * @param boolean $have_request
      *
-     * @return \AnimeDb\Bundle\AppBundle\Service\CommandExecutor
+     * @return CommandExecutor
      */
     protected function getCommandExecutor($have_request = true)
     {
+        /* @var $router \PHPUnit_Framework_MockObject_MockObject|RouterInterface */
         $router = $this->getMock('\Symfony\Component\Routing\RouterInterface');
         $router
             ->expects($this->once())
             ->method('generate')
             ->with('command_exec')
-            ->willReturn($this->path);
+            ->will($this->returnValue($this->path));
         if ($have_request) {
-            $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+            $request = $this
+                ->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
                 ->disableOriginalConstructor()
                 ->getMock();
             $request
                 ->expects($this->once())
                 ->method('getHost')
-                ->willReturn('localhost');
+                ->will($this->returnValue($this->path));
             $request
                 ->expects($this->once())
                 ->method('getPort')
-                ->willReturn(56780);
+                ->will($this->returnValue(56780));
         } else {
             $request = null;
         }
-        $request_stack = $this->getMockBuilder('\Symfony\Component\HttpFoundation\RequestStack')
+
+        /* @var $request_stack \PHPUnit_Framework_MockObject_MockObject|RequestStack */
+        $request_stack = $this
+            ->getMockBuilder('\Symfony\Component\HttpFoundation\RequestStack')
             ->disableOriginalConstructor()
             ->getMock();
         $request_stack
             ->expects($this->once())
             ->method('getCurrentRequest')
-            ->willReturn($request);
+            ->will($this->returnValue($request));
+
         return new CommandExecutor($this->finder, $router, $request_stack, $this->root_dir);
     }
 
     /**
-     * Test exec fail
-     *
      * @expectedException \InvalidArgumentException
      */
     public function testExecFail()
@@ -112,8 +105,6 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test send fail
-     *
      * @expectedException \InvalidArgumentException
      */
     public function testSendFail()
@@ -122,8 +113,6 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get commands
-     *
      * @return array
      */
     public function getCommands()
@@ -145,8 +134,6 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test prepare
-     *
      * @dataProvider getCommands
      *
      * @param string $command
@@ -157,7 +144,7 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
         $this->finder
             ->expects($this->any())
             ->method('getPath')
-            ->willReturn('/path/to/php');
+            ->will($this->returnValue('/path/to/php'));
 
         $this->assertEquals($expected, $this->getCommandExecutor()->prepare($command));
     }

@@ -11,8 +11,15 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\Downloader;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
+use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\RequestInterface;
+use Guzzle\Http\Message\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Guzzle\Http\Exception\RequestException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Test downloader
@@ -30,15 +37,11 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     const IMAGE = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
 
     /**
-     * Download dir
-     *
      * @var string
      */
     protected $dir;
 
     /**
-     * Download favicon dir
-     *
      * @var string
      */
     protected $favicon;
@@ -51,61 +54,42 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     protected $proxy = 'http://www.google.com/s2/favicons?domain=%s';
 
     /**
-     * Example URL
-     *
      * @var string
      */
     protected $url = 'http://example.com/';
 
     /**
-     * Filesystem
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Filesystem
      */
     protected $fs;
 
     /**
-     * Client
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     protected $client;
 
     /**
-     * Validator
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|ValidatorInterface
      */
     protected $validator;
 
     /**
-     * Request
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RequestInterface
      */
     protected $request;
 
     /**
-     * Response
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Response
      */
     protected $response;
 
     /**
-     * Downloader
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
+     * @var Downloader
      */
     protected $downloader;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->dir = sys_get_temp_dir().'/test/';
         $this->favicon = $this->dir.'favicon/';
         mkdir($this->favicon, 0755, true);
@@ -113,7 +97,8 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->client = $this->getMock('\Guzzle\Http\Client');
         $this->validator = $this->getMock('\Symfony\Component\Validator\Validator\ValidatorInterface');
         $this->request = $this->getMock('\Guzzle\Http\Message\RequestInterface');
-        $this->response = $this->getMockBuilder('\Guzzle\Http\Message\Response')
+        $this->response = $this
+            ->getMockBuilder('\Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
         $this->downloader = new Downloader(
@@ -125,27 +110,17 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
             $this->proxy
         );
     }
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::tearDown()
-     */
+
     protected function tearDown()
     {
-        parent::tearDown();
         (new Filesystem())->remove($this->dir);
     }
 
-    /**
-     * Test get root
-     */
     public function testGetRoot()
     {
         $this->assertEquals($this->dir, $this->downloader->getRoot());
     }
 
-    /**
-     * Test download file exists
-     */
     public function testDownloadFileExists()
     {
         $file = tempnam($this->dir, 'test');
@@ -156,8 +131,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get successfuls
-     *
      * @return array
      */
     public function getSuccessfuls()
@@ -169,8 +142,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test download
-     *
      * @dataProvider getSuccessfuls
      *
      * @param boolean $is_successful
@@ -195,9 +166,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->downloader->image($this->url, $file));
     }
 
-    /**
-     * Test image fail download
-     */
     public function testImageFailDownload()
     {
         $file = $this->dir.'test';
@@ -206,9 +174,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->downloader->image($this->url, $file, true));
     }
 
-    /**
-     * Test image
-     */
     public function testImage()
     {
         $file = $this->dir.'test';
@@ -219,8 +184,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test is exists
-     *
      * @dataProvider getSuccessfuls
      *
      * @param boolean $is_successful
@@ -233,28 +196,22 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($is_successful, $this->downloader->isExists($this->url));
     }
 
-    /**
-     * Test is exists exception
-     */
     public function testIsExistsException()
     {
         $this->responseNoBody();
         $this->request
             ->expects($this->once())
             ->method('send')
-            ->willThrowException(new RequestException());
+            ->will($this->throwException(new RequestException()));
         $this->client
             ->expects($this->once())
             ->method('get')
             ->with($this->url)
-            ->willReturn($this->request);
+            ->will($this->returnValue($this->request));
         // test
         $this->assertFalse($this->downloader->isExists($this->url));
     }
 
-    /**
-     * Test favicon bad image
-     */
     public function testFaviconBadImage()
     {
         $host = parse_url($this->url, PHP_URL_HOST);
@@ -265,9 +222,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->downloader->favicon($host));
     }
 
-    /**
-     * Test favicon fail download
-     */
     public function testFaviconFailDownload()
     {
         $host = parse_url($this->url, PHP_URL_HOST);
@@ -276,9 +230,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->downloader->favicon($host, true));
     }
 
-    /**
-     * Test favicon
-     */
     public function testFavicon()
     {
         $host = parse_url($this->url, PHP_URL_HOST);
@@ -290,8 +241,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Download
-     *
      * @param string $target
      * @param boolean $is_successful
      * @param string $url
@@ -305,14 +254,12 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->request
             ->expects($this->once())
             ->method('setResponseBody')
-            ->willReturnSelf()
+            ->will($this->returnSelf())
             ->with($target);
         $this->dialog($is_successful, $url);
     }
 
     /**
-     * Create dialog
-     *
      * @param boolean $is_successful
      * @param string $url
      */
@@ -321,16 +268,16 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->response
             ->expects($this->once())
             ->method('isSuccessful')
-            ->willReturn($is_successful);
+            ->will($this->returnValue($is_successful));
         $this->request
             ->expects($this->once())
             ->method('send')
-            ->willReturn($this->response);
+            ->will($this->returnValue($this->response));
         $this->client
             ->expects($this->once())
             ->method('get')
             ->with($url ?: $this->url)
-            ->willReturn($this->request);
+            ->will($this->returnValue($this->request));
     }
 
     /**
@@ -346,23 +293,20 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $this->request
             ->expects($this->once())
             ->method('getCurlOptions')
-            ->willReturn($options);
+            ->will($this->returnValue($options));
     }
 
     /**
-     * Test entity fail
-     *
      * @expectedException \InvalidArgumentException
      */
     public function testEntityFail()
     {
+        /* @var $entity \PHPUnit_Framework_MockObject_MockObject|EntityInterface */
         $entity = $this->getMock('\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface');
         $this->downloader->entity('http://example.com', $entity);
     }
 
     /**
-     * Get entity
-     *
      * @return array
      */
     public function getEntity()
@@ -376,8 +320,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test entity
-     *
      * @dataProvider getEntity
      *
      * @param boolean $is_successful
@@ -391,6 +333,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         file_put_contents($file, base64_decode(self::IMAGE));
         $this->download($file, $is_successful, $url);
 
+        /* @var $entity \PHPUnit_Framework_MockObject_MockObject|EntityInterface */
         $entity = $this->getMock($entity);
         $entity
             ->expects($this->once())
@@ -399,19 +342,17 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->once())
             ->method('getFilename')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $entity
             ->expects($this->once())
             ->method('getDownloadPath')
-            ->willReturn('bar');
+            ->will($this->returnValue('bar'));
         // test
         $actual = $this->downloader->entity($url, $entity, true);
         $this->assertEquals($is_successful, $actual);
     }
 
     /**
-     * Get toggle
-     *
      * @return array
      */
     public function getToggle()
@@ -423,8 +364,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get toggle multilevel
-     *
      * @return array
      */
     public function getToggleMultilevel()
@@ -438,8 +377,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test image field local
-     *
      * @dataProvider getToggleMultilevel
      *
      * @param boolean $override
@@ -467,25 +404,26 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $file
             ->expects($this->once())
             ->method('getClientOriginalName')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $file
             ->expects($this->once())
             ->method('getClientOriginalName')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $file
             ->expects($this->once())
             ->method('move')
             ->with($this->dir.'bar', $exists && !$override ? 'foo[1]' : 'foo');
 
+        /* @var $entity \PHPUnit_Framework_MockObject_MockObject|Image */
         $entity = $this->getMock('\AnimeDb\Bundle\AppBundle\Entity\Field\Image');
         $entity
             ->expects($this->atLeastOnce())
             ->method('getLocal')
-            ->willReturn($file);
+            ->will($this->returnValue($file));
         $entity
             ->expects($this->once())
             ->method('getFilename')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
         $entity
             ->expects($this->at(3))
             ->method('setFilename')
@@ -499,7 +437,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->once())
             ->method('getDownloadPath')
-            ->willReturn('bar');
+            ->will($this->returnValue('bar'));
         $entity
             ->expects($this->once())
             ->method('clear');
@@ -509,8 +447,6 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test image field remote fail
-     *
      * @dataProvider getToggle
      * @expectedException \InvalidArgumentException
      *
@@ -520,7 +456,8 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     {
         $remote = $toggle ? '///' : '';
         $url = $toggle ? '' : '///';
-        $this->downloader->imageField($this->getImageFieldRemote($remote, $url), $url);
+        $entity = $this->getImageFieldRemote($remote, $url);
+        $this->downloader->imageField($entity, $url);
     }
 
     /**
@@ -549,11 +486,11 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->once())
             ->method('getFilename')
-            ->willReturn($file);
+            ->will($this->returnValue($file));
         $entity
             ->expects($this->once())
             ->method('getDownloadPath')
-            ->willReturn($path);
+            ->will($this->returnValue($path));
         $this->download($this->dir.$path.'/'.$file, $is_successful, $url ?: $remote);
 
         // test
@@ -611,23 +548,24 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->atLeastOnce())
             ->method('getFilename')
-            ->willReturn($file);
+            ->will($this->returnValue($file));
         $entity
             ->expects($this->once())
             ->method('getDownloadPath')
-            ->willReturn($path);
+            ->will($this->returnValue($path));
         $entity
             ->expects($this->once())
             ->method('setLocal')
-            ->willReturnCallback(function ($uploaded_file) use ($that, $target, $file) {
+            ->will($this->returnCallback(function ($uploaded_file) use ($that, $target, $file) {
                 // test uploaded file
+                /* @var $uploaded_file UploadedFile */
                 $that->assertInstanceOf('\Symfony\Component\HttpFoundation\File\UploadedFile', $uploaded_file);
                 $that->assertEquals($target, $uploaded_file->getPathname());
                 $that->assertEquals($file, $uploaded_file->getClientOriginalName());
                 $that->assertEquals(getimagesize($target)['mime'], $uploaded_file->getClientMimeType());
                 $that->assertEquals(filesize($target), $uploaded_file->getClientSize());
                 $that->assertEquals(UPLOAD_ERR_OK, $uploaded_file->getError());
-            });
+            }));
         $entity
             ->expects($message ? $this->never() : $this->once())
             ->method('clear');
@@ -636,24 +574,24 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $list
             ->expects($this->once())
             ->method('has')
-            ->willReturn(!!$message)
+            ->will($this->returnValue(!!$message))
             ->with(0);
         if ($message) {
             $error = $this->getMock('\Symfony\Component\Validator\ConstraintViolationInterface');
             $error
                 ->expects($this->once())
                 ->method('getMessage')
-                ->willReturn($message);
+                ->will($this->returnValue($message));
             $list
                 ->expects($this->once())
                 ->method('get')
-                ->willReturn($error)
+                ->will($this->returnValue($error))
                 ->with(0);
         }
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->willReturn($list)
+            ->will($this->returnValue($list))
             ->with($entity);
         $this->download($this->dir.$path.'/'.$file, true, $url ?: $remote);
 
@@ -662,12 +600,10 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get image field remote
-     *
      * @param string $remote
      * @param string $url
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject|Image
      */
     protected function getImageFieldRemote($remote, $url)
     {
@@ -681,17 +617,15 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $entity
             ->expects($this->atLeastOnce())
             ->method('getRemote')
-            ->willReturn($url ?: $remote);
+            ->will($this->returnValue($url ?: $remote));
         $entity
             ->expects($this->atLeastOnce())
             ->method('getLocal')
-            ->willReturn(null);
+            ->will($this->returnValue(null));
+
         return $entity;
     }
 
-    /**
-     * Test get unique filename
-     */
     public function testGetUniqueFilename()
     {
         $filename = $this->dir.'foo.txt';

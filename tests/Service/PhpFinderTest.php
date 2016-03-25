@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
+use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
  * Test php finder
@@ -21,33 +22,22 @@ use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
 class PhpFinderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Finder
-     *
      * @var \AnimeDb\Bundle\AppBundle\Service\PhpFinder
      */
     protected $finder;
 
     /**
-     * Driver
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|PhpExecutableFinder
      */
     protected $driver;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->driver = $this->getMock('\Symfony\Component\Process\PhpExecutableFinder');
         $this->finder = new PhpFinder($this->driver);
     }
 
     /**
-     * Test get path fail
-     *
      * @expectedException \RuntimeException
      */
     public function testGetPathFail()
@@ -55,20 +45,17 @@ class PhpFinderTest extends \PHPUnit_Framework_TestCase
         $this->driver
             ->expects($this->once())
             ->method('find')
-            ->willReturn(null);
+            ->will($this->returnValue(null));
         $this->finder->getPath();
     }
 
-    /**
-     * Test get path
-     */
     public function testGetPath()
     {
         $expected = "'foo'";
         $this->driver
             ->expects($this->once())
             ->method('find')
-            ->willReturn('foo');
+            ->will($this->returnValue('foo'));
 
         $this->assertEquals($expected, $this->finder->getPath());
         // test lazy load

@@ -21,8 +21,6 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Get nodes
-     *
      * @return array
      */
     public function getNodes()
@@ -34,8 +32,6 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test node
-     *
      * @dataProvider getNodes
      *
      * @param integer $page

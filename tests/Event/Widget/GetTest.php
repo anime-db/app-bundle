@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Widget;
 
 use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
+use AnimeDb\Bundle\AppBundle\Service\WidgetsContainer;
 
 /**
  * Test get
@@ -21,42 +22,30 @@ use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
 class GetTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Widgets container
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|WidgetsContainer
      */
     protected $container;
 
     /**
-     * Place for widgets
-     *
      * @var string
      */
     protected $place = 'foo';
 
     /**
-     * Event
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Event\Widget\Get
+     * @var Get
      */
     protected $event;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
-        $this->container = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\WidgetsContainer')
+        $this->container = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\WidgetsContainer')
             ->disableOriginalConstructor()
             ->getMock();
         $this->event = new Get($this->container, $this->place);
     }
 
     /**
-     * Get getter methods
-     *
      * @return array
      */
     public function getGetterMethods()
@@ -68,8 +57,6 @@ class GetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getter methods
-     *
      * @dataProvider getGetterMethods
      *
      * @param string $var
@@ -81,8 +68,6 @@ class GetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get registr/unregistr methods
-     *
      * @return array
      */
     public function getRegistrMethods()
@@ -94,8 +79,6 @@ class GetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test registr/unregistr methods
-     *
      * @dataProvider getRegistrMethods
      *
      * @param string $method
@@ -105,7 +88,7 @@ class GetTest extends \PHPUnit_Framework_TestCase
         $this->container
             ->expects($this->once())
             ->method($method)
-            ->willReturn('bar')
+            ->will($this->returnValue('bar'))
             ->with($this->place, 'AcmeDemoBundle:Welcome:index');
 
         $this->assertEquals('bar', call_user_func([$this->event, $method], 'AcmeDemoBundle:Welcome:index'));

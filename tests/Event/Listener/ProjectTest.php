@@ -10,8 +10,12 @@
 
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
+use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 use AnimeDb\Bundle\AppBundle\Event\Listener\Project;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
+use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Test listener project
@@ -22,67 +26,50 @@ use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 class ProjectTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Cache clearer
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|CacheClearer
      */
     protected $cache_clearer;
 
     /**
-     * Composer
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Composer
      */
     protected $composer;
 
     /**
-     * Entity manager
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|EntityManagerInterface
      */
     protected $em;
 
     /**
-     * Project listener
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Event\Listener\Project
+     * @var Project
      */
     protected $listener;
 
     /**
-     * Parameters manipulator
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Parameters
      */
     protected $parameters;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        $this->parameters = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
+        $this->parameters = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->cache_clearer = $this->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CacheClearer')
+        $this->cache_clearer = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CacheClearer')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->composer = $this->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer')
+        $this->composer = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->em = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
+        $this->em = $this
+            ->getMockBuilder('\Doctrine\ORM\EntityManagerInterface')
             ->disableOriginalConstructor()
             ->getMock();
-        $doctrine = $this->getMockBuilder('\Doctrine\Bundle\DoctrineBundle\Registry')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $doctrine
-            ->expects($this->once())
-            ->method('getManager')
-            ->willReturn($this->em);
 
-        $this->listener = new Project($doctrine, $this->cache_clearer, $this->composer, $this->parameters);
+        $this->listener = new Project($this->em, $this->cache_clearer, $this->composer, $this->parameters);
     }
 
     /**
@@ -98,23 +85,23 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
         $task
             ->expects($this->once())
             ->method('setNextRun')
-            ->willReturnCallback(function ($date) use ($that, $next_run, $task) {
+            ->will($this->returnCallback(function ($date) use ($that, $next_run, $task) {
                 $that->assertEquals($next_run, $date);
                 return $task;
-            });
+            }));
         $rep = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
         $rep
             ->expects($this->any())
             ->method('findOneBy')
-            ->willReturn($task)
+            ->will($this->returnValue($task))
             ->with(['command' => 'animedb:propose-update']);
         $this->em
             ->expects($this->once())
             ->method('getRepository')
             ->with('AnimeDbAppBundle:Task')
-            ->willReturn($rep);
+            ->will($this->returnValue($rep));
         $this->em
             ->expects($this->once())
             ->method('persist')
@@ -127,9 +114,6 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
         $this->listener->onUpdatedProposeUpdateTask();
     }
 
-    /**
-     * Test on installed or updated try add a Shmop package
-     */
     public function testOnInstalledOrUpdatedAddShmop()
     {
         if (extension_loaded('shmop')) {
@@ -143,6 +127,7 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
                 ->method('addPackage')
                 ->with('anime-db/shmop');
         }
+
         $this->listener->onInstalledOrUpdatedAddShmop();
     }
 }

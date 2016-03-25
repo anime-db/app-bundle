@@ -21,8 +21,6 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\Builder;
 class BuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Get configs
-     *
      * @return array
      */
     public function getConfigs()
@@ -34,8 +32,6 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test create
-     *
      * @dataProvider getConfigs
      *
      * @param integer $max_navigate

@@ -22,43 +22,26 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Image
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Entity\Field\Image
+     * @var Image
      */
     protected $image;
 
     /**
-     * Uploaded file
-     *
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @var UploadedFile
      */
     protected $file;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
-        parent::setUp();
         $this->file = new UploadedFile(tempnam(sys_get_temp_dir(), 'foo'), 'bar');
         $this->image = new Image();
     }
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::tearDown()
-     */
     protected function tearDown()
     {
-        parent::tearDown();
         unlink($this->file->getPathname());
     }
 
-    /**
-     * Test has image
-     */
     public function testHasImage()
     {
         $this->assertFalse($this->image->hasImage());
@@ -67,9 +50,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->image->hasImage());
     }
 
-    /**
-     * Test has image from local file
-     */
     public function testHasImageLocal()
     {
         $this->image->setLocal($this->file);
@@ -77,8 +57,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get methods
-     *
      * @return array
      */
     public function getMethods()
@@ -93,8 +71,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getters and setters
-     *
      * @dataProvider getMethods
      *
      * @param callback $getter
@@ -112,9 +88,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, call_user_func([$this->image, $getter]));
     }
 
-    /**
-     * Test clear
-     */
     public function testClear()
     {
         $this->image->setLocal($this->file);
