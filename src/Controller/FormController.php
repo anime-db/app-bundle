@@ -10,8 +10,9 @@
 
 namespace AnimeDb\Bundle\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\AppBundle\Form\Type\Field\Image\Upload as UploadImage;
@@ -24,18 +25,18 @@ use AnimeDb\Bundle\AppBundle\Util\Filesystem;
  * @package AnimeDb\Bundle\AppBundle\Controller
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-class FormController extends Controller
+class FormController extends BaseController
 {
     /**
      * Form field local path
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function localPathAction(Request $request)
     {
-        $response = $this->get('cache_time_keeper')->getResponse();
+        $response = $this->getCacheTimeKeeper()->getResponse();
         // response was not modified for this request
         if ($response->isNotModified($request)) {
             return $response;
@@ -54,9 +55,9 @@ class FormController extends Controller
     /**
      * Return list folders for path
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function localPathFoldersAction(Request $request)
     {
@@ -68,7 +69,8 @@ class FormController extends Controller
             $path = $root;
         }
 
-        $response = $this->get('cache_time_keeper')
+        /* @var $response JsonResponse */
+        $response = $this->getCacheTimeKeeper()
             ->getResponse([(new \DateTime)->setTimestamp(filemtime($path))], -1, new JsonResponse());
         // response was not modified for this request
         if ($response->isNotModified($request)) {
@@ -84,12 +86,12 @@ class FormController extends Controller
     /**
      * Form field image
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function imageAction(Request $request) {
-        $response = $this->get('cache_time_keeper')->getResponse();
+        $response = $this->getCacheTimeKeeper()->getResponse();
         // response was not modified for this request
         if ($response->isNotModified($request)) {
             return $response;
@@ -102,15 +104,13 @@ class FormController extends Controller
     }
 
     /**
-     * Upload image
+     * @param Request $request
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function imageUploadAction(Request $request) {
         $image = new ImageField();
-        /* @var $form \Symfony\Component\Form\Form */
+        /* @var $form Form */
         $form = $this->createForm(new UploadImage(), $image);
         $form->handleRequest($request);
 
