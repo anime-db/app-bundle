@@ -97,9 +97,9 @@ class Downloader
     /**
      * @param string $url
      * @param string $target
-     * @param boolean $override
+     * @param bool $override
      *
-     * @return boolean
+     * @return bool
      */
     public function download($url, $target, $override = false)
     {
@@ -119,9 +119,9 @@ class Downloader
     /**
      * @param string $url
      * @param string $target
-     * @param boolean $override
+     * @param bool $override
      *
-     * @return boolean
+     * @return bool
      */
     public function image($url, $target, $override = false)
     {
@@ -142,7 +142,7 @@ class Downloader
     /**
      * @param string $url
      *
-     * @return boolean
+     * @return bool
      */
     public function isExists($url)
     {
@@ -158,7 +158,7 @@ class Downloader
 
     /**
      * @param string $host
-     * @param boolean $override
+     * @param bool $override
      * 
      * @return string|false
      */
@@ -176,9 +176,9 @@ class Downloader
     /**
      * @param string $url
      * @param EntityInterface $entity
-     * @param boolean $override
+     * @param bool $override
      *
-     * @return boolean
+     * @return bool
      */
     public function entity($url, EntityInterface $entity, $override = false)
     {
@@ -198,7 +198,7 @@ class Downloader
     /**
      * @param Image $entity
      * @param string $url
-     * @param boolean $override
+     * @param bool $override
      */
     public function imageField(Image $entity, $url = '', $override = false)
     {

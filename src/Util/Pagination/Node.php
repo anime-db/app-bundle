@@ -29,14 +29,14 @@ class Node
     protected $link = '';
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $is_current = false;
 
     /**
      * @param integer $page
      * @param string $link
-     * @param boolean $is_current
+     * @param bool $is_current
      */
     public function __construct($page = 1, $link = '', $is_current = false)
     {
@@ -46,7 +46,7 @@ class Node
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCurrent()
     {

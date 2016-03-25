@@ -62,7 +62,7 @@ class WidgetsContainer
      * @param string $place
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function registr($place, $controller)
     {
@@ -81,7 +81,7 @@ class WidgetsContainer
      * @param string $place
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function unregistr($place, $controller)
     {

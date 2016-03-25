@@ -66,7 +66,7 @@ class Get extends Event
      *
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function registr($controller)
     {
@@ -76,7 +76,7 @@ class Get extends Event
     /**
      * @param string $controller
      *
-     * @return boolean
+     * @return bool
      */
     public function unregistr($controller)
     {
