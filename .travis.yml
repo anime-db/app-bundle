@@ -8,10 +8,10 @@ php:
 notifications:
     email: dev@anime-db.org
 
-install:
+before_script:
     - composer self-update
-    - composer --version
-    - composer install
+    - composer global require "fxp/composer-asset-plugin:~1.0.0"
+    - composer install --prefer-source --no-interaction
 
 script:
     - phpunit --verbose --coverage-clover=coverage.clover
