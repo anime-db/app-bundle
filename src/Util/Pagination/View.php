@@ -139,7 +139,7 @@ class View implements \IteratorAggregate
      */
     public function getIterator()
     {
-        if (!($this->last instanceof ArrayCollection)) {
+        if (!($this->list instanceof ArrayCollection)) {
             $this->list = new ArrayCollection();
 
             if ($this->getTotal() <= 1) {
