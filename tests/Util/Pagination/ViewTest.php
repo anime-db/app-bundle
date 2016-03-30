@@ -121,28 +121,28 @@ class ViewTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getFirstPageLinks
      *
      * @param string|callback $page_link
-     * @param string $ferst_page_link
+     * @param string $first_page_link
      */
-    public function testGetFirst($page_link, $ferst_page_link)
+    public function testGetFirst($page_link, $first_page_link)
     {
         $this->config
             ->expects($this->once())
             ->method('getCurrentPage')
             ->will($this->returnValue(10));
         $this->config
-            ->expects($ferst_page_link ? $this->atLeastOnce() : $this->once())
-            ->method('getFerstPageLink')
-            ->will($this->returnValue($ferst_page_link));
+            ->expects($first_page_link ? $this->atLeastOnce() : $this->once())
+            ->method('getFirstPageLink')
+            ->will($this->returnValue($first_page_link));
         $this->config
-            ->expects($ferst_page_link ? $this->never() : $this->atLeastOnce())
+            ->expects($first_page_link ? $this->never() : $this->atLeastOnce())
             ->method('getPageLink')
             ->will($this->returnValue($page_link));
 
         $node = $this->view->getFirst();
         $this->assertInstanceOf('\AnimeDb\Bundle\AppBundle\Util\Pagination\Node', $node);
         $this->assertEquals(1, $node->getPage());
-        if ($ferst_page_link) {
-            $this->assertEquals($ferst_page_link, $node->getLink());
+        if ($first_page_link) {
+            $this->assertEquals($first_page_link, $node->getLink());
         } else {
             $this->assertEquals($this->getLink($page_link, 1), $node->getLink());
         }
@@ -161,7 +161,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(5));
         $this->config
             ->expects($this->never())
-            ->method('getFerstPageLink')
+            ->method('getFirstPageLink')
             ->will($this->returnValue(''));
         $this->config
             ->expects($this->atLeastOnce())
@@ -178,28 +178,28 @@ class ViewTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getFirstPageLinks
      *
      * @param string|callback $page_link
-     * @param string $ferst_page_link
+     * @param string $first_page_link
      */
-    public function testGetCurrent($page_link, $ferst_page_link)
+    public function testGetCurrent($page_link, $first_page_link)
     {
         $this->config
             ->expects($this->atLeastOnce())
             ->method('getCurrentPage')
             ->will($this->returnValue(1));
         $this->config
-            ->expects($ferst_page_link ? $this->atLeastOnce() : $this->once())
-            ->method('getFerstPageLink')
-            ->will($this->returnValue($ferst_page_link));
+            ->expects($first_page_link ? $this->atLeastOnce() : $this->once())
+            ->method('getFirstPageLink')
+            ->will($this->returnValue($first_page_link));
         $this->config
-            ->expects($ferst_page_link ? $this->never() : $this->atLeastOnce())
+            ->expects($first_page_link ? $this->never() : $this->atLeastOnce())
             ->method('getPageLink')
             ->will($this->returnValue($page_link));
 
         $node = $this->view->getCurrent();
         $this->assertInstanceOf('\AnimeDb\Bundle\AppBundle\Util\Pagination\Node', $node);
         $this->assertEquals(1, $node->getPage());
-        if ($ferst_page_link) {
-            $this->assertEquals($ferst_page_link, $node->getLink());
+        if ($first_page_link) {
+            $this->assertEquals($first_page_link, $node->getLink());
         } else {
             $this->assertEquals($this->getLink($page_link, 1), $node->getLink());
         }
@@ -222,7 +222,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(10));
         $this->config
             ->expects($this->never())
-            ->method('getFerstPageLink')
+            ->method('getFirstPageLink')
             ->will($this->returnValue(''));
         $this->config
             ->expects($this->atLeastOnce())
@@ -252,7 +252,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(10));
         $this->config
             ->expects($this->never())
-            ->method('getFerstPageLink')
+            ->method('getFirstPageLink')
             ->will($this->returnValue(''));
         $this->config
             ->expects($this->atLeastOnce())
@@ -368,10 +368,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
      * @param integer $current_page
      * @param integer $max_navigate
      * @param string|\Closure $page_link
-     * @param string $ferst_page_link
+     * @param string $first_page_link
      * @param ArrayCollection $list
      */
-    public function testGetIterator($total_pages, $current_page, $max_navigate, $page_link, $ferst_page_link, $list)
+    public function testGetIterator($total_pages, $current_page, $max_navigate, $page_link, $first_page_link, $list)
     {
         $this->config
             ->expects($this->any())
@@ -391,8 +391,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($page_link));
         $this->config
             ->expects($this->any())
-            ->method('getFerstPageLink')
-            ->will($this->returnValue($ferst_page_link));
+            ->method('getFirstPageLink')
+            ->will($this->returnValue($first_page_link));
         $this->assertEquals($list, $this->view->getIterator());
     }
 }

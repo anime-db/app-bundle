@@ -108,8 +108,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             [
                 '',
                 '/index.html',
-                'getFerstPageLink',
-                'setFerstPageLink'
+                'getFirstPageLink',
+                'setFirstPageLink'
             ],
         ];
     }
