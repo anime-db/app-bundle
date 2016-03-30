@@ -59,7 +59,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $ferst_page_link = '';
+    protected $first_page_link = '';
 
     /**
      * @param int $total_pages
@@ -172,19 +172,19 @@ class Configuration
     /**
      * @return string
      */
-    public function getFerstPageLink()
+    public function getFirstPageLink()
     {
-        return $this->ferst_page_link;
+        return $this->first_page_link;
     }
 
     /**
-     * @param string $ferst_page_link
+     * @param string $first_page_link
      *
      * @return Configuration
      */
-    public function setFerstPageLink($ferst_page_link)
+    public function setFirstPageLink($first_page_link)
     {
-        $this->ferst_page_link = $ferst_page_link;
+        $this->first_page_link = $first_page_link;
         return $this;
     }
 

@@ -186,8 +186,8 @@ class View implements \IteratorAggregate
      */
     protected function buildLink($page)
     {
-        if ($page == 1 && $this->config->getFerstPageLink()) {
-            return $this->config->getFerstPageLink();
+        if ($page == 1 && $this->config->getFirstPageLink()) {
+            return $this->config->getFirstPageLink();
         }
 
         if (is_callable($this->config->getPageLink())) {
