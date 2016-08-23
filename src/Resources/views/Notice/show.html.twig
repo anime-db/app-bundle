@@ -1,16 +1,16 @@
 <section class="b-notice">
-	<div class="b-message-wrapper">
-		<span class="b-message">
-			{% autoescape false %}{{ notice.message }}{% endautoescape %}
-			{% if link_all %}
-				(<a href="{{ link_all }}" title="{% trans %}View all notices{% endtrans %}">{% trans %}All notices{% endtrans %}</a>)
-			{% endif %}
-		</span>
-	</div>
-	<button type="button" class="bt-notice-scroll bt-notice-scroll-left" title="{% trans %}Scroll left{% endtrans %}">{% trans %}Scroll left{% endtrans %}</button>
-	<button type="button" class="bt-notice-scroll bt-notice-scroll-right" title="{% trans %}Scroll right{% endtrans %}">{% trans %}Scroll right{% endtrans %}</button>
-	<div class="b-controls">
-		<button type="button" class="bt-see-later" title="{% trans %}See notices later{% endtrans %}">{% trans %}See notices later{% endtrans %}</button>
-		<button type="button" class="bt-close" title="{% trans %}Close{% endtrans %}">{% trans %}Close{% endtrans %}</button>
-	</div>
+    <div class="b-message-wrapper">
+        <span class="b-message">
+            {% autoescape false %}{{ notice.message }}{% endautoescape %}
+            {% if link_all %}
+                (<a href="{{ link_all }}" title="{% trans %}View all notices{% endtrans %}">{% trans %}All notices{% endtrans %}</a>)
+            {% endif %}
+        </span>
+    </div>
+    <button type="button" class="bt-notice-scroll bt-notice-scroll-left" title="{% trans %}Scroll left{% endtrans %}">{% trans %}Scroll left{% endtrans %}</button>
+    <button type="button" class="bt-notice-scroll bt-notice-scroll-right" title="{% trans %}Scroll right{% endtrans %}">{% trans %}Scroll right{% endtrans %}</button>
+    <div class="b-controls">
+        <button type="button" class="bt-see-later" title="{% trans %}See notices later{% endtrans %}">{% trans %}See notices later{% endtrans %}</button>
+        <button type="button" class="bt-close" title="{% trans %}Close{% endtrans %}">{% trans %}Close{% endtrans %}</button>
+    </div>
 </section>
