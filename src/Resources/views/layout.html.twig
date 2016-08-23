@@ -2,10 +2,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="/assetic/stylesheets.css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assetic/stylesheets.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/assetic/javascripts.js"></script>
+    <script type="text/javascript" src="{{ asset('/assetic/javascripts.js') }}"></script>
 {% endblock %}
