@@ -14,12 +14,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use AnimeDb\Bundle\AppBundle\Event\Widget\StoreEvents;
 use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
 
-/**
- * Widgets container
- *
- * @package AnimeDb\Bundle\AppBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class WidgetsContainer
 {
     /**

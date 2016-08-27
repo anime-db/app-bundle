@@ -11,12 +11,6 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Service\Downloader\Entity;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
 
-/**
- * Test base entity
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service\Downloader\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class BaseEntityTest extends \PHPUnit_Framework_TestCase
 {
     /**

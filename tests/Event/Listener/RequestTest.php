@@ -19,12 +19,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
-/**
- * Test listener request
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     /**

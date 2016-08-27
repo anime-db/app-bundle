@@ -19,12 +19,6 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
 
-/**
- * Downloader
- *
- * @package AnimeDb\Bundle\AppBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Downloader
 {
     /**

@@ -14,12 +14,6 @@ use AnimeDb\Bundle\AppBundle\Event\Listener\Console;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Test listener console
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ConsoleTest extends \PHPUnit_Framework_TestCase
 {
     /**

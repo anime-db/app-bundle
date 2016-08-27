@@ -13,12 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 
-/**
- * Test cache clearer
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CacheClearerTest extends \PHPUnit_Framework_TestCase
 {
     /**

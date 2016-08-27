@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Entity;
 
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 
-/**
- * Test installed plugin
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
     /**

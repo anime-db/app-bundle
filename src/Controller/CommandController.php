@@ -14,12 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Command controller
- *
- * @package AnimeDb\Bundle\AppBundle\Controller
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CommandController extends Controller
 {
     /**

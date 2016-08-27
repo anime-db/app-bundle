@@ -10,12 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service\Downloader\Entity;
 
-/**
- * Base entity
- *
- * @package AnimeDb\Bundle\AppBundle\Service\Downloader\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 abstract class BaseEntity implements EntityInterface
 {
     /**

@@ -18,9 +18,6 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * Clear the media temporary folder of images
- *
- * @package AnimeDb\Bundle\AppBundle\Command
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class ClearMediaTempCommand extends ContainerAwareCommand
 {

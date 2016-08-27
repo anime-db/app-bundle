@@ -15,12 +15,6 @@ use AnimeDb\Bundle\AppBundle\Repository\Notice as NoticeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Notice
- *
- * @package AnimeDb\Bundle\AppBundle\Controller
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class NoticeController extends BaseController
 {
     /**

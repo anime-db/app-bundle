@@ -15,9 +15,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Rating form field
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type\Field
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Rating extends AbstractType
 {

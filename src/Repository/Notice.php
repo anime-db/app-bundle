@@ -14,12 +14,6 @@ use Doctrine\ORM\EntityRepository;
 use AnimeDb\Bundle\AppBundle\Entity\Notice as NoticeEntity;
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Notice repository
- *
- * @package AnimeDb\Bundle\AppBundle\Repository
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Notice extends EntityRepository
 {
     /**

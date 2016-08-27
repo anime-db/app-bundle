@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Service;
 
 use Symfony\Component\Process\PhpExecutableFinder;
 
-/**
- * Php finder
- *
- * @package AnimeDb\Bundle\AppBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class PhpFinder
 {
     /**

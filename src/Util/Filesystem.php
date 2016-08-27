@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Util;
 
 use Patchwork\Utf8;
 
-/**
- * Filesystem
- *
- * @package AnimeDb\Bundle\AppBundle\Util
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Filesystem
 {
     /**

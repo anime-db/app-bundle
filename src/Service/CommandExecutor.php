@@ -23,9 +23,6 @@ use Symfony\Component\Process\Process;
  *   php composer.phar update
  *   ping > ping.log
  * <code>
- *
- * @package AnimeDb\Bundle\AppBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class CommandExecutor
 {

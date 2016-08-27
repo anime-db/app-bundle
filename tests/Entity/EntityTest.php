@@ -15,12 +15,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Notice;
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 use AnimeDb\Bundle\AppBundle\Entity\Task;
 
-/**
- * Test entity getters and setters
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
     /**

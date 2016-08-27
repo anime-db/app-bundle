@@ -12,9 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Event\Widget;
 
 /**
  * Widget event names
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Widget
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 final class StoreEvents
 {

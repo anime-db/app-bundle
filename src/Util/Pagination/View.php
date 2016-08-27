@@ -11,12 +11,6 @@ namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Pagination view
- *
- * @package AnimeDb\Bundle\AppBundle\Util\Pagination
- * @author Peter Gribanov <info@peter-gribanov.ru>
- */
 class View implements \IteratorAggregate
 {
     /**

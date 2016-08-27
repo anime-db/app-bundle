@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 
-/**
- * Test node
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
     /**

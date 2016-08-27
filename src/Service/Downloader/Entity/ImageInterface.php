@@ -10,12 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service\Downloader\Entity;
 
-/**
- * Image entity interface
- *
- * @package AnimeDb\Bundle\AppBundle\Service\Downloader\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 interface ImageInterface extends EntityInterface
 {
 }

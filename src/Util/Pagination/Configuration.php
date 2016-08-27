@@ -9,12 +9,6 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-/**
- * Pagination configuration
- *
- * @package AnimeDb\Bundle\AppBundle\Util\Pagination
- * @author Peter Gribanov <info@peter-gribanov.ru>
- */
 class Configuration
 {
     /**

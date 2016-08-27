@@ -14,12 +14,6 @@ use AnimeDb\Bundle\AppBundle\Event\Listener\Entity;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Test entity listener
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
     /**

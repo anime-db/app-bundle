@@ -19,12 +19,6 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Test listener package
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class PackageTest extends \PHPUnit_Framework_TestCase
 {
     /**

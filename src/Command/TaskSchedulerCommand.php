@@ -18,12 +18,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Task;
 use AnimeDb\Bundle\AppBundle\Repository\Task as TaskRepository;
 use Symfony\Component\Process\PhpExecutableFinder;
 
-/**
- * Task Scheduler
- *
- * @package AnimeDb\Bundle\AppBundle\Command
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class TaskSchedulerCommand extends ContainerAwareCommand
 {
     protected function configure()

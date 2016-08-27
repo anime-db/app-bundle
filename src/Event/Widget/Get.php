@@ -15,9 +15,6 @@ use AnimeDb\Bundle\AppBundle\Service\WidgetsContainer;
 
 /**
  * Event thrown when a widgets container get a list of widgets for place
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Widget
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Get extends Event
 {

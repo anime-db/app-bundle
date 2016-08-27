@@ -15,12 +15,6 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Item image
- *
- * @package AnimeDb\Bundle\AppBundle\Entity\Field
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Image extends BaseEntity implements ImageInterface
 {
     /**

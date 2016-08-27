@@ -15,12 +15,6 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Test view
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
     /**

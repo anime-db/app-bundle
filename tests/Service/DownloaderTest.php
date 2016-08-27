@@ -21,12 +21,6 @@ use Guzzle\Http\Exception\RequestException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * Test downloader
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class DownloaderTest extends \PHPUnit_Framework_TestCase
 {
     /**

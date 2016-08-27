@@ -17,12 +17,6 @@ use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Test listener project
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ProjectTest extends \PHPUnit_Framework_TestCase
 {
     /**

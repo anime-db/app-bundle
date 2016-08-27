@@ -18,9 +18,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Help type extension
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Help extends AbstractTypeExtension
 {

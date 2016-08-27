@@ -14,12 +14,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 
-/**
- * Entity listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Entity
 {
     /**

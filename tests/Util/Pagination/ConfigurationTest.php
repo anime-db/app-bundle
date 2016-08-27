@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
 
-/**
- * Test configuration
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     /**

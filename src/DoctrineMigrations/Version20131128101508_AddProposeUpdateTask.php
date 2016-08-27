@@ -15,9 +15,6 @@ use Doctrine\DBAL\Schema\Schema;
 use AnimeDb\Bundle\AppBundle\Entity\Task;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 class Version20131128101508_AddProposeUpdateTask extends AbstractMigration
 {
     public function up(Schema $schema)

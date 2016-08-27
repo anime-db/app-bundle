@@ -13,12 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Event\Widget;
 use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
 use AnimeDb\Bundle\AppBundle\Service\WidgetsContainer;
 
-/**
- * Test get
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Widget
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class GetTest extends \PHPUnit_Framework_TestCase
 {
     /**

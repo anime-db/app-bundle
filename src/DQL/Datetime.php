@@ -20,9 +20,6 @@ use Doctrine\ORM\Query\Parser;
  * Datetime
  *
  * Datetime ::= "DATETIME" "(" ArithmeticPrimary "," ArithmeticPrimary ")"
- *
- * @package AnimeDb\Bundle\AppBundle
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Datetime extends FunctionNode
 {

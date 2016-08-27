@@ -15,9 +15,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Image upload form
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type\Field\Image
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Upload extends AbstractType
 {

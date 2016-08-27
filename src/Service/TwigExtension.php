@@ -14,12 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-/**
- * Twig extension
- *
- * @package AnimeDb\Bundle\AppBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class TwigExtension extends \Twig_Extension
 {
     /**

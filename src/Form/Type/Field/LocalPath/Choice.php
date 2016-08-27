@@ -16,9 +16,6 @@ use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 
 /**
  * Local path choice form
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Choice extends AbstractType
 {

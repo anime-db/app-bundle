@@ -13,12 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use AnimeDb\Bundle\AppBundle\Entity\Task as TaskEntity;
 
-/**
- * Task repository
- *
- * @package AnimeDb\Bundle\AppBundle\Repository
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Task extends EntityRepository
 {
     /**

@@ -10,12 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Service;
 
-/**
- * Cache clearer
- *
- * @package AnimeDb\Bundle\AppBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CacheClearer
 {
     /**

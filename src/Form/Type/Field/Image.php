@@ -14,9 +14,6 @@ use Symfony\Component\Form\AbstractType;
 
 /**
  * Image form field
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type\Field
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Image extends AbstractType
 {

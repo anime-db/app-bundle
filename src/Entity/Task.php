@@ -23,9 +23,6 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * })
  * @Assert\Callback(methods={"isModifyValid"})
  * @ORM\Entity(repositoryClass="AnimeDb\Bundle\AppBundle\Repository\Task")
- *
- * @package AnimeDb\Bundle\AppBundle\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Task
 {

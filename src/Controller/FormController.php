@@ -19,12 +19,6 @@ use AnimeDb\Bundle\AppBundle\Form\Type\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath\Choice as ChoiceLocalPath;
 use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 
-/**
- * Form
- *
- * @package AnimeDb\Bundle\AppBundle\Controller
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class FormController extends BaseController
 {
     /**

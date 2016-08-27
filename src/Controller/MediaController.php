@@ -14,12 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use AnimeDb\Bundle\AppBundle\Service\Downloader;
 
-/**
- * Media
- *
- * @package AnimeDb\Bundle\AppBundle\Controller
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class MediaController extends Controller
 {
     /**

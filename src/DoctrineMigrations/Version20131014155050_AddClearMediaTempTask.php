@@ -14,9 +14,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use AnimeDb\Bundle\AppBundle\Entity\Task;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 class Version20131014155050_AddClearMediaTempTask extends AbstractMigration
 {
     public function up(Schema $schema)

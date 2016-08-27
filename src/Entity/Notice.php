@@ -21,9 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *   @ORM\Index(name="notice_show_idx", columns={"date_closed", "date_created"})
  * })
  * @ORM\Entity(repositoryClass="AnimeDb\Bundle\AppBundle\Repository\Notice")
- *
- * @package AnimeDb\Bundle\AppBundle\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Notice
 {

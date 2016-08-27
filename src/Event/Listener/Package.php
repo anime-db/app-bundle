@@ -21,12 +21,6 @@ use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * Package listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Package
 {
     /**

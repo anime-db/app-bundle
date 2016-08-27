@@ -13,12 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Console listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Console
 {
     /**

@@ -17,9 +17,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Notice;
 
 /**
  * Propose to update the application
- *
- * @package AnimeDb\Bundle\AppBundle\Command
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class ProposeUpdateCommand extends ContainerAwareCommand
 {

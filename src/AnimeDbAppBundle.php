@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Bundle
- *
- * @package AnimeDb\Bundle\AppBundle
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class AnimeDbAppBundle extends Bundle
 {
 }

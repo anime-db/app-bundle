@@ -14,12 +14,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Task;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
-/**
- * Test task for Task Scheduler
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class TaskTest extends \PHPUnit_Framework_TestCase
 {
     /**

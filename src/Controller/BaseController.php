@@ -13,10 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Controller;
 use AnimeDb\Bundle\CacheTimeKeeperBundle\Service\Keeper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-/**
- * Class BaseController
- * @package AnimeDb\Bundle\AppBundle\Controller
- */
 abstract class BaseController extends Controller
 {
     /**

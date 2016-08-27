@@ -15,12 +15,6 @@ use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Test command executor
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CommandExecutorTest extends \PHPUnit_Framework_TestCase
 {
     /**

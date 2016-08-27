@@ -19,12 +19,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-/**
- * Request listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Request
 {
     /**

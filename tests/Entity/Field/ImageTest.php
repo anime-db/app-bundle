@@ -13,12 +13,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Entity\Field;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Test item image
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity\Field
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
     /**

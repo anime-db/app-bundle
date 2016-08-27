@@ -12,12 +12,6 @@ namespace AnimeDb\Bundle\AppBundle\Tests\Entity;
 
 use AnimeDb\Bundle\AppBundle\Entity\Notice;
 
-/**
- * Test notice for user
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class NoticeTest extends \PHPUnit_Framework_TestCase
 {
     /**

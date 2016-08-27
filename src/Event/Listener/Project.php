@@ -16,12 +16,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Task;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Project listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Project
 {
     /**

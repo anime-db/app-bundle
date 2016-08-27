@@ -20,9 +20,6 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
  *
  * @ORM\Entity
  * @ORM\Table(name="plugin")
- *
- * @package AnimeDb\Bundle\AppBundle\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Plugin extends BaseEntity implements ImageInterface
 {

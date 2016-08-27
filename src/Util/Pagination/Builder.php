@@ -10,12 +10,6 @@
 
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-/**
- * Builder
- *
- * @package AnimeDb\Bundle\AppBundle\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Builder
 {
     /**
