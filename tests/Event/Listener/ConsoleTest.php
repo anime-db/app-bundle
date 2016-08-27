@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Console;
@@ -24,7 +22,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         return [
             ['', Console::DEFAULT_LOCALE],
             ['ru'],
-            ['en_US']
+            ['en_US'],
         ];
     }
 

@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
@@ -49,7 +47,7 @@ class Project
     }
 
     /**
-     * Update next run date for the propose update task
+     * Update next run date for the propose update task.
      */
     public function onUpdatedProposeUpdateTask()
     {
@@ -66,7 +64,7 @@ class Project
     }
 
     /**
-     * On installed or updated try add a Shmop package
+     * On installed or updated try add a Shmop package.
      */
     public function onInstalledOrUpdatedAddShmop()
     {

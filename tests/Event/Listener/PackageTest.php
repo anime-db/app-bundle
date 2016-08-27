@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed;
@@ -89,7 +87,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['onInstalled', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed'],
-            ['onUpdated', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated']
+            ['onUpdated', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Updated'],
         ];
     }
 
@@ -127,12 +125,12 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             $plugins[] = array_merge($event, [[
                 'logo' => '',
                 'title' => 'plugin title',
-                'description' => 'plugin description'
+                'description' => 'plugin description',
             ]]);
             $plugins[] = array_merge($event, [[
                 'logo' => '/path/to/image/logo.jpg',
                 'title' => 'plugin title',
-                'description' => 'plugin description'
+                'description' => 'plugin description',
             ]]);
         }
 
@@ -146,7 +144,8 @@ class PackageTest extends \PHPUnit_Framework_TestCase
      * @param string $event
      * @param array $data
      */
-    public function testUpdatePlugin($method, $event, array $data) {
+    public function testUpdatePlugin($method, $event, array $data)
+    {
         $plugin = $this->getPlugin($data);
         $this->rep
             ->expects($this->once())
@@ -177,7 +176,8 @@ class PackageTest extends \PHPUnit_Framework_TestCase
      * @param string $event
      * @param array $data
      */
-    public function testAddNewPlugin($method, $event, array $data) {
+    public function testAddNewPlugin($method, $event, array $data)
+    {
         $that = $this;
         // check download logo
         if ($data['logo']) {
@@ -244,6 +244,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
             ->expects($matcher ?: $this->once())
             ->method('getName')
             ->will($this->returnValue('foo/bar'));
+
         return $package;
     }
 
@@ -262,10 +263,10 @@ class PackageTest extends \PHPUnit_Framework_TestCase
 
         $setters = [
             'title' => 'setTitle',
-            'description' => 'setDescription'
+            'description' => 'setDescription',
         ];
         foreach ($setters as $key => $method) {
-            if(empty($data[$key])) {
+            if (empty($data[$key])) {
                 $plugin
                     ->expects($this->never())
                     ->method($method);
@@ -362,7 +363,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['onInstalledConfigureShmop', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed'],
-            ['onRemovedShmop', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed']
+            ['onRemovedShmop', '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed'],
         ];
     }
 
@@ -407,16 +408,16 @@ class PackageTest extends \PHPUnit_Framework_TestCase
                 '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Installed',
                 [
                     'cache_time_keeper.driver' => 'cache_time_keeper.driver.multi',
-                    'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop'
-                ]
+                    'cache_time_keeper.driver.multi.fast' => 'cache_time_keeper.driver.shmop',
+                ],
             ],
             [
                 'onRemovedShmop',
                 '\AnimeDb\Bundle\AnimeDbBundle\Event\Package\Removed',
                 [
-                    'cache_time_keeper.driver' => 'cache_time_keeper.driver.file'
-                ]
-            ]
+                    'cache_time_keeper.driver' => 'cache_time_keeper.driver.file',
+                ],
+            ],
         ];
     }
 
@@ -449,7 +450,7 @@ class PackageTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->at($index))
                 ->method('set')
                 ->with($key, $value);
-            $index++;
+            ++$index;
         }
 
         // test

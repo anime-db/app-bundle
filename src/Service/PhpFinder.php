@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Service;
 
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -47,6 +45,7 @@ class PhpFinder
             }
             $this->php_path = escapeshellarg($this->php_path);
         }
+
         return $this->php_path;
     }
 }

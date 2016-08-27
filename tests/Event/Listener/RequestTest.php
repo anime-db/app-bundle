@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Request;
@@ -88,7 +86,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         return [
             ['ru'],
             ['en'],
-            [null]
+            [null],
         ];
     }
 
@@ -147,7 +145,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         return [
             ['ru'],
             ['en_US'],
-            [$this->locale]
+            [$this->locale],
         ];
     }
 
@@ -200,20 +198,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             [
                 [],
                 'en',
-                'en'
+                'en',
             ],
             [
                 ['ru'],
-                'ru'
+                'ru',
             ],
             [
                 ['rus', 'fra', 'en'],
-                'en'
+                'en',
             ],
             [
                 ['rus', 'fra', 'en_US'],
-                'en_US'
-            ]
+                'en_US',
+            ],
         ];
     }
 
@@ -242,7 +240,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         // validate languages
         $that = $this;
-        for ($i = 0; $i < count($languages); $i++) {
+        for ($i = 0; $i < count($languages); ++$i) {
             $this->validator
                 ->expects($this->at($i))
                 ->method('validate')
@@ -254,8 +252,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                     $list
                         ->expects($that->once())
                         ->method('has')
-                        ->will($this->returnValue($i+1 < count($languages) || $locale))
+                        ->will($this->returnValue($i + 1 < count($languages) || $locale))
                         ->with(0);
+
                     return $list;
                 }));
         }
@@ -295,7 +294,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         return [
             [null, 0],
             [new \DateTime(), 3600],
-            [new \DateTime(), 0]
+            [new \DateTime(), 0],
         ];
     }
 
@@ -303,7 +302,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getResponses
      *
      * @param \DateTime $last_modified
-     * @param integer $max_age
+     * @param int $max_age
      */
     public function testOnKernelResponse(\DateTime $last_modified = null, $max_age)
     {

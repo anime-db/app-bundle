@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -17,7 +15,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Clear the media temporary folder of images
+ * Clear the media temporary folder of images.
  */
 class ClearMediaTempCommand extends ContainerAwareCommand
 {
@@ -33,7 +31,8 @@ class ClearMediaTempCommand extends ContainerAwareCommand
      *
      * @return bool
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $start = microtime(true);
 
         if (file_exists($dir = $this->getContainer()->getParameter('kernel.root_dir').'/../web/media/tmp/')) {
@@ -47,6 +46,6 @@ class ClearMediaTempCommand extends ContainerAwareCommand
             }
         }
 
-        $output->writeln('Time: <info>'.round((microtime(true)-$start)*1000, 2).'</info> s.');
+        $output->writeln('Time: <info>'.round((microtime(true) - $start) * 1000, 2).'</info> s.');
     }
 }

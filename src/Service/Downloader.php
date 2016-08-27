@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Service;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -153,7 +151,7 @@ class Downloader
     /**
      * @param string $host
      * @param bool $override
-     * 
+     *
      * @return string|false
      */
     public function favicon($host, $override = false)
@@ -253,6 +251,7 @@ class Downloader
             $target = $this->getUniqueFilename($target);
             $entity->setFilename(pathinfo($target, PATHINFO_BASENAME)); // update filename
         }
+
         return $target;
     }
 
@@ -261,13 +260,15 @@ class Downloader
      *
      * @return string
      */
-    public function getUniqueFilename($filename) {
+    public function getUniqueFilename($filename)
+    {
         $info = pathinfo($filename);
         $name = $info['filename'];
         $ext = isset($info['extension']) ? '.'.$info['extension'] : '';
-        for ($i = 1; file_exists($info['dirname'].'/'.$name.$ext); $i++) {
+        for ($i = 1; file_exists($info['dirname'].'/'.$name.$ext); ++$i) {
             $name = $info['filename'].'['.$i.']';
         }
+
         return $info['dirname'].'/'.$name.$ext;
     }
 }

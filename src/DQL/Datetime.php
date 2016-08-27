@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\DQL;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
@@ -17,21 +15,21 @@ use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\Parser;
 
 /**
- * Datetime
+ * Datetime.
  *
  * Datetime ::= "DATETIME" "(" ArithmeticPrimary "," ArithmeticPrimary ")"
  */
 class Datetime extends FunctionNode
 {
     /**
-     * First date expression
+     * First date expression.
      *
      * @var SimpleArithmeticExpression
      */
     private $firstDateExpression = null;
 
     /**
-     * Second date expression
+     * Second date expression.
      *
      * @var SimpleArithmeticExpression
      */
