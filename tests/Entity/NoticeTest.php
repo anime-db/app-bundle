@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Entity;
 
 use AnimeDb\Bundle\AppBundle\Entity\Notice;
@@ -30,7 +28,7 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
             [
                 Notice::STATUS_CREATED,
                 Notice::STATUS_SHOWN,
-                Notice::STATUS_CLOSED
+                Notice::STATUS_CLOSED,
             ],
             Notice::getStatuses()
         );
@@ -83,7 +81,7 @@ class NoticeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatuses
      *
-     * @param integer $status
+     * @param int $status
      */
     public function testStatus($status)
     {

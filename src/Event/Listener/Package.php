@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use AnimeDb\Bundle\ApiClientBundle\Service\Client;
@@ -44,7 +42,7 @@ class Package
     protected $rep;
 
     /**
-     * API client
+     * API client.
      *
      * @var Client
      */
@@ -80,7 +78,7 @@ class Package
     }
 
     /**
-     * Update plugin data
+     * Update plugin data.
      *
      * @param UpdatedEvent $event
      */
@@ -92,7 +90,7 @@ class Package
     }
 
     /**
-     * Registr plugin
+     * Registr plugin.
      *
      * @param InstalledEvent $event
      */
@@ -104,7 +102,7 @@ class Package
     }
 
     /**
-     * Add plugin from package
+     * Add plugin from package.
      *
      * @param ComposerPackage $package
      */
@@ -135,7 +133,7 @@ class Package
     }
 
     /**
-     * Unregistr plugin
+     * Unregistr plugin.
      *
      * @param RemovedEvent $event
      */
@@ -152,7 +150,7 @@ class Package
     }
 
     /**
-     * Configure shmop
+     * Configure shmop.
      *
      * @param InstalledEvent $event
      */
@@ -166,7 +164,7 @@ class Package
     }
 
     /**
-     * Restore config on removed shmop
+     * Restore config on removed shmop.
      *
      * @param RemovedEvent $event
      */

@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Widget;
 
 use AnimeDb\Bundle\AppBundle\Event\Widget\Get;
@@ -46,7 +44,7 @@ class GetTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['container', 'getWidgetsContainer'],
-            ['place', 'getPlace']
+            ['place', 'getPlace'],
         ];
     }
 
@@ -68,7 +66,7 @@ class GetTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['registr'],
-            ['unregistr']
+            ['unregistr'],
         ];
     }
 

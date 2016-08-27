@@ -1,20 +1,18 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Notice for user
+ * Notice for user.
  *
  * @ORM\Entity
  * @ORM\Table(name="notice", indexes={
@@ -83,7 +81,7 @@ class Notice
     protected $date_created;
 
     /**
-     * Date start show notice
+     * Date start show notice.
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
@@ -123,7 +121,7 @@ class Notice
     }
 
     /**
-     * Notice shown
+     * Notice shown.
      */
     public function shown()
     {
@@ -150,6 +148,7 @@ class Notice
     public function setMessage($message)
     {
         $this->message = $message;
+
         return $this;
     }
 
@@ -169,6 +168,7 @@ class Notice
     public function setDateClosed(\DateTime $date_closed)
     {
         $this->date_closed = clone $date_closed;
+
         return $this;
     }
 
@@ -196,6 +196,7 @@ class Notice
     public function setDateStart(\DateTime $date_start)
     {
         $this->date_start = clone $date_start;
+
         return $this;
     }
 
@@ -215,6 +216,7 @@ class Notice
     public function setLifetime($lifetime)
     {
         $this->lifetime = $lifetime;
+
         return $this;
     }
 
@@ -234,6 +236,7 @@ class Notice
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -253,7 +256,7 @@ class Notice
         return [
             self::STATUS_CREATED,
             self::STATUS_SHOWN,
-            self::STATUS_CLOSED
+            self::STATUS_CLOSED,
         ];
     }
 
@@ -265,6 +268,7 @@ class Notice
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 

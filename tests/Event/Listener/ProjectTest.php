@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Composer;
@@ -67,7 +65,7 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test on updated propose update task
+     * Test on updated propose update task.
      */
     public function testOnUpdatedProposeUpdateTask()
     {
@@ -81,6 +79,7 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
             ->method('setNextRun')
             ->will($this->returnCallback(function ($date) use ($that, $next_run, $task) {
                 $that->assertEquals($next_run, $date);
+
                 return $task;
             }));
         $rep = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')

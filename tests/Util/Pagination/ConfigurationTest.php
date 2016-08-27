@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
@@ -38,8 +36,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getConfigs
      *
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $total_pages
+     * @param int $current_page
      */
     public function testConstruct($total_pages, $current_page)
     {
@@ -51,8 +49,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getConfigs
      *
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $total_pages
+     * @param int $current_page
      */
     public function testCreate($total_pages, $current_page)
     {
@@ -71,25 +69,25 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 150,
                 10,
                 'getTotalPages',
-                'setTotalPages'
+                'setTotalPages',
             ],
             [
                 33,
                 1,
                 'getCurrentPage',
-                'setCurrentPage'
+                'setCurrentPage',
             ],
             [
                 Configuration::DEFAULT_LIST_LENGTH,
                 Configuration::DEFAULT_LIST_LENGTH + 5,
                 'getMaxNavigate',
-                'setMaxNavigate'
+                'setMaxNavigate',
             ],
             [
                 Configuration::DEFAULT_PAGE_LINK,
                 'page_%s.html',
                 'getPageLink',
-                'setPageLink'
+                'setPageLink',
             ],
             [
                 Configuration::DEFAULT_PAGE_LINK,
@@ -97,13 +95,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     return 'page_'.$number.'.html';
                 },
                 'getPageLink',
-                'setPageLink'
+                'setPageLink',
             ],
             [
                 '',
                 '/index.html',
                 'getFirstPageLink',
-                'setFirstPageLink'
+                'setFirstPageLink',
             ],
         ];
     }

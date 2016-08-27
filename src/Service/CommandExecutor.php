@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Service;
 
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -15,7 +13,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Process\Process;
 
 /**
- * Command executor
+ * Command executor.
  *
  * Example:
  * <code>
@@ -89,7 +87,7 @@ class CommandExecutor
     }
 
     /**
-     * Execute command
+     * Execute command.
      *
      * If timeout <= 0 and callback is null then command will be executed in background
      *
@@ -151,7 +149,7 @@ class CommandExecutor
     }
 
     /**
-     * Send the command to perform in a new thread
+     * Send the command to perform in a new thread.
      *
      * @param string $command
      * @param string $host
@@ -165,10 +163,10 @@ class CommandExecutor
         $content = 'command='.urlencode($command);
 
         $fp = fsockopen($this->host, 80, $errno, $errstr, self::TIMEOUT);
-        $request  = "POST ".$this->path." HTTP/1.1\r\n";
-        $request .= "Host: ".$host."\r\n";
+        $request = 'POST '.$this->path." HTTP/1.1\r\n";
+        $request .= 'Host: '.$host."\r\n";
         $request .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $request .= "Content-Length: ".strlen($content)."\r\n";
+        $request .= 'Content-Length: '.strlen($content)."\r\n";
         $request .= "Connection: Close\r\n\r\n";
         $request .= $content;
         fwrite($fp, $request);

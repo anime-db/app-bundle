@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Entity\Field;
 
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
@@ -18,7 +16,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class Image extends BaseEntity implements ImageInterface
 {
     /**
-     * Image from URL
+     * Image from URL.
      *
      * @Assert\Url()
      *
@@ -27,7 +25,7 @@ class Image extends BaseEntity implements ImageInterface
     protected $remote = '';
 
     /**
-     * Local image
+     * Local image.
      *
      * @Assert\Image(
      *     maxSize = "2048k",
@@ -49,6 +47,7 @@ class Image extends BaseEntity implements ImageInterface
     public function setRemote($remote)
     {
         $this->remote = $remote;
+
         return $this;
     }
 
@@ -68,6 +67,7 @@ class Image extends BaseEntity implements ImageInterface
     public function setLocal(UploadedFile $local)
     {
         $this->local = $local;
+
         return $this;
     }
 
@@ -92,7 +92,7 @@ class Image extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Clear local and remote file
+     * Clear local and remote file.
      */
     public function clear()
     {
@@ -101,10 +101,10 @@ class Image extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Has remote or local image
+     * Has remote or local image.
      *
      * @Assert\True(message = "No selected image")
-     * 
+     *
      * @return bool
      */
     public function hasImage()

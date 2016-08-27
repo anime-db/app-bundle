@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Service;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -49,7 +47,7 @@ class TwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'favicon' => new \Twig_SimpleFilter('favicon', [$this, 'favicon'])
+            'favicon' => new \Twig_SimpleFilter('favicon', [$this, 'favicon']),
         ];
     }
 
@@ -59,7 +57,7 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'widgets' => new \Twig_SimpleFunction('widgets', [$this, 'widgets'], ['is_safe' => ['html']])
+            'widgets' => new \Twig_SimpleFunction('widgets', [$this, 'widgets'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -90,6 +88,7 @@ class TwigExtension extends \Twig_Extension
                 $options
             );
         }
+
         return $result;
     }
 

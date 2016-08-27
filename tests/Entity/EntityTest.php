@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Entity;
 
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
@@ -65,13 +63,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             // Task
             ['task', 'getCommand', 'setCommand'],
             ['task', 'getModify', 'setModify'],
-            ['task', 'getStatus', 'setStatus', Task::STATUS_DISABLED, Task::STATUS_ENABLED]
+            ['task', 'getStatus', 'setStatus', Task::STATUS_DISABLED, Task::STATUS_ENABLED],
         ];
     }
 
     /**
      * @dataProvider getMethods
-     * 
+     *
      * @param string $entity
      * @param string $getter
      * @param string $setter
@@ -91,6 +89,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     public function getMethodsTime()
     {
         $now = new \DateTime();
+
         return [
             // Notice
             ['notice', 'getDateClosed', 'setDateClosed'],
@@ -99,13 +98,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             ['plugin', 'getDateInstall', 'setDateInstall', $now],
             // Task
             ['task', 'getLastRun', 'setLastRun'],
-            ['task', 'getNextRun', 'setNextRun', $now]
+            ['task', 'getNextRun', 'setNextRun', $now],
         ];
     }
 
     /**
      * @dataProvider getMethodsTime
-     * 
+     *
      * @param string $entity
      * @param string $getter
      * @param string $setter
