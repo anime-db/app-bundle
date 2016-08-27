@@ -126,7 +126,9 @@ class Package
             if ($data['logo']) {
                 $this->downloader->entity($data['logo'], $plugin, true);
             }
-        } catch (\Exception $e) {} // is not a critical error
+        } catch (\Exception $e) {
+            // is not a critical error
+        }
 
         $this->em->persist($plugin);
         $this->em->flush();
