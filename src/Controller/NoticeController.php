@@ -58,7 +58,7 @@ class NoticeController extends BaseController
                 'see_later' => $this->generateUrl('notice_see_later'),
                 'content' => $this->renderView('AnimeDbAppBundle:Notice:show.html.twig', [
                     'notice' => $notice,
-                    'link_all' => $request->get('all')
+                    'link_all' => $request->query->getBoolean('all')
                 ])
             ]);
         }

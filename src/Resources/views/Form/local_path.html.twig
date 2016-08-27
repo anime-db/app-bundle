@@ -17,7 +17,11 @@
                     {{ form_widget(form.path) }}
                 </td>
                 <td class="b-button">
-                    <button type="submit" title="{{ 'Change path'|trans }}" class="change-path">{% trans %}Change path{% endtrans %}</button>
+                    <button
+                        type="submit"
+                        class="change-path"
+                        title="{{ 'Change path'|trans }}"
+                    >{{ 'Change path'|trans }}</button>
                 </td>
             </tr>
         </table>

@@ -21,8 +21,8 @@
                         <button
                             type="button"
                             class="icon icon-minus bt-remove-item"
-                            title="{% trans %}Remove row{% endtrans %}"
-                        >{% trans %}Remove row{% endtrans %}</button>
+                            title="{{ 'Remove row'|trans }}"
+                        >{{ 'Remove row'|trans }}</button>
                         <div class="f-col-clear"></div>
                     </div>
                 {% endfor %}
@@ -33,8 +33,8 @@
                     <button
                         type="button"
                         class="icon icon-plus bt-add-item"
-                        title="{% trans %}Add row{% endtrans %}"
-                    >{% trans %}Add row{% endtrans %}</button>
+                        title="{{ 'Add row'|trans }}"
+                    >{{ 'Add row'|trans }}</button>
                     <div class="f-col-clear"></div>
                 </div>
             {% endif %}
@@ -59,8 +59,8 @@
             <button
                 type="button"
                 class="icon icon-minus bt-remove-item"
-                title="{% trans %}Remove row{% endtrans %}"
-            >{% trans %}Remove row{% endtrans %}</button>
+                title="{{ 'Remove row'|trans }}"
+            >{{ 'Remove row'|trans }}</button>
             <div class="f-col-clear"></div>
         </div>
     {% endfor %}
@@ -137,12 +137,20 @@
     {% spaceless %}
     <div
         class="f-image"
-        data-popup="{% if value is empty %}{{ path('form_image') }}{% else %}{{ path('form_image', {'change': 1}) }}{% endif %}"
+        {% if value is empty %}
+            data-popup="{{ path('form_image') }}"
+        {% else %}
+            data-popup="{{ path('form_image', {'change': 1}) }}"
+        {% endif %}
     >
         {% set type = 'hidden' %}
         {{ block('form_widget') }}
         {% if read_only == false %}
-            <button type="button" class="change-button" title="{% trans %}Change image{% endtrans %}">{% trans %}Change image{% endtrans %}</button>
+            <button
+                type="button"
+                class="change-button"
+                title="{{ 'Change image'|trans }}"
+            >{{ 'Change image'|trans }}</button>
         {% endif %}
         <img src="{% if value is not empty %}/media/{{ value }}{% endif %}" />
     </div>
@@ -157,7 +165,11 @@
         data-popup="{{ path('form_local_path', {'path': value}) }}"
     >
         {{ block('form_widget') }}
-        <button type="button" class="change-path" title="{% trans %}Change{% endtrans %}">{% trans %}Change{% endtrans %}</button>
+        <button
+            type="button"
+            class="change-path"
+            title="{{ 'Change'|trans }}"
+        >{{ 'Change'|trans }}</button>
     </div>
     {% endspaceless %}
 {% endblock %}
@@ -189,7 +201,7 @@
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
             {{ label|trans({}, translation_domain) }}
             {% if required %}
-                <span class="starlet" title="{% trans %}Required field{% endtrans %}">*</span>
+                <span class="starlet" title="{{ 'Required field'|trans }}">*</span>
             {% endif %}
         </label>
     {% endif %}
