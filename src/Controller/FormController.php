@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Controller;
 
 use Symfony\Component\Form\Form;
@@ -19,16 +17,10 @@ use AnimeDb\Bundle\AppBundle\Form\Type\Field\Image\Upload as UploadImage;
 use AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath\Choice as ChoiceLocalPath;
 use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 
-/**
- * Form
- *
- * @package AnimeDb\Bundle\AppBundle\Controller
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class FormController extends BaseController
 {
     /**
-     * Form field local path
+     * Form field local path.
      *
      * @param Request $request
      *
@@ -48,12 +40,12 @@ class FormController extends BaseController
         );
 
         return $this->render('AnimeDbAppBundle:Form:local_path.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ], $response);
     }
 
     /**
-     * Return list folders for path
+     * Return list folders for path.
      *
      * @param Request $request
      *
@@ -71,7 +63,7 @@ class FormController extends BaseController
 
         /* @var $response JsonResponse */
         $response = $this->getCacheTimeKeeper()
-            ->getResponse([(new \DateTime)->setTimestamp(filemtime($path))], -1, new JsonResponse());
+            ->getResponse([(new \DateTime())->setTimestamp(filemtime($path))], -1, new JsonResponse());
         // response was not modified for this request
         if ($response->isNotModified($request)) {
             return $response;
@@ -79,18 +71,19 @@ class FormController extends BaseController
 
         return $response->setData([
             'path' => $path,
-            'folders' => Filesystem::scandir($path, Filesystem::DIRECTORY)
+            'folders' => Filesystem::scandir($path, Filesystem::DIRECTORY),
         ]);
     }
 
     /**
-     * Form field image
+     * Form field image.
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function imageAction(Request $request) {
+    public function imageAction(Request $request)
+    {
         $response = $this->getCacheTimeKeeper()->getResponse();
         // response was not modified for this request
         if ($response->isNotModified($request)) {
@@ -99,7 +92,7 @@ class FormController extends BaseController
 
         return $this->render('AnimeDbAppBundle:Form:image.html.twig', [
             'form' => $this->createForm(new UploadImage())->createView(),
-            'change' => (bool)$request->get('change', false)
+            'change' => (bool) $request->get('change', false),
         ], $response);
     }
 
@@ -108,7 +101,8 @@ class FormController extends BaseController
      *
      * @return JsonResponse
      */
-    public function imageUploadAction(Request $request) {
+    public function imageUploadAction(Request $request)
+    {
         $image = new ImageField();
         /* @var $form Form */
         $form = $this->createForm(new UploadImage(), $image);
@@ -116,14 +110,16 @@ class FormController extends BaseController
 
         if (!$form->isValid()) {
             $errors = $form->getErrors();
+
             return new JsonResponse(['error' => $this->get('translator')->trans($errors[0]->getMessage())], 404);
         }
 
         // try upload file
         try {
             $this->get('anime_db.downloader')->imageField($image);
+
             return new JsonResponse([
-                'path'  => $image->getFilename(),
+                'path' => $image->getFilename(),
                 'image' => $image->getWebPath(),
             ]);
         } catch (\InvalidArgumentException $e) {

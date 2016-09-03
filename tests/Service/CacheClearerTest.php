@@ -1,24 +1,16 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
 
-/**
- * Test cache clearer
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CacheClearerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -30,7 +22,7 @@ class CacheClearerTest extends \PHPUnit_Framework_TestCase
             [''],
             ['prod'],
             ['dev'],
-            ['test']
+            ['test'],
         ];
     }
 

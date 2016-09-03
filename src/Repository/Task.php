@@ -1,35 +1,27 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use AnimeDb\Bundle\AppBundle\Entity\Task as TaskEntity;
 
-/**
- * Task repository
- *
- * @package AnimeDb\Bundle\AppBundle\Repository
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Task extends EntityRepository
 {
     /**
-     * Maximum standby time
+     * Maximum standby time.
      *
      * Between scans tasks can interpose new task.
      * If no limit standby scheduler can not handle the new task before
      * the arrival of the start time of the next task.
      * For example the scheduler can expect a few days before the execution of the tasks
      * that must be performed every hour.
-     * 
+     *
      * @var int
      */
     const MAX_STANDBY_TIME = 3600;

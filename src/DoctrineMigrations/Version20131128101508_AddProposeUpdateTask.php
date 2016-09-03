@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\DoctrineMigrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -15,9 +13,6 @@ use Doctrine\DBAL\Schema\Schema;
 use AnimeDb\Bundle\AppBundle\Entity\Task;
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 class Version20131128101508_AddProposeUpdateTask extends AbstractMigration
 {
     public function up(Schema $schema)
@@ -36,9 +31,9 @@ class Version20131128101508_AddProposeUpdateTask extends AbstractMigration
                 (?, ?, ?, ?)',
             [
                 'animedb:propose-update',
-                date('Y-m-d 01:00:00', time()+ProposeUpdateCommand::INERVAL_UPDATE),
+                date('Y-m-d 01:00:00', time() + ProposeUpdateCommand::INERVAL_UPDATE),
                 sprintf('+%s second', ProposeUpdateCommand::INERVAL_UPDATE),
-                Task::STATUS_ENABLED
+                Task::STATUS_ENABLED,
             ]
         );
     }

@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Command\ProposeUpdateCommand;
@@ -16,12 +14,6 @@ use AnimeDb\Bundle\AppBundle\Entity\Task;
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Project listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Project
 {
     /**
@@ -55,7 +47,7 @@ class Project
     }
 
     /**
-     * Update next run date for the propose update task
+     * Update next run date for the propose update task.
      */
     public function onUpdatedProposeUpdateTask()
     {
@@ -72,7 +64,7 @@ class Project
     }
 
     /**
-     * On installed or updated try add a Shmop package
+     * On installed or updated try add a Shmop package.
      */
     public function onInstalledOrUpdatedAddShmop()
     {

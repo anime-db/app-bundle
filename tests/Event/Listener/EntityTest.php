@@ -1,25 +1,17 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Event\Listener;
 
 use AnimeDb\Bundle\AppBundle\Event\Listener\Entity;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Test entity listener
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -50,7 +42,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['postRemove'],
-            ['postUpdate']
+            ['postUpdate'],
         ];
     }
 
@@ -85,7 +77,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             ['postRemove', []],
             ['postRemove', ['file1', 'file2']],
             ['postUpdate', []],
-            ['postUpdate', ['file1', 'file2']]
+            ['postUpdate', ['file1', 'file2']],
         ];
     }
 
@@ -140,7 +132,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[]],
-            [['file1', 'file2']]
+            [['file1', 'file2']],
         ];
     }
 

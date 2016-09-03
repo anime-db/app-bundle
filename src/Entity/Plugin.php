@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -16,13 +14,10 @@ use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\BaseEntity;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface;
 
 /**
- * Installed plugin
+ * Installed plugin.
  *
  * @ORM\Entity
  * @ORM\Table(name="plugin")
- *
- * @package AnimeDb\Bundle\AppBundle\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Plugin extends BaseEntity implements ImageInterface
 {
@@ -78,6 +73,7 @@ class Plugin extends BaseEntity implements ImageInterface
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -97,6 +93,7 @@ class Plugin extends BaseEntity implements ImageInterface
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -116,6 +113,7 @@ class Plugin extends BaseEntity implements ImageInterface
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -135,6 +133,7 @@ class Plugin extends BaseEntity implements ImageInterface
     public function setLogo($logo)
     {
         $this->setFilename($logo);
+
         return $this;
     }
 
@@ -171,6 +170,7 @@ class Plugin extends BaseEntity implements ImageInterface
     public function setDateInstall(\DateTime $date_install)
     {
         $this->date_install = $date_install;
+
         return $this;
     }
 
@@ -191,7 +191,7 @@ class Plugin extends BaseEntity implements ImageInterface
     }
 
     /**
-     * Get logo web path
+     * Get logo web path.
      *
      * @deprecated use getWebPath()
      * @codeCoverageIgnore

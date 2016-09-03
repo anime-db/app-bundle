@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Event\Listener;
 
 use AnimeDb\Bundle\ApiClientBundle\Service\Client;
@@ -21,12 +19,6 @@ use AnimeDb\Bundle\AnimeDbBundle\Manipulator\Parameters;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * Package listener
- *
- * @package AnimeDb\Bundle\AppBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Package
 {
     /**
@@ -50,7 +42,7 @@ class Package
     protected $rep;
 
     /**
-     * API client
+     * API client.
      *
      * @var Client
      */
@@ -86,7 +78,7 @@ class Package
     }
 
     /**
-     * Update plugin data
+     * Update plugin data.
      *
      * @param UpdatedEvent $event
      */
@@ -98,7 +90,7 @@ class Package
     }
 
     /**
-     * Registr plugin
+     * Registr plugin.
      *
      * @param InstalledEvent $event
      */
@@ -110,7 +102,7 @@ class Package
     }
 
     /**
-     * Add plugin from package
+     * Add plugin from package.
      *
      * @param ComposerPackage $package
      */
@@ -132,14 +124,16 @@ class Package
             if ($data['logo']) {
                 $this->downloader->entity($data['logo'], $plugin, true);
             }
-        } catch (\Exception $e) {} // is not a critical error
+        } catch (\Exception $e) {
+            // is not a critical error
+        }
 
         $this->em->persist($plugin);
         $this->em->flush();
     }
 
     /**
-     * Unregistr plugin
+     * Unregistr plugin.
      *
      * @param RemovedEvent $event
      */
@@ -156,7 +150,7 @@ class Package
     }
 
     /**
-     * Configure shmop
+     * Configure shmop.
      *
      * @param InstalledEvent $event
      */
@@ -170,7 +164,7 @@ class Package
     }
 
     /**
-     * Restore config on removed shmop
+     * Restore config on removed shmop.
      *
      * @param RemovedEvent $event
      */

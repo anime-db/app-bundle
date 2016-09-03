@@ -1,23 +1,15 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Util;
 
 use Patchwork\Utf8;
 
-/**
- * Filesystem
- *
- * @package AnimeDb\Bundle\AppBundle\Util
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Filesystem
 {
     /**
@@ -31,7 +23,7 @@ class Filesystem
     const DIRECTORY = 2;
 
     /**
-     * Gets the name of the owner of the current PHP script
+     * Gets the name of the owner of the current PHP script.
      *
      * @return string
      */
@@ -41,11 +33,12 @@ class Filesystem
     }
 
     /**
-     * Get user home directory
+     * Get user home directory.
      *
      * @return string
      */
-    public static function getUserHomeDir() {
+    public static function getUserHomeDir()
+    {
         return self::getRealPath(self::doGetUserHomeDir());
     }
 
@@ -76,6 +69,7 @@ class Filesystem
             if (is_dir($win7path = 'C:\Users\\'.$username.'\\')) {
                 return $win7path;
             }
+
             return 'C:\Documents and Settings\\'.$username.'\\';
         }
 
@@ -88,7 +82,7 @@ class Filesystem
     }
 
     /**
-     * List files and directories inside the specified path
+     * List files and directories inside the specified path.
      *
      * @param string $path
      * @param int $filter
@@ -102,7 +96,7 @@ class Filesystem
             ($filter & self::FILE) != self::FILE &&
             ($filter & self::DIRECTORY) != self::DIRECTORY
         )) {
-            $filter = self::FILE|self::DIRECTORY;
+            $filter = self::FILE | self::DIRECTORY;
         }
         // add slash if need
         $path = self::getRealPath($path);
@@ -126,7 +120,7 @@ class Filesystem
                 ) {
                     $folders[$file->getFilename()] = [
                         'name' => $file->getFilename(),
-                        'path' => $path . $file->getFilename() . DIRECTORY_SEPARATOR
+                        'path' => $path.$file->getFilename().DIRECTORY_SEPARATOR,
                     ];
                 }
             } catch (\Exception $e) {
@@ -147,7 +141,7 @@ class Filesystem
             $pos = strrpos(substr($path, 0, -1), DIRECTORY_SEPARATOR) + 1;
             array_unshift($folders, [
                 'name' => '..',
-                'path' => substr($path, 0, $pos)
+                'path' => substr($path, 0, $pos),
             ]);
         }
 
@@ -162,6 +156,7 @@ class Filesystem
     public static function getRealPath($path)
     {
         $path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
+
         return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
     }
 }

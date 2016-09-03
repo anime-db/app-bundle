@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\Downloader;
@@ -21,16 +19,10 @@ use Guzzle\Http\Exception\RequestException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * Test downloader
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class DownloaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Base64 image
+     * Base64 image.
      *
      * @var string
      */
@@ -47,7 +39,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     protected $favicon;
 
     /**
-     * Favicon proxy
+     * Favicon proxy.
      *
      * @var string
      */
@@ -137,14 +129,14 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [true],
-            [false]
+            [false],
         ];
     }
 
     /**
      * @dataProvider getSuccessfuls
      *
-     * @param boolean $is_successful
+     * @param bool $is_successful
      */
     public function testDownload($is_successful)
     {
@@ -155,7 +147,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test image bad image
+     * Test image bad image.
      */
     public function testImageBadImage()
     {
@@ -186,7 +178,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSuccessfuls
      *
-     * @param boolean $is_successful
+     * @param bool $is_successful
      */
     public function testIsExists($is_successful)
     {
@@ -242,7 +234,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $target
-     * @param boolean $is_successful
+     * @param bool $is_successful
      * @param string $url
      */
     protected function download($target, $is_successful = true, $url = '')
@@ -260,7 +252,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param boolean $is_successful
+     * @param bool $is_successful
      * @param string $url
      */
     protected function dialog($is_successful = true, $url = '')
@@ -281,7 +273,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Response no body
+     * Response no body.
      */
     protected function responseNoBody()
     {
@@ -315,14 +307,14 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
             [true, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface'],
             [false, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface'],
             [true, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface'],
-            [false, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface']
+            [false, '\AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\ImageInterface'],
         ];
     }
 
     /**
      * @dataProvider getEntity
      *
-     * @param boolean $is_successful
+     * @param bool $is_successful
      * @param string $entity
      */
     public function testEntity($is_successful, $entity)
@@ -359,7 +351,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [true],
-            [false]
+            [false],
         ];
     }
 
@@ -379,8 +371,8 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getToggleMultilevel
      *
-     * @param boolean $override
-     * @param boolean $exists
+     * @param bool $override
+     * @param bool $exists
      */
     public function testImageFieldLocal($override, $exists)
     {
@@ -398,7 +390,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
                 pathinfo($file, PATHINFO_BASENAME),
                 'text/plain',
                 0,
-                UPLOAD_ERR_OK
+                UPLOAD_ERR_OK,
             ])
             ->getMock();
         $file
@@ -450,7 +442,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getToggle
      * @expectedException \InvalidArgumentException
      *
-     * @param boolean $toggle
+     * @param bool $toggle
      */
     public function testImageFieldRemoteFail($toggle)
     {
@@ -461,13 +453,13 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test image field remote bad image
+     * Test image field remote bad image.
      *
      * @dataProvider getToggleMultilevel
      * @expectedException \RuntimeException
      *
-     * @param boolean $toggle
-     * @param boolean $is_successful
+     * @param bool $toggle
+     * @param bool $is_successful
      */
     public function testImageFieldRemoteBadImage($toggle, $is_successful)
     {
@@ -498,13 +490,13 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test image field remote validator fail
+     * Test image field remote validator fail.
      *
      * @dataProvider getToggle
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Error message
      *
-     * @param boolean $toggle
+     * @param bool $toggle
      */
     public function testImageFieldRemoteValidatorFail($toggle)
     {
@@ -512,11 +504,11 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test image field remote
+     * Test image field remote.
      *
      * @dataProvider getToggle
      *
-     * @param boolean $toggle
+     * @param bool $toggle
      */
     public function testImageFieldRemote($toggle)
     {
@@ -524,9 +516,9 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Download image field remote
+     * Download image field remote.
      *
-     * @param boolean $toggle
+     * @param bool $toggle
      * @param string $message
      */
     protected function downloadImageFieldRemote($toggle, $message = '')
@@ -574,7 +566,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $list
             ->expects($this->once())
             ->method('has')
-            ->will($this->returnValue(!!$message))
+            ->will($this->returnValue((bool) $message))
             ->with(0);
         if ($message) {
             $error = $this->getMock('\Symfony\Component\Validator\ConstraintViolationInterface');

@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
@@ -15,12 +13,6 @@ use AnimeDb\Bundle\AppBundle\Service\PhpFinder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Test command executor
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CommandExecutorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -49,11 +41,10 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\PhpFinder')
             ->disableOriginalConstructor()
             ->getMock();
-
     }
 
     /**
-     * @param boolean $have_request
+     * @param bool $have_request
      *
      * @return CommandExecutor
      */
@@ -117,7 +108,7 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
      */
     public function getCommands()
     {
-        $console = escapeshellarg($this->root_dir . DIRECTORY_SEPARATOR . 'console');
+        $console = escapeshellarg($this->root_dir.DIRECTORY_SEPARATOR.'console');
 
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $expected = "/path/to/php {$console} cache:clear > nul 2>&1";
@@ -132,12 +123,12 @@ class CommandExecutorTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'php composer.phar update',
-                "/path/to/php composer.phar update",
+                '/path/to/php composer.phar update',
             ],
             [
                 'ping > ping.log',
                 'ping > ping.log',
-            ]
+            ],
         ];
     }
 

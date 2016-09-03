@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * Task for Task Scheduler
+ * Task for Task Scheduler.
  *
  * @ORM\Entity
  * @ORM\Table(name="task", indexes={
@@ -23,9 +21,6 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * })
  * @Assert\Callback(methods={"isModifyValid"})
  * @ORM\Entity(repositoryClass="AnimeDb\Bundle\AppBundle\Repository\Task")
- *
- * @package AnimeDb\Bundle\AppBundle\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Task
 {
@@ -72,7 +67,7 @@ class Task
     protected $next_run;
 
     /**
-     * A date/time string
+     * A date/time string.
      *
      * Valid formats are explained in Date and Time Formats.
      *
@@ -104,6 +99,7 @@ class Task
     public function setCommand($command)
     {
         $this->command = $command;
+
         return $this;
     }
 
@@ -131,6 +127,7 @@ class Task
     public function setLastRun(\DateTime $last_run)
     {
         $this->last_run = clone $last_run;
+
         return $this;
     }
 
@@ -150,6 +147,7 @@ class Task
     public function setNextRun(\DateTime $next_run)
     {
         $this->next_run = clone $next_run;
+
         return $this;
     }
 
@@ -169,8 +167,9 @@ class Task
     public function setInterval($interval)
     {
         if ($interval > 0) {
-            $this->setModify(sprintf('+%s second', (int)$interval));
+            $this->setModify(sprintf('+%s second', (int) $interval));
         }
+
         return $this;
     }
 
@@ -182,6 +181,7 @@ class Task
     public function setModify($modify)
     {
         $this->modify = $modify;
+
         return $this;
     }
 
@@ -201,6 +201,7 @@ class Task
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -219,7 +220,7 @@ class Task
     {
         return [
             self::STATUS_DISABLED,
-            self::STATUS_ENABLED
+            self::STATUS_ENABLED,
         ];
     }
 
@@ -237,7 +238,7 @@ class Task
     }
 
     /**
-     * Update task after execution
+     * Update task after execution.
      */
     public function executed()
     {

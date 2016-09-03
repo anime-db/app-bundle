@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath;
 
 use Symfony\Component\Form\AbstractType;
@@ -15,10 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use AnimeDb\Bundle\AppBundle\Util\Filesystem;
 
 /**
- * Local path choice form
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type\Field\LocalPath
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * Local path choice form.
  */
 class Choice extends AbstractType
 {
@@ -33,8 +28,8 @@ class Choice extends AbstractType
                 'label' => 'Path',
                 'required' => true,
                 'attr' => [
-                    'placeholder' => Filesystem::getUserHomeDir()
-                ]
+                    'placeholder' => Filesystem::getUserHomeDir(),
+                ],
             ])
             ->setMethod('GET');
 
@@ -45,16 +40,16 @@ class Choice extends AbstractType
         ) {
             // types: Unknown, Removable, Fixed, Network, CD-ROM, RAM Disk
             $choices = [];
-            foreach($fs->Drives as $drive) {
+            foreach ($fs->Drives as $drive) {
                 $drive = $fs->GetDrive($drive);
-                if($drive->DriveType == 3){
+                if ($drive->DriveType == 3) {
                     $name = $drive->Sharename;
                 } elseif ($drive->IsReady) {
                     $name = $drive->VolumeName;
                 } else {
                     $name = '[Drive not ready]';
                 }
-                $choices[$drive->DriveLetter] = $drive->DriveLetter . ': ' . $name;
+                $choices[$drive->DriveLetter] = $drive->DriveLetter.': '.$name;
             }
             $builder->add('letter', 'choice', ['choices' => $choices]);
         }

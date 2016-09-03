@@ -1,24 +1,17 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-/**
- * Pagination configuration
- *
- * @package AnimeDb\Bundle\AppBundle\Util\Pagination
- * @author Peter Gribanov <info@peter-gribanov.ru>
- */
 class Configuration
 {
     /**
-     * Length of the list of pagination defaults
+     * Length of the list of pagination defaults.
      *
      * @var int
      */
@@ -45,7 +38,7 @@ class Configuration
     protected $view;
 
     /**
-     * The number of pages displayed in the navigation
+     * The number of pages displayed in the navigation.
      *
      * @var int
      */
@@ -98,6 +91,7 @@ class Configuration
     public function setTotalPages($total_pages)
     {
         $this->total_pages = $total_pages;
+
         return $this;
     }
 
@@ -117,6 +111,7 @@ class Configuration
     public function setCurrentPage($current_page)
     {
         $this->current_page = $current_page;
+
         return $this;
     }
 
@@ -136,6 +131,7 @@ class Configuration
     public function setMaxNavigate($max_navigate)
     {
         $this->max_navigate = $max_navigate;
+
         return $this;
     }
 
@@ -148,7 +144,7 @@ class Configuration
     }
 
     /**
-     * Set page link
+     * Set page link.
      *
      * Basic reference, for example `page_%s.html` where %s page number, or
      * callback function which takes one parameter - the number of the page.
@@ -166,6 +162,7 @@ class Configuration
     public function setPageLink($page_link)
     {
         $this->page_link = $page_link;
+
         return $this;
     }
 
@@ -185,6 +182,7 @@ class Configuration
     public function setFirstPageLink($first_page_link)
     {
         $this->first_page_link = $first_page_link;
+
         return $this;
     }
 
@@ -196,6 +194,7 @@ class Configuration
         if (!$this->view) {
             $this->view = new View($this);
         }
+
         return $this->view;
     }
 }

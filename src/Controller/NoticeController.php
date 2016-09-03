@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Controller;
 
 use AnimeDb\Bundle\AppBundle\Entity\Notice;
@@ -15,16 +13,10 @@ use AnimeDb\Bundle\AppBundle\Repository\Notice as NoticeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Notice
- *
- * @package AnimeDb\Bundle\AppBundle\Controller
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class NoticeController extends BaseController
 {
     /**
-     * Show last notice
+     * Show last notice.
      *
      * @param Request $request
      *
@@ -58,8 +50,8 @@ class NoticeController extends BaseController
                 'see_later' => $this->generateUrl('notice_see_later'),
                 'content' => $this->renderView('AnimeDbAppBundle:Notice:show.html.twig', [
                     'notice' => $notice,
-                    'link_all' => $request->get('all')
-                ])
+                    'link_all' => $request->query->getBoolean('all'),
+                ]),
             ]);
         }
 
@@ -88,7 +80,7 @@ class NoticeController extends BaseController
     public function seeLaterAction()
     {
         /* @var $rep NoticeRepository */
-        $rep =  $this->getDoctrine()->getRepository('AnimeDbAppBundle:Notice');
+        $rep = $this->getDoctrine()->getRepository('AnimeDbAppBundle:Notice');
         $rep->seeLater();
 
         return new JsonResponse([]);

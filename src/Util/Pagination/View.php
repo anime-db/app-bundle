@@ -1,8 +1,7 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
@@ -11,12 +10,6 @@ namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Pagination view
- *
- * @package AnimeDb\Bundle\AppBundle\Util\Pagination
- * @author Peter Gribanov <info@peter-gribanov.ru>
- */
 class View implements \IteratorAggregate
 {
     /**
@@ -57,7 +50,8 @@ class View implements \IteratorAggregate
     /**
      * @param Configuration $config
      */
-    public function __construct(Configuration $config) {
+    public function __construct(Configuration $config)
+    {
         $this->config = $config;
     }
 
@@ -77,6 +71,7 @@ class View implements \IteratorAggregate
         if (!$this->first && $this->config->getCurrentPage() > 1) {
             $this->first = new Node(1, $this->buildLink(1));
         }
+
         return $this->first;
     }
 
@@ -91,6 +86,7 @@ class View implements \IteratorAggregate
                 $this->buildLink($this->config->getCurrentPage() - 1)
             );
         }
+
         return $this->prev;
     }
 
@@ -106,6 +102,7 @@ class View implements \IteratorAggregate
                 true
             );
         }
+
         return $this->current;
     }
 
@@ -120,6 +117,7 @@ class View implements \IteratorAggregate
                 $this->buildLink($this->config->getCurrentPage() + 1)
             );
         }
+
         return $this->next;
     }
 
@@ -131,6 +129,7 @@ class View implements \IteratorAggregate
         if (!$this->last && $this->config->getCurrentPage() < $this->getTotal()) {
             $this->last = new Node($this->getTotal(), $this->buildLink($this->getTotal()));
         }
+
         return $this->last;
     }
 
@@ -167,7 +166,7 @@ class View implements \IteratorAggregate
             $page_from = $page_from > 1 ? $page_from : 1;
 
             // build list
-            for ($page = $page_from; $page <= $page_to; $page++) {
+            for ($page = $page_from; $page <= $page_to; ++$page) {
                 if ($page == $this->config->getCurrentPage()) {
                     $this->list->add($this->getCurrent());
                 } else {

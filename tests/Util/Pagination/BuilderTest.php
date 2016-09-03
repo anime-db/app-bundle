@@ -1,23 +1,15 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Builder;
 
-/**
- * Test builder
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class BuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -34,9 +26,9 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getConfigs
      *
-     * @param integer $max_navigate
-     * @param integer $total_pages
-     * @param integer $current_page
+     * @param int $max_navigate
+     * @param int $total_pages
+     * @param int $current_page
      */
     public function testCreate($max_navigate, $total_pages, $current_page)
     {

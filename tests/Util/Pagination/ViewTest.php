@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Configuration;
@@ -15,12 +13,6 @@ use AnimeDb\Bundle\AppBundle\Util\Pagination\View;
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Test view
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -58,7 +50,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ['getFirst', 1],
             ['getPrev', 1],
             ['getNext', 110],
-            ['getLast', 110]
+            ['getLast', 110],
         ];
     }
 
@@ -89,7 +81,9 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['page_%s.html'],
-            [function ($number) { return 'page_'.$number.'.html'; }],
+            [function ($number) {
+                return 'page_'.$number.'.html';
+            }],
         ];
     }
 
@@ -101,14 +95,18 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         return [
             ['page_%s.html', ''],
             ['page_%s.html', '/index.html'],
-            [function ($number) { return 'page_'.$number.'.html'; }, ''],
-            [function ($number) { return 'page_'.$number.'.html'; }, '/index.html'],
+            [function ($number) {
+                return 'page_'.$number.'.html';
+            }, ''],
+            [function ($number) {
+                return 'page_'.$number.'.html';
+            }, '/index.html'],
         ];
     }
 
     /**
      * @param string|callback $page_link
-     * @param integer $number
+     * @param int $number
      *
      * @return string
      */
@@ -277,7 +275,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                 5,
                 '%s',
                 null,
-                new ArrayCollection()
+                new ArrayCollection(),
             ],
             [
                 2,
@@ -288,7 +286,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                 new ArrayCollection([
                     new Node(1, '/?page=1', true),
                     new Node(2, '/?page=2'),
-                ])
+                ]),
             ],
             [
                 2,
@@ -299,7 +297,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                 new ArrayCollection([
                     new Node(1, '/?page=1'),
                     new Node(2, '/?page=2', true),
-                ])
+                ]),
             ],
             [
                 10,
@@ -313,7 +311,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                     new Node(3, '/?page=3'),
                     new Node(4, '/?page=4'),
                     new Node(5, '/?page=5'),
-                ])
+                ]),
             ],
             [
                 10,
@@ -327,7 +325,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                     new Node(8, '/?page=8'),
                     new Node(9, '/?page=9'),
                     new Node(10, '/?page=10', true),
-                ])
+                ]),
             ],
             [
                 10,
@@ -341,7 +339,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                     new Node(5, '/?page=5', true),
                     new Node(6, '/?page=6'),
                     new Node(7, '/?page=7'),
-                ])
+                ]),
             ],
             [
                 10,
@@ -356,17 +354,17 @@ class ViewTest extends \PHPUnit_Framework_TestCase
                     new Node(5, '/?page=5', true),
                     new Node(6, '/?page=6'),
                     new Node(7, '/?page=7'),
-                ])
-            ]
+                ]),
+            ],
         ];
     }
 
     /**
      * @dataProvider getNodes
      *
-     * @param integer $total_pages
-     * @param integer $current_page
-     * @param integer $max_navigate
+     * @param int $total_pages
+     * @param int $current_page
+     * @param int $max_navigate
      * @param string|\Closure $page_link
      * @param string $first_page_link
      * @param ArrayCollection $list

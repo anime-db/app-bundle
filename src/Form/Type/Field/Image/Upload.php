@@ -1,23 +1,18 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Form\Type\Field\Image;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Image upload form
- *
- * @package AnimeDb\Bundle\AppBundle\Form\Type\Field\Image
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * Image upload form.
  */
 class Upload extends AbstractType
 {
@@ -30,11 +25,11 @@ class Upload extends AbstractType
         $builder
             ->add('remote', 'text', [
                 'label' => 'Image URL',
-                'required' => false
+                'required' => false,
             ])
             ->add('local', 'file', [
                 'label' => 'Upload image',
-                'required' => false
+                'required' => false,
             ]);
     }
 

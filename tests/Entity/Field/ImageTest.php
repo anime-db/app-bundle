@@ -1,24 +1,16 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Entity\Field;
 
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Test item image
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity\Field
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -62,11 +54,12 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     public function getMethods()
     {
         $this->setUp();
+
         return [
             ['getLocal', 'setLocal', null, $this->file],
             ['getRemote', 'setRemote', '', 'http://example.com/foo'],
             ['getFilename', 'setFilename', '', 'foo', 'tmp/'.date('Ymd').'/foo'],
-            ['getFilename', 'setFilename', '', 'tmp/20141018/bar']
+            ['getFilename', 'setFilename', '', 'tmp/20141018/bar'],
         ];
     }
 

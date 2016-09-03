@@ -1,25 +1,17 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Util\Pagination;
 
-/**
- * Builder
- *
- * @package AnimeDb\Bundle\AppBundle\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Builder
 {
     /**
-     * The number of pages displayed in the navigation
+     * The number of pages displayed in the navigation.
      *
      * @var int
      */
@@ -39,7 +31,8 @@ class Builder
      *
      * @return Configuration
      */
-    public function create($total_pages = 0, $current_page = 1) {
+    public function create($total_pages = 0, $current_page = 1)
+    {
         return (new Configuration($total_pages, $current_page))
             ->setMaxNavigate($this->max_navigate);
     }

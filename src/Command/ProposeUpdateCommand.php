@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -16,15 +14,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use AnimeDb\Bundle\AppBundle\Entity\Notice;
 
 /**
- * Propose to update the application
- *
- * @package AnimeDb\Bundle\AppBundle\Command
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * Propose to update the application.
  */
 class ProposeUpdateCommand extends ContainerAwareCommand
 {
     /**
-     * Interval offers updates
+     * Interval offers updates.
      *
      * 30 days
      *
@@ -33,7 +28,7 @@ class ProposeUpdateCommand extends ContainerAwareCommand
     const INERVAL_UPDATE = 2592000;
 
     /**
-     * Interval notification
+     * Interval notification.
      *
      * 5 days
      *
@@ -53,7 +48,8 @@ class ProposeUpdateCommand extends ContainerAwareCommand
      *
      * @return bool
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $root = $this->getContainer()->getParameter('kernel.root_dir').'/../';
         $time = filemtime($root.'composer.json');
 
@@ -62,7 +58,7 @@ class ProposeUpdateCommand extends ContainerAwareCommand
         }
 
         // need update
-        if ($time+self::INERVAL_UPDATE < time()) {
+        if ($time + self::INERVAL_UPDATE < time()) {
             $output->writeln('Application must be updated');
 
             // send notice
@@ -74,7 +70,7 @@ class ProposeUpdateCommand extends ContainerAwareCommand
             $em->persist($notice);
             $em->flush();
 
-            touch($root.'composer.json', time()+self::INERVAL_NOTIFICATION-self::INERVAL_UPDATE);
+            touch($root.'composer.json', time() + self::INERVAL_NOTIFICATION - self::INERVAL_UPDATE);
         } else {
             $output->writeln('Application is already updated');
         }

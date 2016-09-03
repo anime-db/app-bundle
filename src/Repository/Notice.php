@@ -1,25 +1,17 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use AnimeDb\Bundle\AppBundle\Entity\Notice as NoticeEntity;
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Notice repository
- *
- * @package AnimeDb\Bundle\AppBundle\Repository
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Notice extends EntityRepository
 {
     /**
@@ -87,7 +79,7 @@ class Notice extends EntityRepository
     public function seeLater()
     {
         $time = time();
-        $start = date('Y-m-d H:i:s', $time+self::SEE_LATER_INTERVAL);
+        $start = date('Y-m-d H:i:s', $time + self::SEE_LATER_INTERVAL);
         $time = date('Y-m-d H:i:s', $time);
 
         // not shown notice
@@ -183,7 +175,7 @@ class Notice extends EntityRepository
     {
         $query = $this->createQueryBuilder('n');
 
-        if (is_integer($status) && in_array($status, NoticeEntity::getStatuses())) {
+        if (is_int($status) && in_array($status, NoticeEntity::getStatuses())) {
             $query
                 ->where('n.status = :status')
                 ->setParameter('status', $status);

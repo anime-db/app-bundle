@@ -1,23 +1,15 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Util\Pagination;
 
 use AnimeDb\Bundle\AppBundle\Util\Pagination\Node;
 
-/**
- * Test node
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Util\Pagination
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -34,9 +26,9 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getNodes
      *
-     * @param integer $page
+     * @param int $page
      * @param string $link
-     * @param boolean $is_current
+     * @param bool $is_current
      */
     public function test($page, $link, $is_current)
     {

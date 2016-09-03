@@ -1,23 +1,15 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AppBundle\Tests\Entity;
 
 use AnimeDb\Bundle\AppBundle\Entity\Plugin;
 
-/**
- * Test installed plugin
- *
- * @package AnimeDb\Bundle\AppBundle\Tests\Entity
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -37,7 +29,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['setLogo'],
-            ['setFilename']
+            ['setFilename'],
         ];
     }
 
