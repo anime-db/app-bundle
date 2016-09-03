@@ -42,6 +42,5 @@
     },
     "suggest": {
         "ext-com_dotnet": "Allows to switch between drives in Windows"
-    },
-    "minimum-stability": "stable"
+    }
 }
