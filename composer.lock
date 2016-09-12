@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "615c6f4ef3741c67a395532e12ce757c",
-    "content-hash": "748529d3cc8f4d6f0cec1df5acab10bb",
+    "hash": "f9c37e35b8595cd590684f596fa37b6a",
+    "content-hash": "f5df622c4d66b6d38337abc8dbb72736",
     "packages": [
         {
             "name": "anime-db/api-client-bundle",
@@ -855,16 +855,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.16",
+            "version": "v2.7.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "42199fef6e9b448947d395add058642975e59127"
+                "reference": "d3ddb1a34e12e78fd763fbcf89513a38d7eb91ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/42199fef6e9b448947d395add058642975e59127",
-                "reference": "42199fef6e9b448947d395add058642975e59127",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/d3ddb1a34e12e78fd763fbcf89513a38d7eb91ce",
+                "reference": "d3ddb1a34e12e78fd763fbcf89513a38d7eb91ce",
                 "shasum": ""
             },
             "require": {
@@ -978,20 +978,20 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-07-30 08:15:52"
+            "time": "2016-09-07 00:55:03"
         },
         {
             "name": "twig/twig",
-            "version": "v1.24.1",
+            "version": "v1.24.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512"
+                "reference": "33093f6e310e6976baeac7b14f3a6ec02f2d79b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3566d311a92aae4deec6e48682dc5a4528c4a512",
-                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/33093f6e310e6976baeac7b14f3a6ec02f2d79b7",
+                "reference": "33093f6e310e6976baeac7b14f3a6ec02f2d79b7",
                 "shasum": ""
             },
             "require": {
@@ -1039,22 +1039,22 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-05-30 09:11:59"
+            "time": "2016-09-01 17:50:53"
         }
     ],
     "packages-dev": [
         {
             "name": "anime-db/ani-db-browser-bundle",
-            "version": "v1.1.0",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/ani-db-browser-bundle.git",
-                "reference": "a00819fb532b7a4762f9096139ee2554acbc9c93"
+                "reference": "6e601670369468d77d8f3a1ffe76acb2cd16f8ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/ani-db-browser-bundle/zipball/a00819fb532b7a4762f9096139ee2554acbc9c93",
-                "reference": "a00819fb532b7a4762f9096139ee2554acbc9c93",
+                "url": "https://api.github.com/repos/anime-db/ani-db-browser-bundle/zipball/6e601670369468d77d8f3a1ffe76acb2cd16f8ee",
+                "reference": "6e601670369468d77d8f3a1ffe76acb2cd16f8ee",
                 "shasum": ""
             },
             "require": {
@@ -1081,26 +1081,33 @@
             ],
             "description": "Plugin AniDB for the catalog Anime DB",
             "homepage": "http://github.com/anime-db/ani-db-browser-bundle",
-            "time": "2016-06-28 12:48:02"
+            "time": "2016-01-05 12:22:27"
         },
         {
             "name": "anime-db/ani-db-filler-bundle",
-            "version": "v0.1.9",
+            "version": "v0.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/ani-db-filler-bundle.git",
-                "reference": "22010f82efe8034b253b12313152de14e1abf4e7"
+                "reference": "acc6a8c2326d5f4de59f715bdae602a7ce56f3c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/ani-db-filler-bundle/zipball/22010f82efe8034b253b12313152de14e1abf4e7",
-                "reference": "22010f82efe8034b253b12313152de14e1abf4e7",
+                "url": "https://api.github.com/repos/anime-db/ani-db-filler-bundle/zipball/acc6a8c2326d5f4de59f715bdae602a7ce56f3c4",
+                "reference": "acc6a8c2326d5f4de59f715bdae602a7ce56f3c4",
                 "shasum": ""
             },
             "require": {
-                "anime-db/ani-db-browser-bundle": ">=1.0.0",
-                "anime-db/catalog-bundle": ">=0.4.17",
+                "anime-db/ani-db-browser-bundle": "~1.0.0",
                 "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "anime-db/app-bundle": "~0.4.4",
+                "anime-db/catalog-bundle": "~0.4.26",
+                "phpunit/phpunit": "^4.8.0",
+                "satooshi/php-coveralls": "^1.0.0",
+                "scrutinizer/ocular": "~1.3.0",
+                "symfony/expression-language": "~2.4|~3.0"
             },
             "type": "anime-db-plugin",
             "autoload": {
@@ -1115,7 +1122,7 @@
             ],
             "description": "Plugin AniDB for the catalog Anime DB",
             "homepage": "http://github.com/anime-db/ani-db-filler-bundle",
-            "time": "2015-03-29 15:11:21"
+            "time": "2016-09-03 10:00:27"
         },
         {
             "name": "anime-db/anime-db",
@@ -1208,20 +1215,20 @@
         },
         {
             "name": "anime-db/catalog-bundle",
-            "version": "v0.4.26",
+            "version": "v0.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/catalog-bundle.git",
-                "reference": "2bd9650058d51368163fd6d023ba6e97f4255ea3"
+                "reference": "82a97c40aa1021e429a6ee65d4e5da593d4cea81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/2bd9650058d51368163fd6d023ba6e97f4255ea3",
-                "reference": "2bd9650058d51368163fd6d023ba6e97f4255ea3",
+                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/82a97c40aa1021e429a6ee65d4e5da593d4cea81",
+                "reference": "82a97c40aa1021e429a6ee65d4e5da593d4cea81",
                 "shasum": ""
             },
             "require": {
-                "anime-db/app-bundle": ">=0.4.0,<0.4.x-dev",
+                "anime-db/app-bundle": ">=0.4.0",
                 "ext-mbstring": "*",
                 "knplabs/knp-menu-bundle": "1.1.*",
                 "php": ">=5.4.0"
@@ -1235,7 +1242,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.4.x-dev"
+                    "dev-master": "0.4.x-dev",
+                    "dev-develop": "0.4.x-dev"
                 }
             },
             "autoload": {
@@ -1263,7 +1271,7 @@
             ],
             "description": "The application for making home collection anime",
             "homepage": "http://anime-db.org",
-            "time": "2016-03-30 15:36:31"
+            "time": "2016-01-04 18:47:36"
         },
         {
             "name": "anime-db/shikimori-browser-bundle",
@@ -1665,16 +1673,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.4",
+            "version": "v2.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "abbdfd1cff43a7b99d027af3be709bc8fc7d4769"
+                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/abbdfd1cff43a7b99d027af3be709bc8fc7d4769",
-                "reference": "abbdfd1cff43a7b99d027af3be709bc8fc7d4769",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
+                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
                 "shasum": ""
             },
             "require": {
@@ -1683,7 +1691,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "4.*",
-                "symfony/console": "2.*"
+                "symfony/console": "2.*||^3.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
@@ -1732,7 +1740,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-01-05 22:11:12"
+            "time": "2016-09-09 19:13:33"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -2085,16 +2093,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.4",
+            "version": "v2.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "bc4ddbfb0114cb33438cc811c9a740d8aa304aab"
+                "reference": "73e4be7c7b3ba26f96b781a40b33feba4dfa6d45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/bc4ddbfb0114cb33438cc811c9a740d8aa304aab",
-                "reference": "bc4ddbfb0114cb33438cc811c9a740d8aa304aab",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/73e4be7c7b3ba26f96b781a40b33feba4dfa6d45",
+                "reference": "73e4be7c7b3ba26f96b781a40b33feba4dfa6d45",
                 "shasum": ""
             },
             "require": {
@@ -2157,7 +2165,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-01-05 21:34:58"
+            "time": "2016-09-10 18:51:13"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -2236,6 +2244,98 @@
                 "uploadable"
             ],
             "time": "2015-02-24 21:41:37"
+        },
+        {
+            "name": "guzzlehttp/guzzle",
+            "version": "v3.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "*",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "1.0.*",
+                "symfony/class-loader": "*",
+                "zendframework/zend-cache": "<2.3",
+                "zendframework/zend-log": "<2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2014-01-28 22:29:15"
         },
         {
             "name": "imagine/imagine",
@@ -3519,23 +3619,23 @@
         },
         {
             "name": "scrutinizer/ocular",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrutinizer-ci/ocular.git",
-                "reference": "72dcffcd4fbafeff41bf51da349df33170f487e5"
+                "reference": "b87630fa5a872283319a84133bb610163fe509b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrutinizer-ci/ocular/zipball/72dcffcd4fbafeff41bf51da349df33170f487e5",
-                "reference": "72dcffcd4fbafeff41bf51da349df33170f487e5",
+                "url": "https://api.github.com/repos/scrutinizer-ci/ocular/zipball/b87630fa5a872283319a84133bb610163fe509b1",
+                "reference": "b87630fa5a872283319a84133bb610163fe509b1",
                 "shasum": ""
             },
             "require": {
-                "guzzle/guzzle": "~3.0",
+                "guzzlehttp/guzzle": "~3.0",
                 "jms/serializer": "^1.0.0",
                 "phpoption/phpoption": "~1.0",
-                "symfony/console": "~2.0|~3.0",
+                "symfony/console": "^2.0.5|~3.0",
                 "symfony/process": "~2.3|~3.0"
             },
             "require-dev": {
@@ -3552,7 +3652,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2015-12-16 14:33:15"
+            "time": "2016-09-09 08:07:18"
         },
         {
             "name": "sebastian/comparator",
@@ -4066,17 +4166,17 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v4.0.7",
+            "version": "v4.0.9",
             "target-dir": "Sensio/Bundle/DistributionBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "d738952285a1a7d969f9338f735108c9f65bb7f2"
+                "reference": "cad8516c9c0f14d739add965fb93ff82ead467ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/d738952285a1a7d969f9338f735108c9f65bb7f2",
-                "reference": "d738952285a1a7d969f9338f735108c9f65bb7f2",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/cad8516c9c0f14d739add965fb93ff82ead467ec",
+                "reference": "cad8516c9c0f14d739add965fb93ff82ead467ec",
                 "shasum": ""
             },
             "require": {
@@ -4122,7 +4222,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2016-06-23 16:10:25"
+            "time": "2016-09-10 19:25:23"
         },
         {
             "name": "sensio/framework-extra-bundle",
