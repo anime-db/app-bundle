@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f9c37e35b8595cd590684f596fa37b6a",
-    "content-hash": "f5df622c4d66b6d38337abc8dbb72736",
+    "hash": "04565dabdfe3b08828a4444bc64ff4c0",
+    "content-hash": "ea012c0cf2c040c0411fba62bc76cb7a",
     "packages": [
         {
             "name": "anime-db/api-client-bundle",
@@ -1215,35 +1215,37 @@
         },
         {
             "name": "anime-db/catalog-bundle",
-            "version": "v0.4.23",
+            "version": "v0.4.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anime-db/catalog-bundle.git",
-                "reference": "82a97c40aa1021e429a6ee65d4e5da593d4cea81"
+                "reference": "2132f51c2a91b46f64b0f893e56c35f0a574127a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/82a97c40aa1021e429a6ee65d4e5da593d4cea81",
-                "reference": "82a97c40aa1021e429a6ee65d4e5da593d4cea81",
+                "url": "https://api.github.com/repos/anime-db/catalog-bundle/zipball/2132f51c2a91b46f64b0f893e56c35f0a574127a",
+                "reference": "2132f51c2a91b46f64b0f893e56c35f0a574127a",
                 "shasum": ""
             },
             "require": {
                 "anime-db/app-bundle": ">=0.4.0",
                 "ext-mbstring": "*",
-                "knplabs/knp-menu-bundle": "1.1.*",
+                "knplabs/knp-menu-bundle": "2.1.*",
                 "php": ">=5.4.0"
             },
+            "require-dev": {
+                "anime-db/anime-db": ">=0.3.0",
+                "phpunit/phpunit": "^4.8.0",
+                "satooshi/php-coveralls": "^1.0",
+                "scrutinizer/ocular": "1.3.*"
+            },
             "suggest": {
-                "anime-db/ani-db-filler-bundle": "Allows import data from a site AniDB.net",
-                "anime-db/shikimori-filler-bundle": "Allows import data from a site Shikimori.org",
-                "anime-db/world-art-filler-bundle": "Allows import data from a site World-Art.ru",
                 "ext-intl": "Allows correct sort form view"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.4.x-dev",
-                    "dev-develop": "0.4.x-dev"
+                    "dev-master": "0.4.x-dev"
                 }
             },
             "autoload": {
@@ -1271,7 +1273,7 @@
             ],
             "description": "The application for making home collection anime",
             "homepage": "http://anime-db.org",
-            "time": "2016-01-04 18:47:36"
+            "time": "2016-09-13 19:21:33"
         },
         {
             "name": "anime-db/shikimori-browser-bundle",
@@ -2713,25 +2715,27 @@
         },
         {
             "name": "knplabs/knp-menu",
-            "version": "v1.1.2",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpMenu.git",
-                "reference": "f8e867268f63f561c1adadd6cbb5d8524f921873"
+                "reference": "9917b999a3c3d3901386d60c4888b07679291031"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpMenu/zipball/f8e867268f63f561c1adadd6cbb5d8524f921873",
-                "reference": "f8e867268f63f561c1adadd6cbb5d8524f921873",
+                "url": "https://api.github.com/repos/KnpLabs/KnpMenu/zipball/9917b999a3c3d3901386d60c4888b07679291031",
+                "reference": "9917b999a3c3d3901386d60c4888b07679291031",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "pimple/pimple": "*",
-                "silex/silex": "1.0.*",
-                "twig/twig": ">=1.2,<2.0-dev"
+                "pimple/pimple": "~1.0",
+                "silex/silex": "~1.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0",
+                "symfony/routing": "~2.3|~3.0",
+                "twig/twig": "~1.16|~2.0"
             },
             "suggest": {
                 "pimple/pimple": "for the built-in implementations of the menu provider and renderer provider",
@@ -2741,12 +2745,12 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "2.1-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Knp\\Menu\\": "src/"
+                "psr-4": {
+                    "Knp\\Menu\\": "src/Knp/Menu"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2773,31 +2777,39 @@
                 "menu",
                 "tree"
             ],
-            "time": "2012-06-10 16:20:40"
+            "time": "2016-01-08 15:42:54"
         },
         {
             "name": "knplabs/knp-menu-bundle",
-            "version": "v1.1.2",
-            "target-dir": "Knp/Bundle/MenuBundle",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpMenuBundle.git",
-                "reference": "2fecac02614e5a006f674dd5dd754eeaeca060b9"
+                "reference": "42ff1953c3a79d0b31aba2ece8c03fbd70e7f1ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpMenuBundle/zipball/2fecac02614e5a006f674dd5dd754eeaeca060b9",
-                "reference": "2fecac02614e5a006f674dd5dd754eeaeca060b9",
+                "url": "https://api.github.com/repos/KnpLabs/KnpMenuBundle/zipball/42ff1953c3a79d0b31aba2ece8c03fbd70e7f1ca",
+                "reference": "42ff1953c3a79d0b31aba2ece8c03fbd70e7f1ca",
                 "shasum": ""
             },
             "require": {
-                "knplabs/knp-menu": "~1.1",
-                "symfony/framework-bundle": "~2.0"
+                "knplabs/knp-menu": "~2.1",
+                "symfony/framework-bundle": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "symfony/expression-language": "~2.4|~3.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0"
             },
             "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Knp\\Bundle\\MenuBundle": ""
+                "psr-4": {
+                    "Knp\\Bundle\\MenuBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2822,7 +2834,7 @@
             "keywords": [
                 "menu"
             ],
-            "time": "2013-05-25 10:20:03"
+            "time": "2016-06-21 06:53:03"
         },
         {
             "name": "kriswallsmith/assetic",
