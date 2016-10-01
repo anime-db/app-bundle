@@ -17,8 +17,7 @@ before_install:
     - mkdir build
 
 install:
-    - COMPOSER_ROOT_VERSION=dev-master
-    - composer install --no-interaction --no-progress
+    - COMPOSER_ROOT_VERSION=dev-master composer install --no-interaction --no-progress
 
 script:
     - vendor/bin/phpunit
