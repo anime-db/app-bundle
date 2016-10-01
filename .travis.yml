@@ -12,12 +12,12 @@ notifications:
     email: dev@anime-db.org
 
 before_install:
-    - COMPOSER_ROOT_VERSION=dev-master composer install
     - 'if [[ -n "$GH_TOKEN" ]]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;'
     - composer self-update
     - mkdir build
 
 install:
+    - COMPOSER_ROOT_VERSION=dev-master
     - composer install --no-interaction --no-progress
 
 script:
