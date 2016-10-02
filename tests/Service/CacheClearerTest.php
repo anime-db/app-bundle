@@ -41,7 +41,7 @@ class CacheClearerTest extends \PHPUnit_Framework_TestCase
         $executor
             ->expects($this->once())
             ->method('console')
-            ->with('cache:clear --no-debug --env='.($env ?: 'dev'));
+            ->with('cache:clear --no-debug --env='.($env ?: 'dev'), 0);
 
         $clearer = new CacheClearer($executor, 'dev');
         $clearer->clear($env);
