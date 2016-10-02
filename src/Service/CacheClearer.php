@@ -35,6 +35,6 @@ class CacheClearer
      */
     public function clear($env = '')
     {
-        $this->executor->console('cache:clear --no-debug --env='.($env ?: $this->env));
+        $this->executor->console('cache:clear --no-debug --env='.($env ?: $this->env), 0);
     }
 }
