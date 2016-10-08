@@ -8,33 +8,37 @@
  */
 namespace AnimeDb\Bundle\AppBundle\Service;
 
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+
 class CacheClearer
 {
     /**
      * @var string
      */
-    protected $env;
+    protected $root;
 
     /**
-     * @var CommandExecutor
+     * @var Filesystem
      */
-    protected $executor;
+    protected $fs;
 
     /**
-     * @param CommandExecutor $executor
-     * @param string $env
+     * @param Filesystem $fs
+     * @param string $root
      */
-    public function __construct(CommandExecutor $executor, $env)
+    public function __construct(Filesystem $fs, $root)
     {
-        $this->executor = $executor;
-        $this->env = $env;
+        $this->fs = $fs;
+        $this->root = $root;
     }
 
-    /**
-     * @param string $env
-     */
-    public function clear($env = '')
+    public function clear()
     {
-        $this->executor->console('cache:clear --no-debug --env='.($env ?: $this->env), 0);
+        try {
+            $this->fs->remove($this->root.'/cache/'); // so quickly
+        } catch (IOException $e) {
+            // is not a critical error
+        }
     }
 }

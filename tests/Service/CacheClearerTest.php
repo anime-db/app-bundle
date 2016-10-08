@@ -9,41 +9,43 @@
 namespace AnimeDb\Bundle\AppBundle\Tests\Service;
 
 use AnimeDb\Bundle\AppBundle\Service\CacheClearer;
-use AnimeDb\Bundle\AppBundle\Service\CommandExecutor;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CacheClearerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return array
-     */
-    public function getEnv()
+    public function testClear()
     {
-        return [
-            [''],
-            ['prod'],
-            ['dev'],
-            ['test'],
-        ];
-    }
-
-    /**
-     * @dataProvider getEnv
-     *
-     * @param string $env
-     */
-    public function testClear($env)
-    {
-        /* @var $executor \PHPUnit_Framework_MockObject_MockObject|CommandExecutor */
-        $executor = $this
-            ->getMockBuilder('\AnimeDb\Bundle\AppBundle\Service\CommandExecutor')
+        $root = 'foo';
+        /* @var $fs \PHPUnit_Framework_MockObject_MockObject|Filesystem */
+        $fs = $this
+            ->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
             ->disableOriginalConstructor()
             ->getMock();
-        $executor
+        $fs
             ->expects($this->once())
-            ->method('console')
-            ->with('cache:clear --no-debug --env='.($env ?: 'dev'), 0);
+            ->method('remove')
+            ->with($root.'/cache/');
 
-        $clearer = new CacheClearer($executor, 'dev');
-        $clearer->clear($env);
+        $clearer = new CacheClearer($fs, $root);
+        $clearer->clear();
+    }
+
+    public function testCatchException()
+    {
+        $root = 'foo';
+        /* @var $fs \PHPUnit_Framework_MockObject_MockObject|Filesystem */
+        $fs = $this
+            ->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $fs
+            ->expects($this->once())
+            ->method('remove')
+            ->with($root.'/cache/')
+            ->willThrowException(new IOException('bar'));
+
+        $clearer = new CacheClearer($fs, $root);
+        $clearer->clear();
     }
 }

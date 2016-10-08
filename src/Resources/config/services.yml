@@ -8,7 +8,7 @@ services:
 
     anime_db.cache_clearer:
         class: AnimeDb\Bundle\AppBundle\Service\CacheClearer
-        arguments: [ '@anime_db.command', '%kernel.environment%' ]
+        arguments: [ '@filesystem', '%kernel.root_dir%' ]
 
     anime_db.command:
         class: AnimeDb\Bundle\AppBundle\Service\CommandExecutor
