@@ -16,10 +16,17 @@
 
 ## Указатель документации
 
-**L1b для агентов (кратко):**
-- [.claude-docs/index.md](.claude-docs/index.md) — роутинг; начинать отсюда при сомнениях
-- [.claude-docs/architecture.md](.claude-docs/architecture.md) — устройство бандла
-- [.claude-docs/gotchas.md](.claude-docs/gotchas.md) — подводные камни / footguns
+### Agent docs (.claude-docs/)
+
+Тонкий L1b-слой для агентов. Начинать с `index.md`.
+
+| Файл                                                         | Когда читать                                                            |
+|--------------------------------------------------------------|-------------------------------------------------------------------------|
+| [.claude-docs/index.md](.claude-docs/index.md)               | роутинг; начинать отсюда при сомнениях                                  |
+| [.claude-docs/architecture.md](.claude-docs/architecture.md) | устройство бандла: структура, сервисы, события                          |
+| [.claude-docs/gotchas.md](.claude-docs/gotchas.md)           | нетривиальные ловушки и «так и задумано»                                |
+| [.claude-docs/glossary.md](.claude-docs/glossary.md)         | имя/термин читается неоднозначно: опечатки в коде, исторический нейминг |
+| [.claude-docs/context.md](.claude-docs/context.md)           | кто вызывает код, модель угроз, статус легаси-решений                   |
 
 **docs/ (развёрнуто, для людей):**
 - [docs/AUDIT.md](docs/AUDIT.md) — сводный аудит
