@@ -4,6 +4,8 @@ tags: [memory/repo, architecture]
 
 # Архитектура — anime-db/app-bundle
 
+> L1b-слой для агентов (кратко). Развёрнутая версия — [../docs/PROJECT.md](../docs/PROJECT.md) и [../docs/TECHNICAL.md](../docs/TECHNICAL.md).
+
 Бандл Symfony 2/3 (`AnimeDbAppBundle`), реализующий ядро приложения менеджера домашней коллекции аниме AnimeDB.
 
 ## Структура бандла
@@ -58,13 +60,13 @@ src/
 
 ## Слушатели событий
 
-| Слушатель | Прослушиваемые события                                   | Ответственность                                                                  |
-|-----------|----------------------------------------------------------|----------------------------------------------------------------------------------|
-| `Request` | `kernel.request`, `kernel.response`                      | Устанавливает локаль Gedmo translatable; добавляет заголовки кэша                 |
-| `Console` | `console.command`                                        | Устанавливает локаль Gedmo translatable для CLI-команд                           |
-| `Package` | `anime_db.package.installed/updated/removed`             | Регистрирует/удаляет сущности `Plugin`; настраивает драйвер кэша shmop            |
+| Слушатель | Прослушиваемые события                                   | Ответственность                                                                                   |
+|-----------|----------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `Request` | `kernel.request`, `kernel.response`                      | Устанавливает локаль Gedmo translatable; добавляет заголовки кэша                                 |
+| `Console` | `console.command`                                        | Устанавливает локаль Gedmo translatable для CLI-команд                                            |
+| `Package` | `anime_db.package.installed/updated/removed`             | Регистрирует/удаляет сущности `Plugin`; настраивает драйвер кэша shmop                            |
 | `Project` | `anime_db.project.updated`, `anime_db.project.installed` | Ставит в очередь задачу `ProposeUpdate`; добавляет расширение shmop в composer.json, если его нет |
-| `Entity`  | Doctrine `postRemove`, `postUpdate`                      | Удаляет осиротевшие файлы изображений с диска при удалении/обновлении сущности    |
+| `Entity`  | Doctrine `postRemove`, `postUpdate`                      | Удаляет осиротевшие файлы изображений с диска при удалении/обновлении сущности                    |
 
 ## Утилита пагинации
 
