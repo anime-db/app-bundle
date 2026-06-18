@@ -16,8 +16,8 @@ tags: [memory/repo, context, security]
 `@anime_db.manipulator.parameters`, `@anime_db.api.client`, `@anime_db.client`).
 
 Модель развёртывания: приложение для **домашнего использования**. Пользователь запускает его на своём ПК
-(Windows или *nix), UI открывает в браузере на `localhost`. Отдельной утилиты-монитора (`anime-db/monitor`,
-C++/Qt System Tray) запускает процесс на Windows.
+(Windows или *nix), UI открывает в браузере на `localhost`. На Windows существует отдельная утилита-монитор
+(`anime-db/monitor`, C++/Qt, иконка в системном трее).
 
 ## Кто вызывает код бандла (точки входа)
 
