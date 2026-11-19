@@ -57,7 +57,7 @@ composer install            # зависимости
 
 > ⚠️ **Безопасность:** в текущем коде есть критичная проблема — endpoint `/command/exec.html` исполняет произвольные команды. См. [docs/BUGS.md](docs/BUGS.md).
 
-Для AI-агентов (Claude Code) точка входа — [CLAUDE.md](CLAUDE.md).
+Для AI-агентов (Claude Code) точка входа — [AGENTS.md](AGENTS.md).
 
 ### Лицензия
 
